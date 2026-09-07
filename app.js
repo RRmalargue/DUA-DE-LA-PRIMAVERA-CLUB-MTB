@@ -78,51 +78,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const successScreen = document.getElementById('success-screen');
     const loadingScreen = document.getElementById('loading-screen');
 
-    // Configuración de respaldo (Fallback) en caso de que el navegador bloquee la carga local (restricciones CORS al abrir con doble clic en archivo local)
-    const FALLBACK_CONFIG = {
-      "raceName": "CROSS TRAIL \"TERCER TIEMPO\"",
-      "posterImage": "./IMAGENES/AFICHE TERCER.jpg",
-      "tshirtImage": "./IMAGENES/REMERA TERCER.jpg",
-      "altitudeMapImage": "./IMAGENES/MAPA ALTURA.jpg",
-      "gpxLink": "#",
-      "kmlLink": "#",
-      "startLocationMapLink": "https://maps.google.com/?q=-34.603722,-58.381592",
-      "deslindeLink": "./assets/deslinde.pdf",
-      "paymentDetails": "Banco de la Nación Argentina\nCBU: 0110599520000001234567\nAlias: ALPACHIRI.TRAIL\nTitular: Trail Running S.A.",
+    // Configuración de respaldo (Fallback) en caso de que falle la carga dinámica
+    const FALLBACK_CONFIG = (typeof window !== 'undefined' && window.RACE_CONFIG) ? window.RACE_CONFIG : {
+      "raceName": "DUATLON DE LA PRIMAVERA CLUB MTB",
+      "posterImage": "",
+      "logoImage": "./IMAGENES/LOGO CLUB.png",
+      "contactWhatsapp": "5492604697855",
       "distances": [
-        {
-          "id": "5 KMS",
-          "name": "COMPETITIVA",
-          "price": 35000,
-          "detail": ""
-        },
-        {
-          "id": "15 KMS",
-          "name": "COMPETITIVA",
-          "price": 50000,
-          "detail": ""
-        }
-      ],
-      "categories": [
-        { "id": "infantiles_4_y_5_años", "name": "INFANTILES 4 Y 5 AÑOS 100 MTS", "minAge": 4, "maxAge": 5 },
-        { "id": "infantiles_6_y_7_años", "name": "INFANTILES 6 Y 7 AÑOS 200 MTS", "minAge": 6, "maxAge": 7 },
-        { "id": "infantiles_8_y_9_años", "name": "INFANTILES 8 Y 9 AÑOS 400 MTS", "minAge": 8, "maxAge": 9 },
-        { "id": "infantiles_10_y_11_años", "name": "INFANTILES 10 Y 11 AÑOS 800 MTS", "minAge": 10, "maxAge": 11 },
-        { "id": "infantiles_12_y_13_años", "name": "INFANTILES 12 Y 13 AÑOS 1200 MTS", "minAge": 12, "maxAge": 13 },
-        { "id": "damas_5_kms", "name": "DAMAS 5 KMS LIBRE", "minAge": 13, "maxAge": 80 },
-        { "id": "caballeros_5_kms_libre", "name": "CABALLEROS 5 KMS LIBRE", "minAge": 13, "maxAge": 80 },
-        { "id": "damas_15_kms_16_a_19_años", "name": "DAMAS 15 KMS 16  A 19 AÑOS", "minAge": 16, "maxAge": 19 },
-        { "id": "damas_15_kms_20_a_29_años", "name": "DAMAS 15 KMS 20 A 29 AÑOS", "minAge": 20, "maxAge": 29 },
-        { "id": "damas_15_kms_30_a_39_años", "name": "DAMAS 15 KMS 30 A 39 AÑOS", "minAge": 30, "maxAge": 39 },
-        { "id": "damas_15_kms_40_a_49_años", "name": "DAMAS 15 KMS 40 A 49 AÑOS", "minAge": 40, "maxAge": 49 },
-        { "id": "damas_15_kms_50_a_59_años", "name": "DAMAS 15 KMS 50 A 59 AÑOS", "minAge": 50, "maxAge": 59 },
-        { "id": "damas_15_kms_60_a_69_años", "name": "DAMAS 15 KMS 60 A 69 AÑOS", "minAge": 60, "maxAge": 69 },
-        { "id": "15_kms_caballeros_16_a_19_años", "name": "15 KMS CABALLEROS 16 A 19 AÑOS", "minAge": 16, "maxAge": 19 },
-        { "id": "15_kms_caballeros_20_a_29_años", "name": "15 KMS CABALLEROS 20 A 29 AÑOS", "minAge": 20, "maxAge": 29 },
-        { "id": "15_kms_caballeros_30_a_39_años", "name": "15 KMS CABALLEROS 30 A 39 AÑOS", "minAge": 30, "maxAge": 39 },
-        { "id": "15_kms_caballeros_40_a_49_años", "name": "15 KMS CABALLEROS 40 A 49 AÑOS", "minAge": 40, "maxAge": 49 },
-        { "id": "15_kms_caballeros_50_a_59_años", "name": "15 KMS CABALLEROS 50 A 59 AÑOS", "minAge": 50, "maxAge": 59 },
-        { "id": "15_kms_caballeros_60_a_69_años", "name": "15 KMS CABALLEROS 60 A 69 AÑOS", "minAge": 60, "maxAge": 69 }
+        { "id": "INDIVIDUAL", "name": "INDIVIDUAL (10K + 25K)", "price": 40000 },
+        { "id": "POSTAS", "name": "POSTAS (10K + 25K DUPLAS)", "price": 75000, "isPostas": true }
       ]
     };
 
@@ -316,7 +280,9 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 if (posterFrame) {
                     posterFrame.classList.remove('hidden');
-                    posterFrame.src = 'afiche.html?embed=true';
+                    if (!posterFrame.getAttribute('src')) {
+                        posterFrame.src = './afiche.html?embed=true';
+                    }
                 }
                 if (posterBanner) posterBanner.classList.add('hidden');
             }

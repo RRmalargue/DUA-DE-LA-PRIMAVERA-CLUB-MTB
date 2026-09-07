@@ -1,5 +1,5 @@
 // sw.js - Service Worker para habilitar la instalación de la PWA
-const CACHE_NAME = 'trail-portal-v5.4';
+const CACHE_NAME = 'trail-portal-v5.5';
 const ASSETS = [
     './index.html',
     './afiche.html',
@@ -7,7 +7,7 @@ const ASSETS = [
     './app.js',
     './config.js',
     './manifest.json',
-    './IMAGENES/LOGO.jpg'
+    './IMAGENES/LOGO CLUB.png'
 ];
 
 self.addEventListener('install', (e) => {
