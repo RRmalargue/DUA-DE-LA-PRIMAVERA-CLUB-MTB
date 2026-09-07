@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Afiche Oficial - Duatlón de la Primavera 2026 | Malargüe, Mendoza</title>
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,600;0,800;0,900;1,900&family=Teko:wght@600;700;800&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <!-- html2canvas for instant high-res PNG export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        :root {
+            --accent-cyan: #00f2fe;
+            --accent-cyan-glow: rgba(0, 242, 254, 0.4);
+            --accent-orange: #ff8c00;
+            --accent-orange-glow: rgba(255, 140, 0, 0.45);
+            --accent-yellow: #ffea00;
+            --accent-spring-green: #00e676;
+            --accent-spring-lime: #76ff03;
+            --accent-spring-gold: #ffd600;
+            --dark-bg: #07090e;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #0b0e14;
+            font-family: 'Montserrat', sans-serif;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        /* Top Action Bar */
+        .toolbar {
+            width: 100%;
+            max-width: 850px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+        }
+
+        .toolbar-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toolbar-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-action {
+            background: linear-gradient(135deg, var(--accent-orange), #ff4500);
+            color: #fff;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px var(--accent-orange-glow);
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 140, 0, 0.6);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+
+        /* POSTER CANVAS CONTAINER */
+        #poster-scaler {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            justify-content: center;
+            position: relative;
+        }
+
+        #poster-container {
+            width: 800px;
+            height: 1200px;
+            position: relative;
+            background: #0d1117;
+            overflow: hidden;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 40px rgba(0, 242, 254, 0.15);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            transform-origin: top center;
+            flex-shrink: 0;
+        }
+
+        /* Embed mode for iframe inside public portal */
+        body.embed-mode {
+            padding: 0 !important;
+            margin: 0 !important;
+            background: transparent !important;
+            min-height: auto !important;
+            overflow: hidden !important;
+        }
+
+        body.embed-mode .toolbar {
+            display: none !important;
+        }
+
+        body.embed-mode #poster-scaler {
+            max-width: 100% !important;
+        }
+
+        body.embed-mode #poster-container {
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        /* Background Layers */
+        .poster-bg {
+            position: absolute;
+            inset: 0;
+            background-image: url('IMAGENES/TORRECILLAS.jpg');
+            background-size: cover;
+            background-position: center center;
+            filter: contrast(1.1) saturate(1.15) brightness(0.95);
+            z-index: 1;
+            transition: background-image 0.4s ease;
+        }
+
+        /* Overlay Gradients for readability and epic mood */
+        .poster-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                180deg,
+                rgba(7, 9, 14, 0.92) 0%,
+                rgba(7, 9, 14, 0.4) 30%,
+                rgba(7, 9, 14, 0.45) 55%,
+                rgba(7, 9, 14, 0.96) 82%,
+                rgba(7, 9, 14, 1) 100%
+            );
+            z-index: 2;
+        }
+
+        .poster-glow-cyan {
+            position: absolute;
+            top: 20%;
+            left: -15%;
+            width: 50%;
+            height: 50%;
+            background: radial-gradient(circle, rgba(0, 242, 254, 0.25) 0%, transparent 70%);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .poster-glow-orange {
+            position: absolute;
+            bottom: 25%;
+            right: -15%;
+            width: 55%;
+            height: 55%;
+            background: radial-gradient(circle, rgba(255, 140, 0, 0.3) 0%, transparent 70%);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .poster-glow-spring {
+            position: absolute;
+            top: 10%;
+            right: -10%;
+            width: 55%;
+            height: 55%;
+            background: radial-gradient(circle, rgba(255, 214, 0, 0.18) 0%, rgba(0, 230, 118, 0.14) 40%, transparent 70%);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .spring-decorations {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        /* CONTENT */
+        .poster-content {
+            position: relative;
+            z-index: 3;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 26px 32px 22px;
+        }
+
+        /* HEADER */
+        .poster-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.15);
+            padding-bottom: 12px;
+        }
+
+        .organizer-tag {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-club-img {
+            height: 105px;
+            width: auto;
+            filter: drop-shadow(0 6px 16px rgba(0,0,0,0.7));
+            border-radius: 50%;
+            background: rgba(255,255,255,0.12);
+            padding: 6px;
+            border: 2px solid rgba(255, 214, 0, 0.45);
+        }
+
+        .organizer-text {
+            text-align: left;
+        }
+
+        .organizer-badge {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 800;
+            letter-spacing: 3px;
+            color: var(--accent-orange);
+            text-transform: uppercase;
+            display: block;
+        }
+
+        .organizer-name {
+            font-family: 'Teko', sans-serif;
+            font-size: 2.2rem;
+            letter-spacing: 1.5px;
+            line-height: 0.9;
+            color: #ffffff;
+            text-transform: uppercase;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+        }
+
+        .location-badge {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(0, 242, 254, 0.4);
+            padding: 8px 16px;
+            border-radius: 30px;
+            text-align: right;
+            backdrop-filter: blur(8px);
+        }
+
+        .location-badge i {
+            color: var(--accent-cyan);
+            margin-right: 5px;
+        }
+
+        .location-badge span {
+            font-weight: 800;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            color: #ffffff;
+            text-transform: uppercase;
+        }
+
+        /* HERO TITLE SECTION */
+        .poster-hero {
+            text-align: center;
+            margin: 8px 0;
+        }
+
+        .edition-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: linear-gradient(90deg, transparent, rgba(0, 230, 118, 0.2), rgba(255, 214, 0, 0.25), transparent);
+            border-top: 1.5px solid var(--accent-spring-green);
+            border-bottom: 1.5px solid var(--accent-spring-gold);
+            padding: 6px 36px;
+            font-size: 0.95rem;
+            font-weight: 900;
+            letter-spacing: 5px;
+            color: #fffbdf;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            text-shadow: 0 0 12px rgba(255, 214, 0, 0.6);
+        }
+
+        .edition-badge i {
+            font-size: 1rem;
+        }
+
+        .main-title {
+            font-family: 'Teko', sans-serif;
+            font-size: 5.8rem;
+            line-height: 0.85;
+            font-weight: 800;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #ffffff;
+            text-shadow: 0 6px 20px rgba(0,0,0,0.9), 0 0 30px rgba(0, 242, 254, 0.3);
+            margin: 0;
+        }
+
+        .main-title span.primavera {
+            display: block;
+            font-family: 'Bebas Neue', cursive;
+            font-size: 6.8rem;
+            line-height: 0.82;
+            letter-spacing: 6px;
+            background: linear-gradient(135deg, #00f2fe 0%, #00e676 35%, #ffd600 70%, #ff8c00 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 6px 18px rgba(0, 230, 118, 0.45));
+        }
+
+        .spring-season-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: rgba(0, 230, 118, 0.12);
+            border: 1px solid rgba(0, 230, 118, 0.4);
+            padding: 5px 20px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 800;
+            letter-spacing: 2.5px;
+            color: #bbf7d0;
+            text-transform: uppercase;
+            margin: 8px auto 6px;
+            backdrop-filter: blur(6px);
+            box-shadow: 0 0 15px rgba(0, 230, 118, 0.25);
+        }
+
+        .spring-season-badge i {
+            color: var(--accent-spring-gold);
+            font-size: 0.9rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.15rem;
+            font-weight: 800;
+            letter-spacing: 4px;
+            color: #e2e8f0;
+            text-transform: uppercase;
+            margin-top: 6px;
+            text-shadow: 0 2px 6px rgba(0,0,0,0.8);
+        }
+
+        /* DUAL DISCIPLINES PILL GRID */
+        .disciplines-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 10px 0;
+        }
+
+        .discipline-card {
+            background: rgba(15, 23, 42, 0.75);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s;
+        }
+
+        .discipline-card.pedestre {
+            border: 2px solid var(--accent-cyan);
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.25);
+        }
+
+        .discipline-card.pedestre::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--accent-cyan);
+        }
+
+        .discipline-card.mtb {
+            border: 2px solid var(--accent-orange);
+            box-shadow: 0 0 20px rgba(255, 140, 0, 0.25);
+        }
+
+        .discipline-card.mtb::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--accent-orange);
+        }
+
+        .discipline-icon {
+            font-size: 2.2rem;
+            margin-bottom: 4px;
+        }
+
+        .discipline-card.pedestre .discipline-icon {
+            color: var(--accent-cyan);
+            filter: drop-shadow(0 0 10px rgba(0, 242, 254, 0.5));
+        }
+
+        .discipline-card.mtb .discipline-icon {
+            color: var(--accent-orange);
+            filter: drop-shadow(0 0 10px rgba(255, 140, 0, 0.5));
+        }
+
+        .discipline-distance {
+            font-family: 'Teko', sans-serif;
+            font-size: 3.4rem;
+            line-height: 0.85;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: #ffffff;
+        }
+
+        .discipline-type {
+            font-size: 0.9rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #cbd5e1;
+            margin-top: 2px;
+        }
+
+        /* MODALITIES STRIP */
+        .modalities-strip {
+            background: linear-gradient(90deg, rgba(0, 242, 254, 0.15), rgba(255, 140, 0, 0.15));
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .modality-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modality-item i {
+            font-size: 1.3rem;
+            color: var(--accent-yellow);
+        }
+
+        .modality-text strong {
+            display: block;
+            font-size: 1.05rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #fff;
+        }
+
+        .modality-text span {
+            font-size: 0.75rem;
+            color: #cbd5e1;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* CATEGORIES PILLS */
+        .categories-overview {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .categories-title {
+            font-size: 0.75rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: var(--accent-orange);
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .categories-pills {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .cat-pill {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #e2e8f0;
+            text-transform: uppercase;
+        }
+
+        .cat-pill.special {
+            background: rgba(0, 242, 254, 0.15);
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+
+        /* DATE & LOCATION BANNER */
+        .date-location-banner {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border: 2px solid var(--accent-yellow);
+            border-radius: 12px;
+            padding: 10px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            margin-bottom: 10px;
+        }
+
+        .date-box {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .date-box i {
+            font-size: 2.5rem;
+            color: var(--accent-yellow);
+            filter: drop-shadow(0 0 10px rgba(255, 234, 0, 0.4));
+        }
+
+        .date-info strong {
+            display: block;
+            font-family: 'Teko', sans-serif;
+            font-size: 2.2rem;
+            line-height: 0.85;
+            color: #ffffff;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .date-info span {
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--accent-yellow);
+            text-transform: uppercase;
+        }
+
+        .location-box {
+            text-align: right;
+            border-left: 2px solid rgba(255, 255, 255, 0.15);
+            padding-left: 18px;
+        }
+
+        .location-box strong {
+            display: block;
+            font-family: 'Teko', sans-serif;
+            font-size: 1.8rem;
+            line-height: 0.9;
+            color: #ffffff;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .location-box span {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            text-transform: uppercase;
+        }
+
+        /* FOOTER / CALL TO ACTION */
+        .poster-footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            padding-top: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .cta-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cta-box i {
+            font-size: 1.8rem;
+            color: #00e676;
+        }
+
+        .cta-text strong {
+            display: block;
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .cta-text span {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #00e676;
+            font-family: monospace;
+        }
+
+        .price-summary {
+            text-align: right;
+        }
+
+        .price-summary span {
+            font-size: 0.72rem;
+            color: #94a3b8;
+            display: block;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .price-summary strong {
+            font-size: 1.05rem;
+            font-weight: 900;
+            color: var(--accent-yellow);
+        }
+
+        /* PRINT STYLES */
+        @media print {
+            body {
+                background: none;
+                padding: 0;
+            }
+            .toolbar {
+                display: none;
+            }
+            #poster-container {
+                width: 100vw;
+                height: 100vh;
+                max-width: none;
+                border: none;
+                border-radius: 0;
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOOLBAR SUPERIOR CON CONTROLES -->
+    <div class="toolbar">
+        <div class="toolbar-title">
+            <i class="fa-solid fa-image"></i>
+            <span>Afiche Oficial Duatlón de la Primavera 2026</span>
+        </div>
+        <div class="toolbar-buttons">
+            <!-- Selector de Fondo -->
+            <button class="btn-secondary" onclick="changeBackground('IMAGENES/TORRECILLAS.jpg')" title="Fondo Torrecillas Malargüe" style="border-color: var(--accent-cyan); color: var(--accent-cyan);">
+                <i class="fa-solid fa-mountain-sun"></i> Torrecillas
+            </button>
+            <button class="btn-secondary" onclick="changeBackground('snow_mountain.jpg')" title="Fondo Cordillera Nevada">
+                <i class="fa-solid fa-mountain"></i> Cordillera
+            </button>
+            <button class="btn-secondary" onclick="changeBackground('sunset_ridge.jpg')" title="Fondo Atardecer">
+                <i class="fa-solid fa-sun"></i> Atardecer
+            </button>
+            <button class="btn-secondary" onclick="changeBackground('rocky_valley.jpg')" title="Fondo Valle Rocoso">
+                <i class="fa-solid fa-road"></i> Senderos
+            </button>
+            
+            <!-- Descargar Imagen -->
+            <button class="btn-action" onclick="downloadPoster()">
+                <i class="fa-solid fa-cloud-arrow-down"></i> Descargar Afiche (PNG HD)
+            </button>
+
+            <!-- Imprimir -->
+            <button class="btn-secondary" onclick="window.print()">
+                <i class="fa-solid fa-print"></i> Imprimir
+            </button>
+
+            <!-- Volver al portal -->
+            <a href="index.html" class="btn-secondary">
+                <i class="fa-solid fa-arrow-left"></i> Volver al Portal
+            </a>
+            <!-- Panel Admin -->
+            <a href="admin.html" class="btn-secondary" style="border-color: var(--accent-orange); color: var(--accent-orange);">
+                <i class="fa-solid fa-shield-halved"></i> Panel Admin
+            </a>
+        </div>
+    </div>
+
+    <!-- CONTENEDOR DEL AFICHE OFICIAL ESCALABLE -->
+    <div id="poster-scaler">
+        <div id="poster-container">
+        <!-- Fondos y resplandores dinámicos -->
+        <div class="poster-bg" id="poster-bg"></div>
+        <div class="poster-overlay"></div>
+        <div class="poster-glow-cyan"></div>
+        <div class="poster-glow-orange"></div>
+        <div class="poster-glow-spring"></div>
+
+        <!-- Decoración Primaveral Vectorial Integrada -->
+        <svg class="spring-decorations" viewBox="0 0 800 1200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <radialGradient id="springSunGrad" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="#fffbdf" stop-opacity="0.85"/>
+                    <stop offset="45%" stop-color="#ffd600" stop-opacity="0.5"/>
+                    <stop offset="100%" stop-color="#ff9100" stop-opacity="0"/>
+                </radialGradient>
+                <linearGradient id="springLeafGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#76ff03"/>
+                    <stop offset="100%" stop-color="#00e676"/>
+                </linearGradient>
+            </defs>
+
+            <!-- Sol de Primavera en la cumbre derecha -->
+            <g opacity="0.38" transform="translate(730, 80)">
+                <circle cx="0" cy="0" r="50" fill="url(#springSunGrad)" />
+                <line x1="0" y1="-65" x2="0" y2="-78" stroke="#ffd600" stroke-width="2.5" stroke-linecap="round"/>
+                <line x1="0" y1="65" x2="0" y2="78" stroke="#ffd600" stroke-width="2.5" stroke-linecap="round"/>
+                <line x1="-65" y1="0" x2="-78" y2="0" stroke="#ffd600" stroke-width="2.5" stroke-linecap="round"/>
+                <line x1="65" y1="0" x2="78" y2="0" stroke="#ffd600" stroke-width="2.5" stroke-linecap="round"/>
+                <line x1="-46" y1="-46" x2="-56" y2="-56" stroke="#ffd600" stroke-width="2.5" stroke-linecap="round"/>
+                <line x1="46" y1="-46" x2="56" y2="-56" stroke="#ffd600" stroke-width="2.5" stroke-linecap="round"/>
+                <line x1="-46" y1="46" x2="-56" y2="56" stroke="#ffd600" stroke-width="2.5" stroke-linecap="round"/>
+                <line x1="46" y1="46" x2="56" y2="56" stroke="#ffd600" stroke-width="2.5" stroke-linecap="round"/>
+            </g>
+
+            <!-- Follaje / Brotes primaverales andinos sutiles en esquinas -->
+            <g opacity="0.4" stroke="url(#springLeafGrad)" stroke-width="2" fill="none">
+                <path d="M-10,35 Q60,55 100,110 T140,210" />
+                <path d="M45,55 Q65,40 80,50 C75,64 60,65 45,55" fill="#00e676" opacity="0.6"/>
+                <path d="M80,90 Q105,75 115,90 C108,104 90,102 80,90" fill="#76ff03" opacity="0.6"/>
+                <path d="M120,140 Q148,128 155,145 C142,156 130,152 120,140" fill="#00e676" opacity="0.6"/>
+            </g>
+
+            <!-- Hojas y flores silvestres flotando en la brisa de montaña -->
+            <g opacity="0.32">
+                <!-- Hoja flotante 1 -->
+                <path d="M720,290 C742,275 758,290 752,310 C732,318 720,305 720,290 Z" fill="#76ff03" transform="rotate(-15 735 300)"/>
+                <!-- Flor silvestre 1 -->
+                <g transform="translate(690, 480) scale(0.75)">
+                    <circle cx="0" cy="0" r="7" fill="#ffd600"/>
+                    <circle cx="0" cy="-14" r="7.5" fill="#ffffff" opacity="0.85"/>
+                    <circle cx="13" cy="-4.5" r="7.5" fill="#ffffff" opacity="0.85"/>
+                    <circle cx="8" cy="12" r="7.5" fill="#ffffff" opacity="0.85"/>
+                    <circle cx="-8" cy="12" r="7.5" fill="#ffffff" opacity="0.85"/>
+                    <circle cx="-13" cy="-4.5" r="7.5" fill="#ffffff" opacity="0.85"/>
+                </g>
+                <!-- Hoja flotante 2 -->
+                <path d="M75,640 C95,622 112,635 108,655 C90,665 78,655 75,640 Z" fill="#00e676" transform="rotate(25 90 645)"/>
+                <!-- Flor silvestre 2 -->
+                <g transform="translate(85, 780) scale(0.7)">
+                    <circle cx="0" cy="0" r="7" fill="#ffd600"/>
+                    <circle cx="0" cy="-14" r="7.5" fill="#ffffff" opacity="0.85"/>
+                    <circle cx="13" cy="-4.5" r="7.5" fill="#ffffff" opacity="0.85"/>
+                    <circle cx="8" cy="12" r="7.5" fill="#ffffff" opacity="0.85"/>
+                    <circle cx="-8" cy="12" r="7.5" fill="#ffffff" opacity="0.85"/>
+                    <circle cx="-13" cy="-4.5" r="7.5" fill="#ffffff" opacity="0.85"/>
+                </g>
+                <!-- Hoja flotante 3 -->
+                <path d="M730,860 C752,842 768,858 762,878 C742,886 730,875 730,860 Z" fill="#76ff03" transform="rotate(-30 745 865)"/>
+            </g>
+        </svg>
+
+        <!-- Contenido Gráfico del Afiche -->
+        <div class="poster-content">
+            
+            <!-- 1. ENCABEZADO OFICIAL -->
+            <div class="poster-header">
+                <div class="organizer-tag">
+                    <img src="IMAGENES/LOGO CLUB.png" alt="Club MTB Malargüe" class="logo-club-img" onerror="this.src='LOGOCLUB.jpg'">
+                    <div class="organizer-text">
+                        <span class="organizer-badge">ORGANIZA</span>
+                        <div class="organizer-name">CLUB MTB MALARGÜE</div>
+                    </div>
+                </div>
+                <div class="location-badge">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <span>MALARGÜE, MENDOZA</span>
+                </div>
+            </div>
+
+            <!-- 2. TÍTULO PRINCIPAL DE IMPACTO -->
+            <div class="poster-hero">
+                <div class="edition-badge">
+                    <i class="fa-solid fa-mountain-sun"></i>
+                    <span>MALARGÜE TE ESPERA</span>
+                    <i class="fa-solid fa-seedling" style="color: var(--accent-spring-lime);"></i>
+                </div>
+                <h1 class="main-title">
+                    DUATLÓN
+                    <span class="primavera">DE LA PRIMAVERA</span>
+                </h1>
+                <div class="spring-season-badge">
+                    <i class="fa-solid fa-sun"></i>
+                    <span>EDICIÓN PRIMAVERA 2026 • MALARGÜE</span>
+                    <i class="fa-solid fa-spa"></i>
+                </div>
+                <div class="hero-subtitle">DESAFÍO PEDESTRISMO & MOUNTAIN BIKE</div>
+            </div>
+
+            <!-- 3. BLOQUE DE DISCIPLINAS (10K PEDESTRE + 25K MTB) -->
+            <div class="disciplines-grid">
+                <!-- PEDESTRE -->
+                <div class="discipline-card pedestre">
+                    <div class="discipline-icon">
+                        <i class="fa-solid fa-person-running"></i>
+                    </div>
+                    <div class="discipline-distance">10K</div>
+                    <div class="discipline-type">PEDESTRISMO</div>
+                </div>
+
+                <!-- MOUNTAIN BIKE -->
+                <div class="discipline-card mtb">
+                    <div class="discipline-icon">
+                        <i class="fa-solid fa-bicycle"></i>
+                    </div>
+                    <div class="discipline-distance">25K</div>
+                    <div class="discipline-type">MOUNTAIN BIKE</div>
+                </div>
+            </div>
+
+            <!-- 4. MODALIDADES DE COMPETENCIA -->
+            <div class="modalities-strip">
+                <div class="modality-item">
+                    <i class="fa-solid fa-user"></i>
+                    <div class="modality-text">
+                        <strong>INDIVIDUAL</strong>
+                        <span style="font-weight: 800; color: #ffffff; letter-spacing: 1px;">10 K 25 MTB</span>
+                    </div>
+                </div>
+                <div style="height: 30px; width: 1px; background: rgba(255,255,255,0.2);"></div>
+                <div class="modality-item">
+                    <i class="fa-solid fa-users"></i>
+                    <div class="modality-text">
+                        <strong>POSTAS (DUPLAS)</strong>
+                        <span style="font-weight: 800; color: #ffffff; letter-spacing: 1px;"><span style="color: var(--accent-cyan);">10 K PEDESTRE</span> | <span style="color: var(--accent-orange);">25 K MTB</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. CATEGORÍAS -->
+            <div class="categories-overview">
+                <div class="categories-title">CATEGORÍAS POR EDADES & ESPECIALES</div>
+                <div class="categories-pills">
+                    <span class="cat-pill">Damas y Caballeros</span>
+                    <span class="cat-pill">Hasta 29 años</span>
+                    <span class="cat-pill">Hasta 40 años</span>
+                    <span class="cat-pill">Más de 40 años</span>
+                    <span class="cat-pill">Postas Sumatoria</span>
+                    <span class="cat-pill special"><i class="fa-solid fa-bicycle"></i> Postas Tándem</span>
+                    <span class="cat-pill special"><i class="fa-solid fa-wheelchair"></i> Postas Adaptadas / Disca</span>
+                </div>
+            </div>
+
+            <!-- 6. FECHA, HORARIO Y LUGAR DE LARGADA -->
+            <div class="date-location-banner">
+                <div class="date-box">
+                    <i class="fa-regular fa-calendar-check"></i>
+                    <div class="date-info">
+                        <strong>DOMINGO 1 DE NOVIEMBRE 2026</strong>
+                        <span><i class="fa-solid fa-sun" style="color: var(--accent-spring-gold); margin-right: 4px;"></i> HORARIO: 10:00 AM • ¡BIENVENIDA PRIMAVERA!</span>
+                    </div>
+                </div>
+                <div class="location-box">
+                    <strong>POLIDEPORTIVO</strong>
+                    <span>MALARGÜE - MENDOZA</span>
+                </div>
+            </div>
+
+            <!-- 7. PIE / INSCRIPCIONES Y VALORES -->
+            <div class="poster-footer">
+                <div class="cta-box">
+                    <i class="fa-brands fa-whatsapp"></i>
+                    <div class="cta-text">
+                        <strong>INSCRIPCIONES & CONTACTO</strong>
+                        <span>2604-697855 / 2604-236123</span>
+                    </div>
+                </div>
+                <div class="price-summary">
+                    <span>VALORES DE INSCRIPCIÓN</span>
+                    <strong>Individual $40.000 | Postas $75.000</strong>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    </div>
+
+    <script>
+        // Función para cambiar la foto de fondo
+        function changeBackground(imageName) {
+            document.getElementById('poster-bg').style.backgroundImage = 'url(' + imageName + ')';
+        }
+
+        // Ajuste dinámico de escala proporcional
+        function updatePosterScale() {
+            const poster = document.getElementById('poster-container');
+            const scaler = document.getElementById('poster-scaler');
+            if (!poster || !scaler) return;
+
+            const isEmbed = window.location.search.includes('embed') || window.self !== window.top;
+            if (isEmbed) {
+                document.body.classList.add('embed-mode');
+            }
+
+            const availWidth = isEmbed ? window.innerWidth : Math.min(window.innerWidth - 30, 800);
+            const scale = Math.min(availWidth / 800, 1);
+            poster.style.transform = 'scale(' + scale + ')';
+            const finalHeight = Math.ceil(1200 * scale);
+            scaler.style.height = finalHeight + 'px';
+
+            if (isEmbed && window.parent && window.parent !== window) {
+                window.parent.postMessage({ type: 'resize-poster', height: finalHeight }, '*');
+            }
+        }
+
+        window.addEventListener('resize', updatePosterScale);
+        window.addEventListener('DOMContentLoaded', updatePosterScale);
+        updatePosterScale();
+
+        // Función para descargar el afiche completo en alta resolución (PNG)
+        function downloadPoster() {
+            const poster = document.getElementById('poster-container');
+            const btn = document.querySelector('.btn-action');
+            const originalText = btn.innerHTML;
+            const currentTransform = poster.style.transform;
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generando imagen HD...';
+            poster.style.transform = 'none';
+
+            html2canvas(poster, {
+                scale: 2.5,
+                width: 800,
+                height: 1200,
+                useCORS: true,
+                allowTaint: true,
+                backgroundColor: '#07090e'
+            }).then(canvas => {
+                poster.style.transform = currentTransform;
+                const link = document.createElement('a');
+                link.download = 'AFICHE_DUATLON_DE_LA_PRIMAVERA_2026_MALARGUE.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }).catch(err => {
+                poster.style.transform = currentTransform;
+                console.error('Error al generar afiche:', err);
+                alert('No se pudo generar la descarga automática: ' + err.message);
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            });
+        }
+    </script>
+</body>
+</html>

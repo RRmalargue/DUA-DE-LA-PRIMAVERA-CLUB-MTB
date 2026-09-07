@@ -287,7 +287,8 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Carga de fondo de la web (Background Overlay)
         const BACKGROUND_THEMES = {
-            default: './assets/trail_background.jpg',
+            default: './IMAGENES/TORRECILLAS.jpg',
+            torrecillas: './IMAGENES/TORRECILLAS.jpg',
             snow: './assets/snow_mountain.jpg',
             sunset: './assets/sunset_ridge.jpg',
             rocky: './assets/rocky_valley.jpg',
@@ -302,15 +303,22 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Cargar afiche principal visible (Flyer)
         const posterBanner = document.getElementById('poster-banner');
+        const posterFrame = document.getElementById('poster-live-frame');
         const posterBannerContainer = document.getElementById('poster-banner-container');
-        if (config.posterImage) {
-            if (posterBanner && posterBannerContainer) {
-                posterBanner.src = config.posterImage;
-                posterBannerContainer.classList.remove('hidden');
-            }
-        } else {
-            if (posterBannerContainer) {
-                posterBannerContainer.classList.add('hidden');
+        if (posterBannerContainer) {
+            posterBannerContainer.classList.remove('hidden');
+            if (config.posterImage && config.posterImage !== '' && !config.posterImage.includes('AFICHEDUA')) {
+                if (posterBanner) {
+                    posterBanner.src = config.posterImage;
+                    posterBanner.classList.remove('hidden');
+                }
+                if (posterFrame) posterFrame.classList.add('hidden');
+            } else {
+                if (posterFrame) {
+                    posterFrame.classList.remove('hidden');
+                    posterFrame.src = 'afiche.html?embed=true';
+                }
+                if (posterBanner) posterBanner.classList.add('hidden');
             }
         }
         

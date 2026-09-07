@@ -95,14 +95,31 @@
                             </button>
                         </div>
                     </div>
-                    <div class="input-group">
-                        <label for="posterImage">Imagen del Afiche (Fondo del Header)</label>
-                        <div style="display: flex; gap: 0.5rem;">
-                            <input type="text" id="posterImage" placeholder="Ej: ./IMAGENES/AFICHE TERCER.jpg" style="flex: 1;">
-                            <input type="file" id="posterImageFile" accept="image/*" style="display: none;">
-                            <button type="button" class="btn-secondary" onclick="document.getElementById('posterImageFile').click()" style="padding: 0.85rem 1rem; flex-shrink: 0;">
-                                <i class="fa-solid fa-cloud-arrow-up"></i> Subir
-                            </button>
+                    <div class="input-group" style="grid-column: span 2; background: rgba(0, 242, 254, 0.05); border: 1px solid rgba(0, 242, 254, 0.25); border-radius: var(--radius-md); padding: 1.2rem; margin-bottom: 0.8rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                            <div>
+                                <label style="color: var(--accent-cyan); font-size: 1.1rem; font-weight: 800; display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.3rem;">
+                                    <i class="fa-solid fa-wand-magic-sparkles"></i> Gestión y Descarga del Afiche Oficial (Exclusivo Administrador)
+                                </label>
+                                <p style="font-size: 0.88rem; color: #cbd5e1; margin: 0; line-height: 1.5;">
+                                    El afiche con el fondo de <strong>Torrecillas</strong> está cargado automáticamente en el portal público. Desde aquí puedes abrir el editor para cambiar el fondo (Torrecillas, Cordillera, Atardecer, Senderos), personalizar detalles y <strong>Descargar el Afiche en Ultra HD (PNG)</strong> para redes sociales e impresión.
+                                </p>
+                            </div>
+                            <div style="display: flex; gap: 0.8rem; align-items: center; flex-wrap: wrap;">
+                                <a href="afiche.html" target="_blank" class="btn-primary" style="padding: 0.8rem 1.4rem; font-size: 0.95rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.6rem; font-weight: 700; border-radius: var(--radius-sm); box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);">
+                                    <i class="fa-solid fa-palette"></i> Cambiar Fondo / Descargar Afiche HD
+                                </a>
+                            </div>
+                        </div>
+                        <div style="margin-top: 1rem; padding-top: 0.8rem; border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap;">
+                            <span style="font-size: 0.82rem; color: #94a3b8;">O si prefieres usar una imagen estática personalizada en lugar del afiche dinámico:</span>
+                            <div style="display: flex; gap: 0.5rem; flex: 1; min-width: 250px;">
+                                <input type="text" id="posterImage" placeholder="Vacío = Afiche Torrecillas Dinámico (Recomendado)" style="flex: 1; font-size: 0.88rem;">
+                                <input type="file" id="posterImageFile" accept="image/*" style="display: none;">
+                                <button type="button" class="btn-secondary" onclick="document.getElementById('posterImageFile').click()" style="padding: 0.6rem 0.9rem; flex-shrink: 0; font-size: 0.85rem;">
+                                    <i class="fa-solid fa-cloud-arrow-up"></i> Subir Imagen
+                                </button>
+                            </div>
                         </div>
                     </div>
                     <div class="input-group">
@@ -801,7 +818,8 @@
                     const bgOverlay = document.getElementById('bg-overlay');
                     if (bgOverlay) {
                         const BACKGROUND_THEMES = {
-                            default: './assets/trail_background.jpg',
+                            default: './IMAGENES/TORRECILLAS.jpg',
+                            torrecillas: './IMAGENES/TORRECILLAS.jpg',
                             snow: './assets/snow_mountain.jpg',
                             sunset: './assets/sunset_ridge.jpg',
                             rocky: './assets/rocky_valley.jpg',

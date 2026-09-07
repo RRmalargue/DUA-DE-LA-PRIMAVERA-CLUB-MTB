@@ -1718,7 +1718,8 @@ window.RACE_CONFIG = ${JSON.stringify(state, null, 2)};
 
     // 9. PERSONALIZACIÓN DE FONDOS DE LA WEB
     const BACKGROUND_THEMES = {
-        default: './assets/trail_background.jpg',
+        default: './IMAGENES/TORRECILLAS.jpg',
+        torrecillas: './IMAGENES/TORRECILLAS.jpg',
         snow: './assets/snow_mountain.jpg',
         sunset: './assets/sunset_ridge.jpg',
         rocky: './assets/rocky_valley.jpg',
