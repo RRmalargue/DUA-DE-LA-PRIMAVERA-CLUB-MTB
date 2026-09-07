@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Configuración | Trail Running Portal</title>
+    <meta name="description" content="Configura y personaliza las carreras de trail. Gestiona distancias, categorías, enlaces de mapas y genera el archivo config.json de forma interactiva.">
+    <link rel="stylesheet" href="./index.css">
+    <!-- Leaflet.js for interactive GPX route maps and start location picker -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="bg-overlay" style="background-image: radial-gradient(circle at 10% 20%, rgba(0, 242, 254, 0.05) 0%, transparent 40%), radial-gradient(circle at 90% 80%, rgba(255, 107, 53, 0.03) 0%, transparent 40%); background-color: var(--bg-dark);"></div>
+
+    <div class="admin-container">
+        <!-- Header -->
+        <header class="admin-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 2.5rem;">
+            <div class="admin-title-group">
+                <h1><i class="fa-solid fa-sliders"></i> Panel de Configuración</h1>
+                <p>Configura los parámetros de tu carrera en orden cronológico paso a paso.</p>
+            </div>
+            <div style="display: flex; gap: 0.8rem; flex-wrap: wrap; align-items: center;">
+                <button type="button" id="btn-create-new-race" class="btn-secondary" style="background: rgba(16, 185, 129, 0.15) !important; border-color: #10b981 !important; color: #10b981 !important; font-weight: 700; height: 46px; padding: 0 1.2rem; border-radius: var(--radius-md); cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.2s; border: 1px solid;">
+                    <i class="fa-solid fa-folder-plus"></i> Crear Nueva Carrera
+                </button>
+                <a href="./index.html" class="btn-header-action" style="height: 46px; display: inline-flex; align-items: center; gap: 0.5rem; justify-content: center; text-decoration: none; padding: 0 1.2rem; border-radius: var(--radius-md); font-weight: 600;">
+                    <i class="fa-solid fa-circle-arrow-left"></i> Ir al Formulario Público
+                </a>
+            </div>
+        </header>
+
+        <form id="admin-config-form" autocomplete="off">
+            
+            <!-- PASO 1: INFORMACIÓN GENERAL E IDENTIDAD (Fondo Azul Slate) -->
+            <section class="admin-section" style="background: rgba(30, 41, 59, 0.85); border-left: 5px solid #3b82f6; border-radius: var(--radius-lg); padding: 2rem; margin-bottom: 2.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border-top: 1px solid rgba(255,255,255,0.05); border-right: 1px solid rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.03);">
+                <h2>
+                    <span><i class="fa-solid fa-circle-info" style="color: #3b82f6;"></i> PASO 1: Información General e Identidad</span>
+                    <span style="font-size: 0.85rem; background: #3b82f6; color: #fff; padding: 0.2rem 0.6rem; border-radius: 20px;">Identidad</span>
+                </h2>
+                <p class="mb-2" style="color: var(--text-secondary); font-size: 0.95rem; margin-top: -0.5rem; margin-bottom: 1.5rem;">
+                    Define el nombre, descripción, logos y colores base que darán identidad a la web de tu carrera.
+                </p>
+                <div class="form-grid grid-2">
+                    <div class="input-group" style="grid-column: span 2;">
+                        <label for="raceName">Nombre de la Carrera <span class="requirement">*</span></label>
+                        <input type="text" id="raceName" required placeholder="Ej: CROSS TRAIL TERCER TIEMPO 2026">
+                    </div>
+                    <div class="input-group" style="grid-column: span 2;">
+                        <label for="googleScriptUrl">URL de la Aplicación Web de Google Apps Script <span class="requirement">*</span></label>
+                        <input type="text" id="googleScriptUrl" required placeholder="Ej: https://script.google.com/macros/s/.../exec">
+                        <span style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem;">
+                            * Conecta el formulario de inscripciones con tu planilla de Google Sheets.
+                        </span>
+                    </div>
+                    <div class="input-group" style="grid-column: span 2;">
+                        <label for="raceDescription">Descripción o Información de la Carrera</label>
+                        <textarea id="raceDescription" rows="4" placeholder="Ingresa una descripción o información clave sobre la carrera..." style="width: 100%; border: 1px solid var(--border-color); background: rgba(0,0,0,0.3); color: #fff; padding: 0.8rem; border-radius: var(--radius-sm); font-family: inherit; font-size: 0.95rem; resize: vertical;"></textarea>
+                    </div>
+                    <!-- Logo Image Input -->
+                    <div class="input-group">
+                        <label for="logoImage">Ruta de la Imagen del Logo (Arriba a la Derecha)</label>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input type="text" id="logoImage" placeholder="Ej: ./IMAGENES/LOGO.jpg" style="flex: 1;">
+                            <input type="file" id="logoImageFile" accept="image/*" style="display: none;">
+                            <button type="button" class="btn-secondary" onclick="document.getElementById('logoImageFile').click()" style="padding: 0.85rem 1rem; flex-shrink: 0;">
+                                <i class="fa-solid fa-cloud-arrow-up"></i> Subir
+                            </button>
+                        </div>
+                    </div>
+                    <!-- WhatsApp Contact Input -->
+                    <div class="input-group">
+                        <label for="contactWhatsapp">Teléfono de Soporte WhatsApp (Ej: 5492604552146)</label>
+                        <input type="text" id="contactWhatsapp" placeholder="Ej: 5492604552146 (Solo números con código de país)">
+                    </div>
+                    <div class="input-group">
+                        <label for="deslindeLink">Enlace del PDF de Deslinde</label>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input type="text" id="deslindeLink" placeholder="Ej: ./IMAGENES/DESLINDE DE RESPONSABILIDAD Y ASUNCIÓN DE RIESGOS.pdf" style="flex: 1;">
+                            <input type="file" id="deslindeLinkFile" accept=".pdf" style="display: none;">
+                            <button type="button" class="btn-secondary" onclick="document.getElementById('deslindeLinkFile').click()" style="padding: 0.85rem 1rem; flex-shrink: 0;">
+                                <i class="fa-solid fa-cloud-arrow-up"></i> Subir
+                            </button>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="clasificacionesLink">Enlace del PDF de Clasificaciones (Opcional)</label>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input type="text" id="clasificacionesLink" placeholder="Ej: ./assets/clasificaciones.pdf" style="flex: 1;">
+                            <input type="file" id="clasificacionesLinkFile" accept=".pdf" style="display: none;">
+                            <button type="button" class="btn-secondary" onclick="document.getElementById('clasificacionesLinkFile').click()" style="padding: 0.85rem 1rem; flex-shrink: 0;">
+                                <i class="fa-solid fa-cloud-arrow-up"></i> Subir
+                            </button>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="posterImage">Imagen del Afiche (Fondo del Header)</label>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input type="text" id="posterImage" placeholder="Ej: ./IMAGENES/AFICHE TERCER.jpg" style="flex: 1;">
+                            <input type="file" id="posterImageFile" accept="image/*" style="display: none;">
+                            <button type="button" class="btn-secondary" onclick="document.getElementById('posterImageFile').click()" style="padding: 0.85rem 1rem; flex-shrink: 0;">
+                                <i class="fa-solid fa-cloud-arrow-up"></i> Subir
+                            </button>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="tshirtImage">Imagen de la Remera Oficial</label>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input type="text" id="tshirtImage" placeholder="Ej: ./IMAGENES/REMERA TERCER.jpg" style="flex: 1;">
+                            <input type="file" id="tshirtImageFile" accept="image/*" style="display: none;">
+                            <button type="button" class="btn-secondary" onclick="document.getElementById('tshirtImageFile').click()" style="padding: 0.85rem 1rem; flex-shrink: 0;">
+                                <i class="fa-solid fa-cloud-arrow-up"></i> Subir
+                            </button>
+                        </div>
+                    </div>
+                    <div class="input-group" style="grid-column: span 2;">
+                        <label for="altitudeMapImage">Imagen del Perfil de Elevación General (Opcional)</label>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input type="text" id="altitudeMapImage" placeholder="Ej: ./IMAGENES/ALTURA 5 K.jpg" style="flex: 1;">
+                            <input type="file" id="altitudeMapImageFile" accept="image/*" style="display: none;">
+                            <button type="button" class="btn-secondary" onclick="document.getElementById('altitudeMapImageFile').click()" style="padding: 0.85rem 1rem; flex-shrink: 0;">
+                                <i class="fa-solid fa-cloud-arrow-up"></i> Subir
+                            </button>
+                        </div>
+                    </div>
+                    <div class="input-group" style="grid-column: span 2;">
+                        <label for="kitImage">Imagen del Kit de Competidor (Opcional - Formato A4/Imagen)</label>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input type="text" id="kitImage" placeholder="Ej: ./IMAGENES/KIT_COMPETIDOR.jpg" style="flex: 1;">
+                            <input type="file" id="kitImageFile" accept="image/*" style="display: none;">
+                            <button type="button" class="btn-secondary" onclick="document.getElementById('kitImageFile').click()" style="padding: 0.85rem 1rem; flex-shrink: 0;">
+                                <i class="fa-solid fa-cloud-arrow-up"></i> Subir
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Color Themes -->
+                    <div class="input-group" style="grid-column: span 2; margin-top: 1rem;">
+                        <label style="font-weight: 700; color: var(--accent-cyan); display: block; margin-bottom: 0.5rem;">🎨 Personalización de Tonos de Color de la Web:</label>
+                        <div style="display: flex; gap: 0.8rem; flex-wrap: wrap;">
+                            <button type="button" class="color-theme-btn" data-theme="orange" style="background: #1a1a1a; border: 2px solid #ff6b35; color: #fff; padding: 0.6rem 1rem; border-radius: var(--radius-sm); cursor: pointer; display: flex; align-items: center; gap: 0.5rem; font-weight: 600; transition: transform 0.2s;">
+                                <span style="display: inline-block; width: 14px; height: 14px; background: #ff6b35; border-radius: 50%;"></span> Naranja Fuego
+                            </button>
+                            <button type="button" class="color-theme-btn" data-theme="green" style="background: #1a1a1a; border: 2px solid #00e676; color: #fff; padding: 0.6rem 1rem; border-radius: var(--radius-sm); cursor: pointer; display: flex; align-items: center; gap: 0.5rem; font-weight: 600; transition: transform 0.2s;">
+                                <span style="display: inline-block; width: 14px; height: 14px; background: #00e676; border-radius: 50%;"></span> Verde Bosque
+                            </button>
+                            <button type="button" class="color-theme-btn" data-theme="blue" style="background: #1a1a1a; border: 2px solid #00f2fe; color: #fff; padding: 0.6rem 1rem; border-radius: var(--radius-sm); cursor: pointer; display: flex; align-items: center; gap: 0.5rem; font-weight: 600; transition: transform 0.2s;">
+                                <span style="display: inline-block; width: 14px; height: 14px; background: #00f2fe; border-radius: 50%;"></span> Azul Glaciar
+                            </button>
+                            <button type="button" class="color-theme-btn" data-theme="red" style="background: #1a1a1a; border: 2px solid #ff1744; color: #fff; padding: 0.6rem 1rem; border-radius: var(--radius-sm); cursor: pointer; display: flex; align-items: center; gap: 0.5rem; font-weight: 600; transition: transform 0.2s;">
+                                <span style="display: inline-block; width: 14px; height: 14px; background: #ff1744; border-radius: 50%;"></span> Rojo Volcán
+                            </button>
+                            <button type="button" class="color-theme-btn" data-theme="purple" style="background: #1a1a1a; border: 2px solid #e040fb; color: #fff; padding: 0.6rem 1rem; border-radius: var(--radius-sm); cursor: pointer; display: flex; align-items: center; gap: 0.5rem; font-weight: 600; transition: transform 0.2s;">
+                                <span style="display: inline-block; width: 14px; height: 14px; background: #e040fb; border-radius: 50%;"></span> Púrpura Neón
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Background Themes -->
+                    <div class="input-group" style="grid-column: span 2; margin-top: 1.2rem;">
+                        <label style="font-weight: 700; color: var(--accent-orange); display: block; margin-bottom: 0.5rem;">⛰️ Personalización de Imagen de Fondo de la Web:</label>
+                        <div style="display: flex; gap: 0.8rem; flex-wrap: wrap;">
+                            <button type="button" class="bg-theme-btn" data-bg="default" style="background: #1a1a1a; border: 2px solid #20b05b; color: #fff; padding: 0.6rem 1rem; border-radius: var(--radius-sm); cursor: pointer; display: flex; align-items: center; gap: 0.5rem; font-weight: 600; transition: transform 0.2s;">
+                                <i class="fa-solid fa-tree" style="color: #00e676;"></i> Bosque Verde
+                            </button>
+                            <button type="button" class="bg-theme-btn" data-bg="snow" style="background: #1a1a1a; border: 2px solid #00b0ff; color: #fff; padding: 0.6rem 1rem; border-radius: var(--radius-sm); cursor: pointer; display: flex; align-items: center; gap: 0.5rem; font-weight: 600; transition: transform 0.2s;">
+                                <i class="fa-solid fa-snowflake" style="color: #00b0ff;"></i> Nieve / Alta Montaña
+                            </button>
+                            <button type="button" class="bg-theme-btn" data-bg="sunset" style="background: #1a1a1a; border: 2px solid #ffab00; color: #fff; padding: 0.6rem 1rem; border-radius: var(--radius-sm); cursor: pointer; display: flex; align-items: center; gap: 0.5rem; font-weight: 600; transition: transform 0.2s;">
+                                <i class="fa-solid fa-mountain-sun" style="color: #ffab00;"></i> Atardecer Dorado
+                            </button>
+                            <button type="button" class="bg-theme-btn" data-bg="rocky" style="background: #1a1a1a; border: 2px solid #a1887f; color: #fff; padding: 0.6rem 1rem; border-radius: var(--radius-sm); cursor: pointer; display: flex; align-items: center; gap: 0.5rem; font-weight: 600; transition: transform 0.2s;">
+                                <i class="fa-solid fa-mountain" style="color: #a1887f;"></i> Valle Rocoso
+                            </button>
+                            <button type="button" class="bg-theme-btn" data-bg="solid" style="background: #1a1a1a; border: 2px solid #555; color: #fff; padding: 0.6rem 1rem; border-radius: var(--radius-sm); cursor: pointer; display: flex; align-items: center; gap: 0.5rem; font-weight: 600; transition: transform 0.2s;">
+                                <i class="fa-solid fa-palette" style="color: #9e9e9e;"></i> Solo Color Oscuro
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Border Radius Style -->
+                    <div class="input-group" style="grid-column: span 2; margin-top: 1.2rem;">
+                        <label style="font-weight: 700; color: var(--accent-cyan); display: block; margin-bottom: 0.5rem;">📐 Estilo de las Esquinas (Selector de categorías, inputs, botones):</label>
+                        <div style="display: flex; gap: 0.8rem; flex-wrap: wrap;">
+                            <button type="button" class="radius-btn" data-radius="0px" style="background: #1a1a1a; border: 2px solid #555; color: #fff; padding: 0.6rem 1rem; border-radius: 0px; cursor: pointer; font-weight: 600; transition: transform 0.2s;">
+                                Rectas (0px)
+                            </button>
+                            <button type="button" class="radius-btn" data-radius="6px" style="background: #1a1a1a; border: 2px solid #555; color: #fff; padding: 0.6rem 1rem; border-radius: 4px; cursor: pointer; font-weight: 600; transition: transform 0.2s;">
+                                Suaves (6px)
+                            </button>
+                            <button type="button" class="radius-btn" data-radius="12px" style="background: #1a1a1a; border: 2px solid #555; color: #fff; padding: 0.6rem 1rem; border-radius: 8px; cursor: pointer; font-weight: 600; transition: transform 0.2s;">
+                                Redondeadas (12px)
+                            </button>
+                            <button type="button" class="radius-btn" data-radius="20px" style="background: #1a1a1a; border: 2px solid #555; color: #fff; padding: 0.6rem 1rem; border-radius: 12px; cursor: pointer; font-weight: 600; transition: transform 0.2s;">
+                                Muy Redondeadas (20px)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PASO 2: CAMPOS DEL FORMULARIO DE INSCRIPCIÓN (Fondo Púrpura Deep) -->
+            <section class="admin-section" style="background: rgba(46, 16, 101, 0.85); border-left: 5px solid #a855f7; border-radius: var(--radius-lg); padding: 2rem; margin-bottom: 2.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border-top: 1px solid rgba(255,255,255,0.05); border-right: 1px solid rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.03);">
+                <h2>
+                    <span><i class="fa-solid fa-list-check" style="color: #a855f7;"></i> PASO 2: Campos del Formulario de Inscripción</span>
+                    <span style="font-size: 0.85rem; background: #a855f7; color: #fff; padding: 0.2rem 0.6rem; border-radius: 20px;">Formulario</span>
+                </h2>
+                <p class="mb-2" style="color: var(--text-secondary); font-size: 0.95rem; margin-top: -0.5rem; margin-bottom: 1.5rem;">
+                    Configura qué datos solicitarás a los corredores y si son obligatorios. También puedes crear campos de texto adicionales.
+                </p>
+
+                <!-- Table for Default Fields -->
+                <div class="table-container mb-2">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Nombre del Campo</th>
+                                <th style="text-align: center; width: 120px;">¿Habilitado?</th>
+                                <th style="text-align: center; width: 120px;">¿Obligatorio?</th>
+                                <th>Tipo de Campo</th>
+                            </tr>
+                        </thead>
+                        <tbody id="fields-default-tbody">
+                            <!-- Populated dynamically via admin.js -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem; font-size: 1.15rem; color: var(--accent-orange);"><i class="fa-solid fa-plus-circle"></i> Campos Personalizados Adicionales</h3>
+                <div class="table-container mb-2">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Nombre del Campo</th>
+                                <th style="text-align: center; width: 150px;">¿Obligatorio?</th>
+                                <th style="text-align: center; width: 100px;">Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="fields-custom-tbody">
+                            <!-- Populated dynamically via admin.js -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Add Custom Field Form -->
+                <div class="form-grid grid-3" style="align-items: flex-end; gap: 1rem; margin-top: 1rem; padding: 1rem; background: rgba(255,255,255,0.02); border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                    <div class="input-group" style="margin-bottom: 0;">
+                        <label for="new-field-label">Nombre del nuevo campo</label>
+                        <input type="text" id="new-field-label" placeholder="Ej: Obra Social o Alergias">
+                    </div>
+                    <div class="checkbox-group" style="margin-bottom: 0.6rem; justify-content: center; display: flex;">
+                        <input type="checkbox" id="new-field-required" checked>
+                        <label for="new-field-required" style="cursor: pointer; display: inline; margin-left: 0.5rem;">¿Es obligatorio?</label>
+                    </div>
+                    <button type="button" class="btn-primary" id="btn-add-custom-field" style="width: 100%; height: 46px; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; background: var(--accent-orange); border: none; border-radius: var(--radius-md); font-weight: bold; color: white; cursor: pointer;">
+                        <i class="fa-solid fa-plus"></i> Agregar Campo
+                    </button>
+                </div>
+            </section>
+
+            <!-- PASO 3: PUNTO DE LARGADA Y MAPAS GENERALES (Fondo Dark Slate con Borde Naranja) -->
+            <section class="admin-section" style="background: rgba(15, 23, 42, 0.85); border-left: 5px solid #f97316; border-radius: var(--radius-lg); padding: 2rem; margin-bottom: 2.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border-top: 1px solid rgba(255,255,255,0.05); border-right: 1px solid rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.03);">
+                <h2>
+                    <span><i class="fa-solid fa-map-location-dot" style="color: #f97316;"></i> PASO 3: Punto de Largada y Mapas Generales</span>
+                    <span style="font-size: 0.85rem; background: #f97316; color: #fff; padding: 0.2rem 0.6rem; border-radius: 20px;">Ubicación</span>
+                </h2>
+                <p class="mb-2" style="color: var(--text-secondary); font-size: 0.95rem; margin-top: -0.5rem; margin-bottom: 1.5rem;">
+                    Configura la ubicación exacta de la largada cargando sus coordenadas de Google Maps. Los corredores podrán abrirla como aplicación en sus celulares para navegar.
+                </p>
+
+                <!-- Hidden field to keep backwards compatibility with global code -->
+                <input type="hidden" id="startLocationMapLink">
+
+                <div class="form-grid grid-3">
+                    <!-- Latitude Input -->
+                    <div class="input-group">
+                        <label for="startLatitude">Latitud de la Largada <span class="requirement">*</span></label>
+                        <input type="text" id="startLatitude" placeholder="Ej: -35.474600" style="border-color: var(--accent-orange);">
+                    </div>
+                    <!-- Longitude Input -->
+                    <div class="input-group">
+                        <label for="startLongitude">Longitud de la Largada <span class="requirement">*</span></label>
+                        <input type="text" id="startLongitude" placeholder="Ej: -69.584700" style="border-color: var(--accent-orange);">
+                    </div>
+                    <!-- Test Button -->
+                    <div class="input-group">
+                        <label>Comprobar Ubicación</label>
+                        <a id="btn-open-start-google-maps" href="#" target="_blank" class="btn-secondary" style="padding: 0.85rem 1rem; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; height: 46px; border-color: var(--accent-orange);">
+                            <i class="fa-solid fa-location-arrow" style="color: var(--accent-orange);"></i> Abrir en Google Maps
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Legacy general fallback tracks -->
+                <div class="form-grid grid-2 mt-1">
+                    <div class="input-group">
+                        <label for="gpxLink">Enlace GPX General (Opcional)</label>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input type="text" id="gpxLink" placeholder="Ej: ./assets/ruta_general.gpx" style="flex: 1;">
+                            <input type="file" id="gpxLinkFile" accept=".gpx" style="display: none;">
+                            <button type="button" class="btn-secondary" onclick="document.getElementById('gpxLinkFile').click()" style="padding: 0.85rem 1rem; flex-shrink: 0;">
+                                <i class="fa-solid fa-cloud-arrow-up"></i> Subir
+                            </button>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="kmlLink">Enlace KML General (Opcional)</label>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input type="text" id="kmlLink" placeholder="Ej: ./assets/ruta_general.kml" style="flex: 1;">
+                            <input type="file" id="kmlLinkFile" accept=".kml" style="display: none;">
+                            <button type="button" class="btn-secondary" onclick="document.getElementById('kmlLinkFile').click()" style="padding: 0.85rem 1rem; flex-shrink: 0;">
+                                <i class="fa-solid fa-cloud-arrow-up"></i> Subir
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Enlaces externos para Strava, Garmin y Google Earth -->
+                <div class="form-grid grid-3 mt-1">
+                    <div class="input-group">
+                        <label for="stravaLink">Enlace Strava General (Opcional)</label>
+                        <input type="text" id="stravaLink" placeholder="Ej: https://www.strava.com/routes/...">
+                    </div>
+                    <div class="input-group">
+                        <label for="garminLink">Enlace Garmin General (Opcional)</label>
+                        <input type="text" id="garminLink" placeholder="Ej: https://connect.garmin.com/modern/course/...">
+                    </div>
+                    <div class="input-group">
+                        <label for="googleEarthLink">Enlace Google Earth General (Opcional)</label>
+                        <input type="text" id="googleEarthLink" placeholder="Ej: https://earth.google.com/web/@...">
+                    </div>
+                </div>
+
+                <!-- Leaflet interactive map picker -->
+                <div class="input-group" style="margin-top: 1.5rem;">
+                    <label style="font-weight: 700; color: var(--accent-cyan); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.8rem;">
+                        <span><i class="fa-solid fa-map-pin"></i> Marcar en el Mapa Interactivo o Buscar Localidad</span>
+                        <span style="font-size: 0.8rem; font-weight: 400; color: var(--text-secondary);">Haz clic en el mapa para posicionar el punto de largada o escribe una ciudad.</span>
+                    </label>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 0.8rem; background: rgba(0,0,0,0.15); padding: 1.2rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); margin-bottom: 1rem; width: 100%;">
+                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; width: 100%;">
+                            <input type="text" id="map-search-input" placeholder="Escribe un lugar o ciudad (ej: Las Leñas, Malargüe, Valle Grande...)" style="flex: 1; min-width: 250px; margin: 0; border-color: var(--accent-cyan);">
+                        </div>
+                        <div style="display: flex; gap: 0.8rem; flex-wrap: wrap; width: 100%;">
+                            <button type="button" class="btn-submit" id="btn-search-start-loc" style="margin: 0; background: #00f2fe; color: #000; font-weight: 600; padding: 0.8rem 1.2rem; flex: 1; min-width: 180px; box-shadow: 0 0 10px rgba(0,242,254,0.2);">
+                                <i class="fa-solid fa-location-crosshairs"></i> 1. Ir y Ubicar Largada
+                            </button>
+                            <button type="button" class="btn-submit" id="btn-calculate-route" style="margin: 0; background: var(--accent-orange); color: #000; font-weight: 600; padding: 0.8rem 1.2rem; flex: 1; min-width: 180px; box-shadow: 0 0 10px rgba(255,107,53,0.2);">
+                                <i class="fa-solid fa-route"></i> 2. Medir Ruta hasta aquí
+                            </button>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.8rem; background: rgba(0,0,0,0.15); padding: 0.6rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); width: 100%;">
+                        <input type="checkbox" id="lock-start-marker" checked style="width: 20px; height: 20px; cursor: pointer; margin: 0;">
+                        <label for="lock-start-marker" style="font-weight: 600; color: var(--accent-cyan); cursor: pointer; user-select: none; margin: 0; font-size: 0.9rem;">
+                            🔒 Bloquear posición del marcador de Largada (Evita cambios accidentales al arrastrar el mapa)
+                        </label>
+                    </div>
+
+                    <div id="admin-map" style="height: 380px; width: 100%; border-radius: var(--radius-md); border: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 5; margin-bottom: 1rem;"></div>
+
+                    <div id="route-result-panel" class="hidden" style="background: rgba(0, 242, 254, 0.1); border: 1px solid var(--accent-cyan); padding: 1.2rem; border-radius: var(--radius-md); font-size: 1rem; color: #fff; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; width: 100%; box-shadow: 0 4px 15px rgba(0, 242, 254, 0.15);">
+                        <div style="display: flex; align-items: center; gap: 0.6rem;">
+                            <i class="fa-solid fa-circle-info" style="color: var(--accent-cyan); font-size: 1.2rem;"></i>
+                            <span>Distancia por carretera a <strong id="route-city-name">-</strong>: <strong id="route-distance-value" style="color: var(--success); font-size: 1.2rem; text-shadow: 0 0 8px rgba(0,230,118,0.5);">-</strong></span>
+                        </div>
+                        <a id="btn-open-google-maps-route" href="#" target="_blank" class="btn-submit" style="margin: 0; background: #00e676; color: #000; font-weight: 800; padding: 1rem 2rem; font-size: 1.05rem; border-radius: var(--radius-md); text-decoration: none; display: inline-flex; align-items: center; gap: 0.6rem; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 0 15px rgba(0, 230, 118, 0.4); text-transform: uppercase; border: none; cursor: pointer;">
+                            <i class="fa-solid fa-map-location-dot" style="font-size: 1.2rem;"></i> ABRIR RUTA EN GOOGLE MAPS
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PASO 4: DISTANCIAS Y COSTOS (Fondo Púrpura Magenta) -->
+            <section class="admin-section" style="background: rgba(88, 28, 135, 0.7); border-left: 5px solid #ec4899; border-radius: var(--radius-lg); padding: 2rem; margin-bottom: 2.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border-top: 1px solid rgba(255,255,255,0.05); border-right: 1px solid rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.03);">
+                <h2>
+                    <span><i class="fa-solid fa-person-running" style="color: #ec4899;"></i> PASO 4: Distancias, Costos y Recorridos</span>
+                    <span style="font-size: 0.85rem; background: #ec4899; color: #fff; padding: 0.2rem 0.6rem; border-radius: 20px;">Distancias</span>
+                </h2>
+                <p class="mb-2" style="color: var(--text-secondary); font-size: 0.95rem; margin-top: -0.5rem; margin-bottom: 1.5rem;">
+                    Configura las distancias activas (ej: 5 KMS, 15 KMS), su costo de inscripción, GPX del circuito y su mapa de elevación específico.
+                </p>
+                
+                <!-- Table for active distances -->
+                <div class="table-container mb-2">
+                    <table class="admin-table" id="distances-table">
+                        <thead>
+                            <tr>
+                                <th>ID / Código</th>
+                                <th>Nombre de Distancia</th>
+                                <th>Costo ($)</th>
+                                <th>¿Auto Cat?</th>
+                                <th>Detalles / Hitos</th>
+                                <th style="width: 80px; text-align: center;">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="distances-list">
+                            <!-- Loaded dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Form to add new distance -->
+                <div class="form-grid grid-3 mt-2" style="background: rgba(0,0,0,0.15); padding: 1.2rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                    <div class="input-group">
+                        <label for="new-dist-id">Código (Ej: 15K)</label>
+                        <input type="text" id="new-dist-id" placeholder="Ej: 15K">
+                    </div>
+                    <div class="input-group">
+                        <label for="new-dist-name">Nombre de Distancia</label>
+                        <input type="text" id="new-dist-name" placeholder="Ej: 15K Competitivo">
+                    </div>
+                    <div class="input-group">
+                        <label for="new-dist-price">Precio ($)</label>
+                        <input type="number" id="new-dist-price" placeholder="Ej: 8500">
+                    </div>
+                    <div class="input-group" style="grid-column: span 3; display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem; margin-bottom: 0.5rem;">
+                        <input type="checkbox" id="new-dist-auto-category" checked style="width: 22px; height: 22px; cursor: pointer; margin: 0;">
+                        <label for="new-dist-auto-category" style="font-weight: 600; color: var(--accent-orange); cursor: pointer; user-select: none; margin: 0;">Asignar categorías automáticamente según la edad del corredor</label>
+                    </div>
+                    <div class="input-group" style="grid-column: span 3;">
+                        <label for="new-dist-detail">Descripción del Circuito e Información de Distancia</label>
+                        <textarea id="new-dist-detail" rows="3" placeholder="Ej: Recorrido competitivo por senderos técnicos de montaña..."></textarea>
+                    </div>
+                    <div class="input-group" style="grid-column: span 2;">
+                        <label for="new-dist-gpx">Ruta GPX específica de esta distancia (opcional)</label>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input type="text" id="new-dist-gpx" placeholder="Ej: ./IMAGENES/circuito_5k.gpx" style="flex: 1;">
+                            <input type="file" id="new-dist-gpx-file" accept=".gpx" style="display: none;">
+                            <button type="button" class="btn-secondary" onclick="document.getElementById('new-dist-gpx-file').click()" style="padding: 0.85rem 1rem; flex-shrink: 0;">
+                                <i class="fa-solid fa-cloud-arrow-up"></i> Subir
+                            </button>
+                        </div>
+                    </div>
+                    <div class="input-group" style="grid-column: span 2;">
+                        <label for="new-dist-altitude">Imagen de Altimetría específica de esta distancia (opcional)</label>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input type="text" id="new-dist-altitude" placeholder="Ej: ./IMAGENES/altimetria_5k.jpg" style="flex: 1;">
+                            <input type="file" id="new-dist-altitude-file" accept="image/*" style="display: none;">
+                            <button type="button" class="btn-secondary" onclick="document.getElementById('new-dist-altitude-file').click()" style="padding: 0.85rem 1rem; flex-shrink: 0;">
+                                <i class="fa-solid fa-cloud-arrow-up"></i> Subir
+                            </button>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="new-dist-strava">Enlace Strava (opcional)</label>
+                        <input type="text" id="new-dist-strava" placeholder="Ej: https://www.strava.com/routes/...">
+                    </div>
+                    <div class="input-group">
+                        <label for="new-dist-garmin">Enlace Garmin (opcional)</label>
+                        <input type="text" id="new-dist-garmin" placeholder="Ej: https://connect.garmin.com/modern/course/...">
+                    </div>
+                    <div class="input-group">
+                        <label for="new-dist-google-earth">Enlace Google Earth (opcional)</label>
+                        <input type="text" id="new-dist-google-earth" placeholder="Ej: https://earth.google.com/web/@...">
+                    </div>
+                    <div class="input-group" style="justify-content: flex-end; margin-top: 1.45rem;">
+                        <div style="display: flex; gap: 0.5rem; width: 100%;">
+                            <button type="button" class="btn-submit" id="btn-add-distance" style="padding: 0.8rem; flex: 1;">
+                                <i class="fa-solid fa-plus"></i> Agregar
+                            </button>
+                            <button type="button" class="btn-secondary hidden" id="btn-cancel-edit-distance" style="padding: 0.8rem; margin: 0;">
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PASO 5: CATEGORÍAS POR EDADES (Fondo Verde Teal) -->
+            <section class="admin-section" style="background: rgba(6, 78, 59, 0.85); border-left: 5px solid #10b981; border-radius: var(--radius-lg); padding: 2rem; margin-bottom: 2.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border-top: 1px solid rgba(255,255,255,0.05); border-right: 1px solid rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.03);">
+                <h2>
+                    <span><i class="fa-solid fa-users" style="color: #10b981;"></i> PASO 5: Categorías por Edades</span>
+                    <button type="button" class="btn-secondary" id="btn-load-default-categories" style="font-size: 0.8rem; padding: 0.4rem 1rem; border-color: #10b981;">
+                        <i class="fa-solid fa-cloud-arrow-down"></i> Cargar Estándar
+                    </button>
+                </h2>
+                <p class="mb-2" style="color: var(--text-secondary); font-size: 0.95rem; margin-top: -0.5rem; margin-bottom: 1.5rem;">
+                    Configura los rangos de edad y género para cada distancia. El sistema ubicará al inscripto en su categoría correcta de forma automática según su fecha de nacimiento.
+                </p>
+
+                <!-- Selector de Distancia para filtrar categorías -->
+                <div style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem; background: rgba(0,0,0,0.25); padding: 1rem 1.2rem; border-radius: var(--radius-md); border: 1px solid rgba(16, 185, 129, 0.3);">
+                    <label for="select-cat-distance" style="font-weight: 700; color: #10b981; font-size: 1.05rem; margin: 0; white-space: nowrap;">
+                        <i class="fa-solid fa-filter"></i> Seleccionar Distancia:
+                    </label>
+                    <select id="select-cat-distance" style="padding: 0.7rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: #0f1219; color: #fff; font-size: 1rem; font-weight: bold; flex: 1; cursor: pointer;"></select>
+                </div>
+                
+                <div class="table-container mb-2">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>ID Cat.</th>
+                                <th>Nombre Completo</th>
+                                <th style="width: 100px; text-align: center;">Edad Mín</th>
+                                <th style="width: 100px; text-align: center;">Edad Máx</th>
+                                <th style="width: 120px; text-align: center;">Requiere Pago</th>
+                                <th style="width: 100px; text-align: center;">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="categories-list">
+                            <!-- Loaded dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Form to add/edit category -->
+                <div class="form-grid grid-3 mt-2" style="background: rgba(0,0,0,0.15); padding: 1.2rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                    <div class="input-group">
+                        <label for="new-cat-id">ID Corto (Ej: M30-34)</label>
+                        <input type="text" id="new-cat-id" placeholder="Ej: M30-34">
+                    </div>
+                    <div class="input-group" style="grid-column: span 2;">
+                        <label for="new-cat-name">Nombre Completo de Categoría</label>
+                        <input type="text" id="new-cat-name" placeholder="Ej: MASCULINOS 30 A 34 AÑOS">
+                    </div>
+                    <div class="input-group">
+                        <label for="new-cat-min">Edad Mínima</label>
+                        <input type="number" id="new-cat-min" placeholder="Ej: 30">
+                    </div>
+                    <div class="input-group">
+                        <label for="new-cat-max">Edad Máxima</label>
+                        <input type="number" id="new-cat-max" placeholder="Ej: 34">
+                    </div>
+                    <div class="input-group" style="display: flex; align-items: center; gap: 0.5rem; margin-top: 1.45rem;">
+                        <input type="checkbox" id="new-cat-requires-payment" checked style="width: 22px; height: 22px; cursor: pointer; margin: 0;">
+                        <label for="new-cat-requires-payment" style="font-weight: 600; color: var(--accent-cyan); cursor: pointer; user-select: none; margin: 0;">Requiere Cobro / Pago</label>
+                    </div>
+                    <div class="input-group" style="justify-content: flex-end; display: flex; gap: 0.5rem; align-items: flex-end; grid-column: span 3; margin-top: 0.5rem;">
+                        <button type="button" class="btn-secondary hidden" id="btn-cancel-cat-edit" style="padding: 0.8rem; width: 200px; height: 46px;">
+                            Cancelar
+                        </button>
+                        <button type="button" class="btn-submit" id="btn-add-category" style="padding: 0.8rem; width: 200px; height: 46px; background: #10b981; border: none; color: white;">
+                            <i class="fa-solid fa-plus"></i> Guardar Categoría
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PASO 6: DATOS DE FACTURACIÓN Y PAGO (Fondo Azul Sky con Borde Cyan) -->
+            <section class="admin-section" style="background: rgba(12, 74, 110, 0.85); border-left: 5px solid #06b6d4; border-radius: var(--radius-lg); padding: 2rem; margin-bottom: 2.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border-top: 1px solid rgba(255,255,255,0.05); border-right: 1px solid rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.03);">
+                <h2>
+                    <span><i class="fa-solid fa-wallet" style="color: #06b6d4;"></i> PASO 6: Datos de Facturación y Pago</span>
+                    <span style="font-size: 0.85rem; background: #06b6d4; color: #fff; padding: 0.2rem 0.6rem; border-radius: 20px;">Pagos</span>
+                </h2>
+                <p class="mb-2" style="color: var(--text-secondary); font-size: 0.95rem; margin-top: -0.5rem; margin-bottom: 1.5rem;">
+                    Configura los datos de transferencia bancaria (CBU, Alias, Titular, Banco) que verán los inscriptos en el último paso para efectuar su pago.
+                </p>
+                <div class="input-group">
+                    <label for="paymentDetails">Instrucciones de Transferencia <span class="requirement">*</span></label>
+                    <textarea id="paymentDetails" rows="5" required placeholder="Ingresa los datos bancarios del organizador (CBU, Alias, Banco, Titular, etc.)" style="width: 100%; border: 1px solid var(--border-color); background: rgba(0,0,0,0.3); color: #fff; padding: 0.8rem; border-radius: var(--radius-sm); font-family: inherit; font-size: 0.95rem; resize: vertical;"></textarea>
+                </div>
+            </section>
+
+            <!-- PASO 7: AUSPICIANTES / SPONSORS (Fondo Gris Zinc) -->
+            <section class="admin-section" style="background: rgba(24, 24, 27, 0.85); border-left: 5px solid #71717a; border-radius: var(--radius-lg); padding: 2rem; margin-bottom: 2.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border-top: 1px solid rgba(255,255,255,0.05); border-right: 1px solid rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.03);">
+                <h2>
+                    <span><i class="fa-solid fa-handshake" style="color: #71717a;"></i> PASO 7: Auspiciantes / Sponsors</span>
+                    <span style="font-size: 0.85rem; background: #71717a; color: #fff; padding: 0.2rem 0.6rem; border-radius: 20px;">Sponsors</span>
+                </h2>
+                <p class="mb-2" style="color: var(--text-secondary); font-size: 0.95rem; margin-top: -0.5rem; margin-bottom: 1.5rem;">
+                    Agrega los logotipos de tus auspiciantes. Se mostrarán en un banner animado de manera premium en la parte inferior de la página web pública.
+                </p>
+                <div class="form-grid grid-2" style="margin-bottom: 1.5rem; align-items: flex-end;">
+                    <div class="input-group" style="margin-bottom: 0;">
+                        <label for="new-sponsor-logo">Ruta del Logo del Sponsor</label>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input type="text" id="new-sponsor-logo" placeholder="Ej: ./IMAGENES/sponsor1.png" style="flex: 1;">
+                            <input type="file" id="sponsor-file-input" accept="image/*" style="display: none;">
+                            <button type="button" class="btn-secondary" onclick="document.getElementById('sponsor-file-input').click()" style="padding: 0.85rem 1rem; flex-shrink: 0;">
+                                <i class="fa-solid fa-cloud-arrow-up"></i> Subir
+                            </button>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-submit" id="btn-add-sponsor" style="height: 46px; margin: 0; background: #71717a; border: none; color: white;">
+                        <i class="fa-solid fa-plus"></i> Agregar Auspiciante
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Vista Previa</th>
+                                <th>Ruta del Archivo</th>
+                                <th style="width: 100px; text-align: center;">Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sponsors-list-body">
+                            <!-- Loaded dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- PASO 8: GUARDAR Y EXPORTAR (Fondo Verde Foresta con Borde Verde Brillo) -->
+            <section class="admin-section" style="background: rgba(20, 83, 45, 0.85); border-left: 5px solid #22c55e; border-radius: var(--radius-lg); padding: 2rem; margin-bottom: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border-top: 1px solid rgba(255,255,255,0.05); border-right: 1px solid rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.03);">
+                <h2>
+                    <span><i class="fa-solid fa-download" style="color: #22c55e;"></i> PASO 8: Guardar y Exportar Cambios</span>
+                    <span style="font-size: 0.85rem; background: #22c55e; color: #000; padding: 0.2rem 0.6rem; border-radius: 20px; font-weight: bold;">Finalizar</span>
+                </h2>
+                <p class="mb-2" style="color: var(--text-secondary); font-size: 0.95rem; margin-top: -0.5rem; margin-bottom: 1.5rem;">
+                    Una vez configurados los parámetros, haz clic en **"GUARDAR EN DISCO"** para aplicar los cambios de inmediato en la web. Si no tienes el servidor corriendo, descarga el archivo <code>config.js</code> y reemplázalo en la carpeta del proyecto.
+                </p>
+
+                <div class="form-grid grid-3">
+                    <div>
+                        <button type="button" class="btn-submit" id="btn-save-disk" style="padding: 1.2rem; width: 100%; font-size: 1.1rem; background: #22c55e; color: #000; font-weight: 800; box-shadow: 0 0 15px rgba(34, 197, 94, 0.3); border: none; height: 100%;">
+                            <i class="fa-solid fa-floppy-disk"></i> GUARDAR EN DISCO
+                        </button>
+                    </div>
+                    <div>
+                        <button type="button" class="btn-primary" id="btn-download-config" style="padding: 1.2rem; width: 100%; font-size: 1.1rem; background: var(--accent-orange); color: #000; font-weight: 800; border: none; height: 100%;">
+                            <i class="fa-solid fa-file-arrow-down"></i> DESCARGAR CONFIG.JS
+                        </button>
+                    </div>
+                    <div>
+                        <button type="button" class="btn-secondary" id="btn-copy-json" style="padding: 1.2rem; width: 100%; font-size: 1.1rem; border-color: #22c55e; height: 100%;">
+                            <i class="fa-solid fa-copy"></i> Copiar JSON
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mt-2">
+                    <label style="font-weight: 600; color: var(--accent-cyan); display: block;">Vista previa del JSON generado:</label>
+                    <pre class="json-preview" id="json-preview"></pre>
+                </div>
+            </section>
+
+            <!-- PASO 9: GUÍA DE DESPLIEGUE EN GITHUB (Fondo Azul oscuro con Borde Cyan) -->
+            <section class="admin-section" style="background: rgba(30, 41, 59, 0.9); border-left: 5px solid var(--accent-cyan); border-radius: var(--radius-lg); padding: 2rem; margin-bottom: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border-top: 1px solid rgba(255,255,255,0.05); border-right: 1px solid rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.03);">
+                <h2>
+                    <span><i class="fa-brands fa-github" style="color: var(--accent-cyan);"></i> PASO 9: Archivos a subir a GitHub</span>
+                    <span style="font-size: 0.85rem; background: var(--accent-cyan); color: #000; padding: 0.2rem 0.6rem; border-radius: 20px; font-weight: bold;">Despliegue</span>
+                </h2>
+                <p class="mb-2" style="color: var(--text-secondary); font-size: 0.95rem; margin-top: -0.5rem;">
+                    Esta lista se actualiza automáticamente según lo que modifiques en esta sesión. Sube **únicamente** los siguientes archivos a tu repositorio de GitHub para publicar los cambios:
+                </p>
+
+                <div id="github-upload-guide-container" style="background: rgba(0,0,0,0.3); padding: 1.2rem; border-radius: var(--radius-md); border: 1px solid rgba(255,255,255,0.05); margin-top: 1rem;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.8rem; margin-bottom: 1rem;">
+                        <span style="font-weight: 700; color: #fff;"><i class="fa-solid fa-list-check"></i> Archivos modificados detectados:</span>
+                        <span id="github-files-status-badge" style="font-size: 0.75rem; background: rgba(255,255,255,0.1); padding: 0.1rem 0.5rem; border-radius: 10px; color: var(--text-muted);">Sin cambios detectados</span>
+                    </div>
+                    
+                    <ul id="github-files-list" style="margin: 0; padding-left: 1.2rem; list-style-type: none; display: flex; flex-direction: column; gap: 0.6rem;">
+                        <li style="color: var(--text-muted); font-style: italic;"><i class="fa-solid fa-circle-info"></i> No has realizado modificaciones ni guardado cambios aún.</li>
+                    </ul>
+                    
+                    <div style="margin-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1rem; font-size: 0.85rem; color: var(--text-muted);">
+                        <i class="fa-solid fa-circle-exclamation" style="color: var(--accent-orange);"></i> <b>Recordatorio:</b> Sube estos archivos desde la carpeta <code>C:\Users\Usuario\.gemini\antigravity\scratch\trail-registration-portal</code> arrastrándolos a tu repositorio en GitHub Pages.
+                    </div>
+                </div>
+            </section>
+        </form>
+        <footer class="app-footer" style="text-align: center; margin-top: 3rem; padding-bottom: 2rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1.5rem;">
+            <p>&copy; 2026 Panel Administrativo. Todos los derechos reservados.</p>
+            <p style="margin-top: 0.3rem; font-size: 0.8rem; color: var(--text-muted);">
+                Diseño y Programación: <a href="https://wa.me/5492604552146" target="_blank" style="color: var(--accent-cyan); font-weight: 700; text-decoration: none; transition: color 0.2s;"><i class="fa-solid fa-laptop-code"></i> RR Cómputos! (Tel: 2604552146)</a>
+            </p>
+        </footer>
+    </div>
+
+    <!-- Admin JavaScript Configuration & Logic -->
+    <script src="./config.js?v=2.2"></script>
+    <script>
+        (function() {
+            const config = window.RACE_CONFIG;
+            if (config) {
+                if (config.themeColors) {
+                    const root = document.documentElement;
+                    root.style.setProperty('--accent-orange', config.themeColors.primary);
+                    root.style.setProperty('--accent-orange-glow', config.themeColors.primaryGlow);
+                    root.style.setProperty('--accent-orange-dim', config.themeColors.primaryDim);
+                    root.style.setProperty('--accent-cyan', config.themeColors.secondary);
+                    root.style.setProperty('--accent-cyan-glow', config.themeColors.secondaryGlow);
+                }
+                if (config.themeBackground) {
+                    const bgOverlay = document.getElementById('bg-overlay');
+                    if (bgOverlay) {
+                        const BACKGROUND_THEMES = {
+                            default: './assets/trail_background.jpg',
+                            snow: './assets/snow_mountain.jpg',
+                            sunset: './assets/sunset_ridge.jpg',
+                            rocky: './assets/rocky_valley.jpg',
+                            solid: 'none'
+                        };
+                        const bgPath = BACKGROUND_THEMES[config.themeBackground] || BACKGROUND_THEMES.default;
+                        if (bgPath === 'none') {
+                            bgOverlay.style.backgroundImage = 'none';
+                        } else {
+                            bgOverlay.style.backgroundImage = "url('" + bgPath + "')";
+                        }
+                    }
+                }
+            }
+        })();
+    </script>
+    <script src="./admin.js?v=2.2"></script>
+</body>
+</html>

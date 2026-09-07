@@ -1,0 +1,18 @@
+{
+  "name": "Inscripciones Trail Running",
+  "short_name": "Trail Portal",
+  "description": "Portal Oficial de Inscripciones para Carreras de Trail Running",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0a0f1d",
+  "theme_color": "#00f2fe",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "./IMAGENES/LOGO.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}

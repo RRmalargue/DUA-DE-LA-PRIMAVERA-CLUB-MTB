@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Manual de Configuración - Nueva Carrera</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #334155;
+            background-color: #f8fafc;
+            margin: 0;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 3rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #0284c7;
+            padding-bottom: 2rem;
+            margin-bottom: 2.5rem;
+        }
+        .header h1 {
+            color: #0f172a;
+            font-size: 2.2rem;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .header p {
+            color: #64748b;
+            font-size: 1.1rem;
+            margin: 0.5rem 0 0 0;
+        }
+        .phase-card {
+            margin-bottom: 3rem;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+        .phase-header {
+            padding: 1.2rem 1.8rem;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .phase-1 { background-color: #0284c7; } /* Azul */
+        .phase-2 { background-color: #0f766e; } /* Teal */
+        .phase-3 { background-color: #b45309; } /* Amber */
+        .phase-4 { background-color: #15803d; } /* Green */
+        
+        .phase-body {
+            padding: 2rem 2.2rem;
+            background: #ffffff;
+        }
+        .step-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .step-item {
+            position: relative;
+            padding-left: 3rem;
+            margin-bottom: 1.8rem;
+        }
+        .step-item:last-child {
+            margin-bottom: 0;
+        }
+        .step-number {
+            position: absolute;
+            left: 0;
+            top: 0.2rem;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #f1f5f9;
+            color: #475569;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            border: 1px solid #cbd5e1;
+        }
+        .step-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #1e293b;
+            margin-bottom: 0.4rem;
+        }
+        .step-desc {
+            color: #475569;
+            font-size: 0.98rem;
+            margin: 0;
+        }
+        .alert-box {
+            background-color: #fffbeb;
+            border-left: 4px solid #f59e0b;
+            padding: 1rem 1.5rem;
+            border-radius: 4px;
+            margin-top: 1rem;
+            font-size: 0.92rem;
+            color: #78350f;
+        }
+        .alert-box strong {
+            color: #92400e;
+        }
+        .code-text {
+            background: #f1f5f9;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: Consolas, monospace;
+            font-size: 0.9rem;
+            color: #0f172a;
+            border: 1px solid #e2e8f0;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e2e8f0;
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+        .print-btn {
+            background: #0284c7;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            display: inline-block;
+            margin-bottom: 2rem;
+            text-decoration: none;
+        }
+        @media print {
+            .print-btn { display: none; }
+            body { background: white; padding: 0; }
+            .container { border: none; box-shadow: none; padding: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div style="text-align: right;">
+    <button onclick="window.print()" class="print-btn">🖨️ Imprimir / Guardar PDF</button>
+</div>
+
+<div class="container">
+    <div class="header">
+        <h1>Manual de Configuración</h1>
+        <p>Plataforma de Inscripción de Carreras - Lanzar Nueva Edición</p>
+    </div>
+
+    <!-- SECCIÓN RÁPIDA: REINICIO DE COMPUTADORA -->
+    <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; border-left: 5px solid #22c55e; padding: 1.5rem; border-radius: 8px; margin-bottom: 2.5rem; color: #166534; font-size: 0.95rem; line-height: 1.5;">
+        <h3 style="margin-top: 0; color: #14532d; display: flex; align-items: center; gap: 0.5rem; font-size: 1.15rem; font-weight: 700;">
+            🖥️ ¿Qué pasa si reinicio mi computadora o quiero volver a trabajar otro día?
+        </h3>
+        <p style="margin: 0.5rem 0 0 0;">
+            Si reinicias tu computadora o cerraste la ventana negra de la consola, el servidor se apaga. Si deseas hacer cualquier cambio, **SIEMPRE debes volver a iniciar el panel haciendo doble clic en el archivo `.bat`**.
+            <br><br>
+            <strong>Pasos para volver a abrir el panel:</strong>
+            <br>1. Entra a la carpeta de la carrera que quieras modificar (ej: <code class="code-text">trail-registration-portal</code> o la nueva copia clonada).
+            <br>2. Haz doble clic en el archivo **`INICIAR_PANEL.bat`**.
+            <br>3. Se abrirá la consola negra en segundo plano y, al mismo tiempo, **se abrirá tu navegador automáticamente** en la página de administración correcta.
+            <br><br>
+            <em>💡 Consejo: Si tienes dudas de si el servidor ya estaba encendido o no, haz doble clic en el archivo <code class="code-text">INICIAR_PANEL.bat</code> de todos modos. Es totalmente seguro, ya que cerrará cualquier proceso previo duplicado y encenderá solo el actual.</em>
+        </p>
+    </div>
+
+    <!-- FASE 1 -->
+    <div class="phase-card">
+        <div class="phase-header phase-1">
+            <span>FASE 1: Preparar la planilla de Google Sheets</span>
+            <span style="font-size: 0.8rem; background: rgba(255,255,255,0.2); padding: 0.2rem 0.6rem; border-radius: 10px;">Base de Datos</span>
+        </div>
+        <div class="phase-body">
+            <ul class="step-list">
+                <li class="step-item">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Hacer una Copia de la Planilla</div>
+                    <p class="step-desc">Abre tu Google Drive, busca la planilla de inscripciones actual de la carrera y haz una copia de ella. Cámbiale el nombre a la nueva planilla para identificarla rápidamente.</p>
+                </li>
+                <li class="step-item">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Vaciar Datos Anteriores</div>
+                    <p class="step-desc">Abre la nueva planilla y borra las filas de los participantes inscritos de la carrera anterior. <strong style="color: #ef4444;">¡ATENCIÓN!</strong> Deja intacta la fila 1, que contiene las cabeceras (títulos de columnas) para que no falle la sincronización.</p>
+                </li>
+                <li class="step-item">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Generar Nuevo Enlace de Conexión</div>
+                    <p class="step-desc">Ve al menú superior de la planilla ➔ <strong>Extensiones ➔ Apps Script</strong>. En la pantalla que se abre:
+                        <br>1. Haz clic en el botón azul <strong>"Implementar"</strong> (arriba a la derecha) y selecciona <strong>"Gestionar implementaciones"</strong>.
+                        <br>2. Haz clic en el ícono del <strong>Lápiz (Editar)</strong> de la fila actual.
+                        <br>3. En la opción de versión, elige <strong>"Nueva versión"</strong>.
+                        <br>4. Haz clic en <strong>"Implementar"</strong>.
+                        <br>5. Copia la dirección web bajo el título <strong>"URL de la aplicación web"</strong>. *Este enlace permite a la web guardar a los inscriptos en tu planilla.*
+                    </p>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- FASE 2 -->
+    <div class="phase-card">
+        <div class="phase-header phase-2">
+            <span>FASE 2: Clonar y Configurar la Nueva Carrera</span>
+            <span style="font-size: 0.8rem; background: rgba(255,255,255,0.2); padding: 0.2rem 0.6rem; border-radius: 10px;">En la PC (Servidor Local)</span>
+        </div>
+        <div class="phase-body">
+            <ul class="step-list">
+                <li class="step-item">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Abrir Panel e Iniciar Clonación</div>
+                    <p class="step-desc">Abre tu navegador de internet en la dirección local del panel actual: <a href="http://localhost:3000/admin.html" target="_blank">http://localhost:3000/admin.html</a>. 
+                    <br>Arriba a la derecha, haz clic en el botón verde **"Crear Nueva Carrera"**. Confirma y escribe el nombre de tu nueva carrera (Ej: <code class="code-text">valle-grande-2026</code>). El sistema creará una carpeta duplicada limpia en tu PC de forma automática.</p>
+                </li>
+                <li class="step-item">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Abrir el Servidor de la Nueva Carrera (Doble Clic)</div>
+                    <p class="step-desc">
+                        1. Abre tu explorador de carpetas en Windows y entra a la nueva carpeta creada (Ej: <code class="code-text">trail-portal-valle-grande-2026</code>).
+                        <br>2. Busca el archivo llamado **`INICIAR_PANEL.bat`** y hazle **doble clic**.
+                        <br>3. **¡Y listo!** La ventana negra se abrirá sola, cerrará automáticamente cualquier servidor de carrera anterior que haya quedado abierto y te abrirá el panel de control en tu navegador al instante.
+                    </p>
+                </li>
+                <li class="step-item">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Vincular Base de Datos en el Nuevo Panel</div>
+                    <p class="step-desc">Refresca o abre la dirección del panel: <a href="http://localhost:3000/admin.html" target="_blank">http://localhost:3000/admin.html</a> (ahora estará conectado a la nueva carpeta). 
+                    <br>En el **Paso 1**, pega el enlace de Apps Script de tu nueva planilla en la casilla **"URL de la Aplicación Web de Google Apps Script"**.</p>
+                </li>
+                <li class="step-item">
+                    <div class="step-number">4</div>
+                    <div class="step-title">Configurar Parámetros Generales y Distancias</div>
+                    <p class="step-desc">Modifica el Nombre de la Carrera, reglamentos, categorías, precios de inscripción, CBU/Alias bancario. 
+                    <br>Puedes agregar todas las distancias que desees (ej: 10K, 21K). Para los mapas de altimetría de cada una, **asegúrate de subir imágenes cuyos nombres no tengan espacios en blanco** (Ej: <code class="code-text">MAPADEALTURA21.jpg</code> en lugar de <code class="code-text">MAPA ALTURA 21.jpg</code>) para evitar fallos de carga en la web.</p>
+                </li>
+                <li class="step-item">
+                    <div class="step-number">5</div>
+                    <div class="step-title">Guardar Configuración</div>
+                    <p class="step-desc">En el **Paso 8**, haz clic en el botón verde **"GUARDAR EN DISCO"** para aplicar los cambios de inmediato en los archivos locales de esa carrera.</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- FASE 3 -->
+    <div class="phase-card">
+        <div class="phase-header phase-3">
+            <span>FASE 3: Preparar el Repositorio de GitHub</span>
+            <span style="font-size: 0.8rem; background: rgba(255,255,255,0.2); padding: 0.2rem 0.6rem; border-radius: 10px;">Dónde Publicar</span>
+        </div>
+        <div class="phase-body">
+            <p style="margin-top: 0; color: #475569; font-size: 0.95rem; margin-bottom: 1.5rem;">Tienes dos opciones de despliegue en internet:</p>
+            <ul class="step-list">
+                <li class="step-item">
+                    <div class="step-number">A</div>
+                    <div class="step-title">Opción A: Reemplazar Carrera Actual (Más Fácil)</div>
+                    <p class="step-desc">Si no necesitas conservar la página web de la carrera anterior, simplemente sube los archivos de configuración nuevos al repositorio de GitHub actual. La página se actualizará sola.</p>
+                </li>
+                <li class="step-item">
+                    <div class="step-number">B</div>
+                    <div class="step-title">Opción B: Nueva Dirección de Internet (Recomendado)</div>
+                    <p class="step-desc">Si quieres mantener online la web anterior y abrir otra dirección diferente:
+                        <br>1. Entra a tu cuenta en <strong>github.com</strong> y crea un repositorio público nuevo (ej: <code class="code-text">carrera-nueva</code>).
+                        <br>2. Ve a los ajustes del repositorio (<strong>Settings ➔ Pages</strong>).
+                        <br>3. Activa GitHub Pages seleccionando la rama <strong>`main`</strong> (o master) y la carpeta <strong>`/ (root)`</strong>. Haz clic en <strong>Save</strong>.
+                        <br>4. Sube todos los archivos de tu carpeta local del proyecto la primera vez.
+                    </p>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- FASE 4 -->
+    <div class="phase-card">
+        <div class="phase-header phase-4">
+            <span>FASE 4: Publicar Cambios en GitHub</span>
+            <span style="font-size: 0.8rem; background: rgba(255,255,255,0.2); padding: 0.2rem 0.6rem; border-radius: 10px;">Subida</span>
+        </div>
+        <div class="phase-body">
+            <ul class="step-list">
+                <li class="step-item">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Verificar la Guía Dinámica</div>
+                    <p class="step-desc">Mira el <strong>Paso 9</strong> (la última tarjeta azul del Panel de Administración). Allí verás listados exactamente los archivos que modificaste en la sesión.</p>
+                </li>
+                <li class="step-item">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Arrastrar los archivos en GitHub</div>
+                    <p class="step-desc">Abre tu repositorio en la web de GitHub y arrastra los archivos que te indicó el Paso 9. Por lo general serán:
+                        <br>• <code class="code-text">config.js</code> y <code class="code-text">config.json</code>
+                        <br>• Los archivos o imágenes nuevas que subiste (están guardados en la carpeta local <code class="code-text">IMAGENES</code>).
+                    </p>
+                </li>
+                <li class="step-item">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Confirmar Subida</div>
+                    <p class="step-desc">Haz clic en el botón verde **"Commit changes"** (Confirmar cambios) en GitHub. En 1 o 2 minutos, la web estará online y lista para recibir inscriptos en tu nueva planilla.</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2026 Plataforma de Inscripción de Carreras - Soporte Técnico Integrado.</p>
+    </div>
+</div>
+
+</body>
+</html>
