@@ -211,7 +211,7 @@ El mismo corredor realiza ambos tramos.</p>
                 <div class="wizard-progress">
                     <div class="step-indicator active" id="indicator-1">
                         <div class="step-number">1</div>
-                        <span class="step-label">Datos y Talle</span>
+                        <span class="step-label">Datos Personales</span>
                     </div>
                     <div class="step-indicator" id="indicator-2">
                         <div class="step-number">2</div>
@@ -290,7 +290,7 @@ El mismo corredor realiza ambos tramos.</p>
                                     <label for="telefono">Teléfono de Contacto <span class="requirement">*</span></label>
                                     <input type="tel" id="telefono" name="telefono" placeholder="Ej: +54 9 260 455-2146" autocomplete="tel">
                                 </div>
-                                <div class="input-group">
+                                <div class="input-group" id="talle-remera-group" style="display: none;">
                                     <label for="talle_remera">Talle de Remera <span class="requirement">*</span></label>
                                     <select id="talle_remera" name="talle_remera">
                                         <option value="" disabled selected>Selecciona tu talle...</option>
@@ -400,7 +400,7 @@ El mismo corredor realiza ambos tramos.</p>
                                             <input type="tel" id="postas_telefono_1" name="postas_telefono_1" placeholder="Ej: +54 9 260 455-2146">
                                         </div>
 
-                                        <div class="input-group">
+                                        <div class="input-group" id="postas-talle-1-group" style="display: none;">
                                             <label for="postas_talle_1">Talle de Remera <span class="requirement">*</span></label>
                                             <select id="postas_talle_1" name="postas_talle_1">
                                                 <option value="" disabled selected>Selecciona talle...</option>
@@ -465,7 +465,7 @@ El mismo corredor realiza ambos tramos.</p>
                                             <input type="tel" id="postas_telefono_2" name="postas_telefono_2" placeholder="Ej: +54 9 260 411-2233">
                                         </div>
 
-                                        <div class="input-group">
+                                        <div class="input-group" id="postas-talle-2-group" style="display: none;">
                                             <label for="postas_talle_2">Talle de Remera <span class="requirement">*</span></label>
                                             <select id="postas_talle_2" name="postas_talle_2">
                                                 <option value="" disabled selected>Selecciona talle...</option>
@@ -694,7 +694,7 @@ El mismo corredor realiza ambos tramos.</p>
     </div>
 
     <!-- App JavaScript Configuration -->
-    <script src="./config.js?v=6.1"></script>
+    <script src="./config.js?v=6.2"></script>
     <script>
         (function() {
             const config = window.RACE_CONFIG;
@@ -770,6 +770,6 @@ El mismo corredor realiza ambos tramos.</p>
             });
         }
     </script>
-    <script src="./app.js?v=6.1"></script>
+    <script src="./app.js?v=6.2"></script>
 </body>
 </html>

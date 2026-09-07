@@ -545,6 +545,34 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (container) {
                         container.style.display = field.enabled ? 'block' : 'none';
                     }
+                    // Talle en postas (Corredor 1 y Corredor 2)
+                    const postasTalle1 = document.getElementById('postas_talle_1');
+                    const postasTalle2 = document.getElementById('postas_talle_2');
+                    if (postasTalle1) {
+                        const c1 = postasTalle1.closest('.input-group');
+                        if (c1) c1.style.display = field.enabled ? 'block' : 'none';
+                        if (!field.enabled) {
+                            postasTalle1.removeAttribute('required');
+                            postasTalle1.value = '';
+                        } else if (field.required) {
+                            postasTalle1.setAttribute('required', 'required');
+                        }
+                    }
+                    if (postasTalle2) {
+                        const c2 = postasTalle2.closest('.input-group');
+                        if (c2) c2.style.display = field.enabled ? 'block' : 'none';
+                        if (!field.enabled) {
+                            postasTalle2.removeAttribute('required');
+                            postasTalle2.value = '';
+                        } else if (field.required) {
+                            postasTalle2.setAttribute('required', 'required');
+                        }
+                    }
+                    // Indicador de encabezado paso 1
+                    const step1IndicatorLabel = document.querySelector('#indicator-1 .step-label');
+                    if (step1IndicatorLabel) {
+                        step1IndicatorLabel.textContent = field.enabled ? 'Datos y Talle' : 'Datos Personales';
+                    }
                 } else {
                     const container = element ? element.closest('.input-group') : null;
                     if (container) {
@@ -1511,14 +1539,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 error = error || checkField(pFecha1, !pFecha1 || !pFecha1.value, 'La fecha de nacimiento del Corredor 1 es obligatoria.');
                 error = error || checkField(pGen1, !pGen1 || !pGen1.value, 'Selecciona el género del Corredor 1.');
                 error = error || checkField(pTel1, !pTel1 || !pTel1.value.trim(), 'El teléfono del Corredor 1 es obligatorio.');
-                error = error || checkField(pTalle1, !pTalle1 || !pTalle1.value, 'Selecciona el talle de remera del Corredor 1.');
+                if (isFieldEnabled('talle_remera') && isFieldRequired('talle_remera')) {
+                    error = error || checkField(pTalle1, !pTalle1 || !pTalle1.value, 'Selecciona el talle de remera del Corredor 1.');
+                }
 
                 error = error || checkField(pNom2, !pNom2 || !pNom2.value.trim(), 'El nombre del Corredor 2 (MTB) es obligatorio.');
                 error = error || checkField(pCuil2, !pCuil2 || pCuil2.value.trim().length !== 11, 'El CUIL del Corredor 2 debe tener 11 números.');
                 error = error || checkField(pFecha2, !pFecha2 || !pFecha2.value, 'La fecha de nacimiento del Corredor 2 es obligatoria.');
                 error = error || checkField(pGen2, !pGen2 || !pGen2.value, 'Selecciona el género del Corredor 2.');
                 error = error || checkField(pTel2, !pTel2 || !pTel2.value.trim(), 'El teléfono del Corredor 2 es obligatorio.');
-                error = error || checkField(pTalle2, !pTalle2 || !pTalle2.value, 'Selecciona el talle de remera del Corredor 2.');
+                if (isFieldEnabled('talle_remera') && isFieldRequired('talle_remera')) {
+                    error = error || checkField(pTalle2, !pTalle2 || !pTalle2.value, 'Selecciona el talle de remera del Corredor 2.');
+                }
 
                 const catVal = inputCategoria ? inputCategoria.value : '';
                 error = error || checkField(inputCategoria, !catVal || !catVal.startsWith('POSTAS'), 'Asegúrate de completar las fechas y géneros de ambos corredores para calcular la categoría.');
@@ -1862,7 +1894,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 categoria: inputCategoria.value,
                 telefono: `Pedestre: ${tel1} | MTB: ${tel2}`,
                 genero: duoType,
-                talle_remera: `1) ${talle1} (Pedestre) | 2) ${talle2} (MTB)`,
+                talle_remera: isFieldEnabled('talle_remera') ? `1) ${talle1} (Pedestre) | 2) ${talle2} (MTB)` : 'Sin remera / N/A',
                 team_origen: teamName,
                 distancia: 'POSTAS (10K + 25K DUPLAS)',
                 costo: document.getElementById('selected-distance-price').value,
@@ -1879,14 +1911,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 custom_edad_pedestre: edad1,
                 custom_genero_pedestre: gen1,
                 custom_telefono_pedestre: tel1,
-                custom_talle_pedestre: talle1,
+                custom_talle_pedestre: isFieldEnabled('talle_remera') ? talle1 : '',
                 custom_corredor_mtb: nom2,
                 custom_cuil_mtb: cuil2,
                 custom_fecha_mtb: fecha2,
                 custom_edad_mtb: edad2,
                 custom_genero_mtb: gen2,
                 custom_telefono_mtb: tel2,
-                custom_talle_mtb: talle2
+                custom_talle_mtb: isFieldEnabled('talle_remera') ? talle2 : ''
             };
         } else {
             // Formatear fecha de nacimiento a DD/MM/YYYY
