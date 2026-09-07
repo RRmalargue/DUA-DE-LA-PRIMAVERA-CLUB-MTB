@@ -727,7 +727,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('dashboard-dist-price').textContent = `$${currentDist.price.toLocaleString('es-AR')}`;
             document.getElementById('dashboard-dist-detail').textContent = currentDist.detail || 'Circuito competitivo de trail running con senderos naturales y paisajes desafiantes.';
 
-            // Descargas específicas de la distancia
+            // Descargas específicas de la distancia (si están presentes en el DOM)
             const gpxBtn = document.getElementById('gpx-btn');
             const kmlBtn = document.getElementById('kml-btn');
             const stravaBtn = document.getElementById('strava-btn');
@@ -735,62 +735,70 @@ document.addEventListener('DOMContentLoaded', () => {
             const earthBtn = document.getElementById('earth-btn');
             const startLocationBtn = document.getElementById('start-location-btn');
 
-            if (currentDist.gpxLink && currentDist.gpxLink !== '#') {
-                gpxBtn.href = currentDist.gpxLink;
-                gpxBtn.classList.remove('hidden');
-            } else if (config.gpxLink && config.gpxLink !== '#') {
-                gpxBtn.href = config.gpxLink;
-                gpxBtn.classList.remove('hidden');
-            } else {
-                gpxBtn.classList.add('hidden');
+            if (gpxBtn) {
+                if (currentDist.gpxLink && currentDist.gpxLink !== '#') {
+                    gpxBtn.href = currentDist.gpxLink;
+                    gpxBtn.classList.remove('hidden');
+                } else if (config.gpxLink && config.gpxLink !== '#') {
+                    gpxBtn.href = config.gpxLink;
+                    gpxBtn.classList.remove('hidden');
+                } else {
+                    gpxBtn.classList.add('hidden');
+                }
             }
 
-            // Strava
-            if (currentDist.stravaLink && currentDist.stravaLink !== '#') {
-                stravaBtn.href = currentDist.stravaLink;
-                stravaBtn.classList.remove('hidden');
-            } else if (config.stravaLink && config.stravaLink !== '#') {
-                stravaBtn.href = config.stravaLink;
-                stravaBtn.classList.remove('hidden');
-            } else {
-                stravaBtn.classList.add('hidden');
+            if (stravaBtn) {
+                if (currentDist.stravaLink && currentDist.stravaLink !== '#') {
+                    stravaBtn.href = currentDist.stravaLink;
+                    stravaBtn.classList.remove('hidden');
+                } else if (config.stravaLink && config.stravaLink !== '#') {
+                    stravaBtn.href = config.stravaLink;
+                    stravaBtn.classList.remove('hidden');
+                } else {
+                    stravaBtn.classList.add('hidden');
+                }
             }
 
-            // Garmin
-            if (currentDist.garminLink && currentDist.garminLink !== '#') {
-                garminBtn.href = currentDist.garminLink;
-                garminBtn.classList.remove('hidden');
-            } else if (config.garminLink && config.garminLink !== '#') {
-                garminBtn.href = config.garminLink;
-                garminBtn.classList.remove('hidden');
-            } else {
-                garminBtn.classList.add('hidden');
+            if (garminBtn) {
+                if (currentDist.garminLink && currentDist.garminLink !== '#') {
+                    garminBtn.href = currentDist.garminLink;
+                    garminBtn.classList.remove('hidden');
+                } else if (config.garminLink && config.garminLink !== '#') {
+                    garminBtn.href = config.garminLink;
+                    garminBtn.classList.remove('hidden');
+                } else {
+                    garminBtn.classList.add('hidden');
+                }
             }
 
-            // Google Earth
-            if (currentDist.googleEarthLink && currentDist.googleEarthLink !== '#') {
-                earthBtn.href = currentDist.googleEarthLink;
-                earthBtn.classList.remove('hidden');
-            } else if (config.googleEarthLink && config.googleEarthLink !== '#') {
-                earthBtn.href = config.googleEarthLink;
-                earthBtn.classList.remove('hidden');
-            } else {
-                earthBtn.classList.add('hidden');
+            if (earthBtn) {
+                if (currentDist.googleEarthLink && currentDist.googleEarthLink !== '#') {
+                    earthBtn.href = currentDist.googleEarthLink;
+                    earthBtn.classList.remove('hidden');
+                } else if (config.googleEarthLink && config.googleEarthLink !== '#') {
+                    earthBtn.href = config.googleEarthLink;
+                    earthBtn.classList.remove('hidden');
+                } else {
+                    earthBtn.classList.add('hidden');
+                }
             }
 
-            // KML y Largada (usar específicos o globales como fallback)
-            if (config.kmlLink && config.kmlLink !== '#') {
-                kmlBtn.href = config.kmlLink;
-                kmlBtn.classList.remove('hidden');
-            } else {
-                kmlBtn.classList.add('hidden');
+            if (kmlBtn) {
+                if (config.kmlLink && config.kmlLink !== '#') {
+                    kmlBtn.href = config.kmlLink;
+                    kmlBtn.classList.remove('hidden');
+                } else {
+                    kmlBtn.classList.add('hidden');
+                }
             }
 
-            if (config.startLocationMapLink && config.startLocationMapLink !== '#') {
-                startLocationBtn.href = config.startLocationMapLink;
-                startLocationBtn.classList.remove('hidden');
-            } else {
-                startLocationBtn.classList.add('hidden');
+            if (startLocationBtn) {
+                if (config.startLocationMapLink && config.startLocationMapLink !== '#') {
+                    startLocationBtn.href = config.startLocationMapLink;
+                    startLocationBtn.classList.remove('hidden');
+                } else {
+                    startLocationBtn.classList.add('hidden');
+                }
             }
         }
         
@@ -2401,12 +2409,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 distanceKm: "25 KMS",
                 discipline: "Mountain Bike",
                 color: "#ff8c00",
-                gpxLink: "./IMAGENES/circuito_mtb_25k.gpx",
+                gpxLink: "./IMAGENES/MTB DUA2026.gpx",
                 kmlLink: "",
                 stravaLink: "",
                 garminLink: "https://connect.garmin.com/modern/activity/23966685622?share_unique_id=7",
                 googleEarthLink: "https://earth.google.com/web/@-35.438479,-69.599445,1400a,30000d",
-                altitudeMapImage: "./IMAGENES/MAPADEALTURA15.jpg",
+                altitudeMapImage: "./IMAGENES/ALTIMETRIA_MTB_25K.jpg",
                 detail: "Tramo 2: 25 km Mountain Bike por senderos y caminos de Malargüe."
             }
         };
