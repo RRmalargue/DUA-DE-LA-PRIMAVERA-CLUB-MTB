@@ -19,6 +19,34 @@ document.addEventListener('DOMContentLoaded', () => {
         deslindeLink: '',
         clasificacionesLink: '',
         paymentDetails: '',
+        circuits: {
+            pedestre: {
+                name: 'Circuito Pedestre (10K)',
+                distanceKm: '10 KMS',
+                discipline: 'Pedestrismo',
+                color: '#00f2fe',
+                gpxLink: '',
+                kmlLink: '',
+                stravaLink: '',
+                garminLink: '',
+                googleEarthLink: '',
+                altitudeMapImage: '',
+                detail: ''
+            },
+            mtb: {
+                name: 'Circuito MTB (25K)',
+                distanceKm: '25 KMS',
+                discipline: 'Mountain Bike',
+                color: '#ff8c00',
+                gpxLink: '',
+                kmlLink: '',
+                stravaLink: '',
+                garminLink: '',
+                googleEarthLink: '',
+                altitudeMapImage: '',
+                detail: ''
+            }
+        },
         distances: [],
         categories: [],
         sponsors: [],
@@ -320,6 +348,40 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             state.formFields = state.formFields.filter(f => f.id !== 'apellido');
         }
+        // Sincronizar campos de Circuitos Oficiales del Duatlón (Pedestre y MTB)
+        if (state.circuits) {
+            const p = state.circuits.pedestre || {};
+            const m = state.circuits.mtb || {};
+
+            const cpName = document.getElementById('circuit-pedestre-name');
+            const cpGpx = document.getElementById('circuit-pedestre-gpx');
+            const cpAlt = document.getElementById('circuit-pedestre-altitude');
+            const cpStrava = document.getElementById('circuit-pedestre-strava');
+            const cpGarmin = document.getElementById('circuit-pedestre-garmin');
+            const cpDetail = document.getElementById('circuit-pedestre-detail');
+
+            if (cpName) cpName.value = p.name || '';
+            if (cpGpx) cpGpx.value = p.gpxLink || '';
+            if (cpAlt) cpAlt.value = p.altitudeMapImage || '';
+            if (cpStrava) cpStrava.value = p.stravaLink || '';
+            if (cpGarmin) cpGarmin.value = p.garminLink || '';
+            if (cpDetail) cpDetail.value = p.detail || '';
+
+            const cmName = document.getElementById('circuit-mtb-name');
+            const cmGpx = document.getElementById('circuit-mtb-gpx');
+            const cmAlt = document.getElementById('circuit-mtb-altitude');
+            const cmStrava = document.getElementById('circuit-mtb-strava');
+            const cmGarmin = document.getElementById('circuit-mtb-garmin');
+            const cmDetail = document.getElementById('circuit-mtb-detail');
+
+            if (cmName) cmName.value = m.name || '';
+            if (cmGpx) cmGpx.value = m.gpxLink || '';
+            if (cmAlt) cmAlt.value = m.altitudeMapImage || '';
+            if (cmStrava) cmStrava.value = m.stravaLink || '';
+            if (cmGarmin) cmGarmin.value = m.garminLink || '';
+            if (cmDetail) cmDetail.value = m.detail || '';
+        }
+
         renderFormFieldsEditor();
 
         // Sincronizar tema de color activo
@@ -1002,6 +1064,44 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Sincronizar campos de Circuitos Oficiales del Duatlón con state.circuits
+    function syncCircuitInputs() {
+        if (!state.circuits) {
+            state.circuits = { pedestre: {}, mtb: {} };
+        }
+        if (!state.circuits.pedestre) state.circuits.pedestre = {};
+        if (!state.circuits.mtb) state.circuits.mtb = {};
+
+        const circuitBindings = [
+            { id: 'circuit-pedestre-name', circuit: 'pedestre', prop: 'name' },
+            { id: 'circuit-pedestre-gpx', circuit: 'pedestre', prop: 'gpxLink' },
+            { id: 'circuit-pedestre-altitude', circuit: 'pedestre', prop: 'altitudeMapImage' },
+            { id: 'circuit-pedestre-strava', circuit: 'pedestre', prop: 'stravaLink' },
+            { id: 'circuit-pedestre-garmin', circuit: 'pedestre', prop: 'garminLink' },
+            { id: 'circuit-pedestre-detail', circuit: 'pedestre', prop: 'detail' },
+
+            { id: 'circuit-mtb-name', circuit: 'mtb', prop: 'name' },
+            { id: 'circuit-mtb-gpx', circuit: 'mtb', prop: 'gpxLink' },
+            { id: 'circuit-mtb-altitude', circuit: 'mtb', prop: 'altitudeMapImage' },
+            { id: 'circuit-mtb-strava', circuit: 'mtb', prop: 'stravaLink' },
+            { id: 'circuit-mtb-garmin', circuit: 'mtb', prop: 'garminLink' },
+            { id: 'circuit-mtb-detail', circuit: 'mtb', prop: 'detail' }
+        ];
+
+        circuitBindings.forEach(b => {
+            const el = document.getElementById(b.id);
+            if (el) {
+                el.addEventListener('input', () => {
+                    state.circuits[b.circuit][b.prop] = el.value.trim();
+                    updateJsonPreview();
+                    modifiedFiles.add('config');
+                    updateGitHubUploadGuide();
+                });
+            }
+        });
+    }
+    syncCircuitInputs();
+
     function getGeneratedConfig() {
         return JSON.stringify(state, null, 2);
     }
@@ -1170,6 +1270,10 @@ window.RACE_CONFIG = ${JSON.stringify(state, null, 2)};
     setupFileUploader('kmlLinkFile', 'kmlLink');
     setupFileUploader('new-dist-gpx-file', 'new-dist-gpx');
     setupFileUploader('new-dist-altitude-file', 'new-dist-altitude');
+    setupFileUploader('circuit-pedestre-gpx-file', 'circuit-pedestre-gpx');
+    setupFileUploader('circuit-pedestre-altitude-file', 'circuit-pedestre-altitude');
+    setupFileUploader('circuit-mtb-gpx-file', 'circuit-mtb-gpx');
+    setupFileUploader('circuit-mtb-altitude-file', 'circuit-mtb-altitude');
 
     // 7. MAPA INTERACTIVO DE LARGADA Y TRAZADO DE RUTA
     function parseCoordsFromUrl(url) {

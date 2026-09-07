@@ -471,6 +471,123 @@
                 </div>
             </section>
 
+            <!-- PASO 4.1: CIRCUITOS DEL DUATLÓN (PEDESTRE Y MTB) -->
+            <section class="admin-section" style="background: rgba(15, 23, 42, 0.9); border-left: 5px solid var(--accent-cyan); border-radius: var(--radius-lg); padding: 2rem; margin-bottom: 2.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border-top: 1px solid rgba(255,255,255,0.05); border-right: 1px solid rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.03);">
+                <h2>
+                    <span><i class="fa-solid fa-route" style="color: var(--accent-cyan);"></i> Circuitos Oficiales del Duatlón (Pedestre 10K y MTB 25K)</span>
+                    <span style="font-size: 0.85rem; background: var(--accent-cyan); color: #0f1219; font-weight: 800; padding: 0.2rem 0.6rem; border-radius: 4px;">DUATLÓN</span>
+                </h2>
+                <p class="mb-2" style="color: var(--text-secondary); font-size: 0.95rem; margin-top: -0.5rem; margin-bottom: 1.5rem;">
+                    Configura de forma independiente el archivo GPX, la imagen de altimetría y los enlaces de los dos tramos del Duatlón. Ambos circuitos se presentarán en el portal con selector dinámico y visualización comparativa en el mapa.
+                </p>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 1.5rem;">
+                    <!-- BLOQUE CIRCUITO PEDESTRE -->
+                    <div style="background: rgba(0, 242, 254, 0.05); border: 1px solid rgba(0, 242, 254, 0.25); border-radius: var(--radius-md); padding: 1.5rem;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; border-bottom: 1px solid rgba(0, 242, 254, 0.2); padding-bottom: 0.6rem;">
+                            <h3 style="margin: 0; color: var(--accent-cyan); font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fa-solid fa-person-running"></i> Circuito Pedestre (10K)
+                            </h3>
+                            <span style="background: rgba(0, 242, 254, 0.15); color: var(--accent-cyan); font-weight: 700; font-size: 0.8rem; padding: 0.2rem 0.6rem; border-radius: 4px;">Tramo 1</span>
+                        </div>
+
+                        <div class="input-group mb-1">
+                            <label for="circuit-pedestre-name">Nombre del Circuito</label>
+                            <input type="text" id="circuit-pedestre-name" placeholder="Ej: Circuito Pedestre (10K)">
+                        </div>
+
+                        <div class="input-group mb-1">
+                            <label for="circuit-pedestre-gpx">Ruta del Archivo GPX Pedestre (.gpx)</label>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <input type="text" id="circuit-pedestre-gpx" placeholder="Ej: ./IMAGENES/circuito_pedestre_10k.gpx" style="flex: 1;">
+                                <input type="file" id="circuit-pedestre-gpx-file" accept=".gpx" style="display: none;">
+                                <button type="button" class="btn-secondary" onclick="document.getElementById('circuit-pedestre-gpx-file').click()" style="padding: 0.85rem 1rem; flex-shrink: 0; border-color: var(--accent-cyan); color: var(--accent-cyan);">
+                                    <i class="fa-solid fa-cloud-arrow-up"></i> Subir GPX
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="input-group mb-1">
+                            <label for="circuit-pedestre-altitude">Imagen de Altimetría Pedestre (JPG / PNG)</label>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <input type="text" id="circuit-pedestre-altitude" placeholder="Ej: ./IMAGENES/altimetria_pedestre_10k.jpg" style="flex: 1;">
+                                <input type="file" id="circuit-pedestre-altitude-file" accept="image/*" style="display: none;">
+                                <button type="button" class="btn-secondary" onclick="document.getElementById('circuit-pedestre-altitude-file').click()" style="padding: 0.85rem 1rem; flex-shrink: 0; border-color: var(--accent-cyan); color: var(--accent-cyan);">
+                                    <i class="fa-solid fa-cloud-arrow-up"></i> Subir Altimetría
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="input-group mb-1">
+                            <label for="circuit-pedestre-strava">Enlace Strava (Opcional)</label>
+                            <input type="url" id="circuit-pedestre-strava" placeholder="https://www.strava.com/activities/...">
+                        </div>
+
+                        <div class="input-group mb-1">
+                            <label for="circuit-pedestre-garmin">Enlace Garmin / Wikiloc (Opcional)</label>
+                            <input type="url" id="circuit-pedestre-garmin" placeholder="https://connect.garmin.com/...">
+                        </div>
+
+                        <div class="input-group">
+                            <label for="circuit-pedestre-detail">Descripción y Detalles del Tramo Pedestre</label>
+                            <textarea id="circuit-pedestre-detail" rows="3" placeholder="Detalles de altitud, terreno, puestos de hidratación..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- BLOQUE CIRCUITO MTB -->
+                    <div style="background: rgba(255, 140, 0, 0.05); border: 1px solid rgba(255, 140, 0, 0.25); border-radius: var(--radius-md); padding: 1.5rem;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; border-bottom: 1px solid rgba(255, 140, 0, 0.2); padding-bottom: 0.6rem;">
+                            <h3 style="margin: 0; color: var(--accent-orange); font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fa-solid fa-bicycle"></i> Circuito Mountain Bike (25K)
+                            </h3>
+                            <span style="background: rgba(255, 140, 0, 0.15); color: var(--accent-orange); font-weight: 700; font-size: 0.8rem; padding: 0.2rem 0.6rem; border-radius: 4px;">Tramo 2</span>
+                        </div>
+
+                        <div class="input-group mb-1">
+                            <label for="circuit-mtb-name">Nombre del Circuito</label>
+                            <input type="text" id="circuit-mtb-name" placeholder="Ej: Circuito MTB (25K)">
+                        </div>
+
+                        <div class="input-group mb-1">
+                            <label for="circuit-mtb-gpx">Ruta del Archivo GPX MTB (.gpx)</label>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <input type="text" id="circuit-mtb-gpx" placeholder="Ej: ./IMAGENES/circuito_mtb_25k.gpx" style="flex: 1;">
+                                <input type="file" id="circuit-mtb-gpx-file" accept=".gpx" style="display: none;">
+                                <button type="button" class="btn-secondary" onclick="document.getElementById('circuit-mtb-gpx-file').click()" style="padding: 0.85rem 1rem; flex-shrink: 0; border-color: var(--accent-orange); color: var(--accent-orange);">
+                                    <i class="fa-solid fa-cloud-arrow-up"></i> Subir GPX
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="input-group mb-1">
+                            <label for="circuit-mtb-altitude">Imagen de Altimetría MTB (JPG / PNG)</label>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <input type="text" id="circuit-mtb-altitude" placeholder="Ej: ./IMAGENES/altimetria_mtb_25k.jpg" style="flex: 1;">
+                                <input type="file" id="circuit-mtb-altitude-file" accept="image/*" style="display: none;">
+                                <button type="button" class="btn-secondary" onclick="document.getElementById('circuit-mtb-altitude-file').click()" style="padding: 0.85rem 1rem; flex-shrink: 0; border-color: var(--accent-orange); color: var(--accent-orange);">
+                                    <i class="fa-solid fa-cloud-arrow-up"></i> Subir Altimetría
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="input-group mb-1">
+                            <label for="circuit-mtb-strava">Enlace Strava (Opcional)</label>
+                            <input type="url" id="circuit-mtb-strava" placeholder="https://www.strava.com/activities/...">
+                        </div>
+
+                        <div class="input-group mb-1">
+                            <label for="circuit-mtb-garmin">Enlace Garmin / Wikiloc (Opcional)</label>
+                            <input type="url" id="circuit-mtb-garmin" placeholder="https://connect.garmin.com/...">
+                        </div>
+
+                        <div class="input-group">
+                            <label for="circuit-mtb-detail">Descripción y Detalles del Tramo MTB</label>
+                            <textarea id="circuit-mtb-detail" rows="3" placeholder="Detalles de desnivel acumulado, senderos técnicos, caminos rurales..."></textarea>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <!-- PASO 5: CATEGORÍAS POR EDADES (Fondo Verde Teal) -->
             <section class="admin-section" style="background: rgba(6, 78, 59, 0.85); border-left: 5px solid #10b981; border-radius: var(--radius-lg); padding: 2rem; margin-bottom: 2.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border-top: 1px solid rgba(255,255,255,0.05); border-right: 1px solid rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.03);">
                 <h2>

@@ -569,6 +569,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
+        // Configurar selector y pestañas de circuitos oficiales del Duatlón
+        setupDuathlonCircuits();
+
         // Cargar mapa interactivo GPX
         loadGpxMap();
     }
@@ -840,6 +843,17 @@ document.addEventListener('DOMContentLoaded', () => {
             if (cuilReqIndicator) cuilReqIndicator.innerHTML = '* (11 dígitos exactos)';
         }
 
+        // Alternar entre Formulario Individual y Formulario de Postas (Duplas)
+        const indContainer = document.getElementById('individual-fields-container');
+        const postasContainer = document.getElementById('postas-fields-container');
+        if (selectedId === 'POSTAS') {
+            if (indContainer) indContainer.classList.add('hidden');
+            if (postasContainer) postasContainer.classList.remove('hidden');
+        } else {
+            if (indContainer) indContainer.classList.remove('hidden');
+            if (postasContainer) postasContainer.classList.add('hidden');
+        }
+
         // Recalcular categoría
         recalculateCategory();
         
@@ -962,9 +976,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function recalculateCategory() {
-        const birthDateVal = inputFechaNacimiento.value.trim();
-        const genderVal = inputGenero.value;
-        const distanceVal = document.getElementById('selected-distance-id').value;
+        const distanceVal = document.getElementById('selected-distance-id')?.value;
 
         if (!distanceVal) {
             inputEdad.value = '';
@@ -973,6 +985,16 @@ document.addEventListener('DOMContentLoaded', () => {
             if (inputCategoria) inputCategoria.size = 1;
             return;
         }
+
+        if (distanceVal === 'POSTAS') {
+            if (labelCategoria) labelCategoria.textContent = 'Categoría Asignada automáticamente (Sumatoria Dupla)';
+            if (inputCategoria) inputCategoria.size = 1;
+            recalculatePostasCategory();
+            return;
+        }
+
+        const birthDateVal = inputFechaNacimiento.value.trim();
+        const genderVal = inputGenero.value;
 
         const currentDist = config && config.distances ? config.distances.find(d => d.id === distanceVal) : null;
         const isManual = currentDist && currentDist.autoCategory === false;
@@ -1122,9 +1144,322 @@ document.addEventListener('DOMContentLoaded', () => {
         return age;
     }
 
+    // 4.1 CÁLCULO DE CATEGORÍAS PARA POSTAS (SUMATORIA DE EDADES, TÁNDEM Y DISCA)
+    function recalculatePostasCategory() {
+        const distVal = document.getElementById('selected-distance-id')?.value;
+        if (distVal !== 'POSTAS') return;
 
+        const pEdad1El = document.getElementById('postas_edad_1');
+        const pEdad2El = document.getElementById('postas_edad_2');
+        const pGen1El = document.getElementById('postas_genero_1');
+        const pGen2El = document.getElementById('postas_genero_2');
 
-    // 5. NAVEGACIÓN Y WIZARD FORM
+        const age1 = pEdad1El && pEdad1El.value ? parseInt(pEdad1El.value) : NaN;
+        const age2 = pEdad2El && pEdad2El.value ? parseInt(pEdad2El.value) : NaN;
+        const gen1 = pGen1El ? pGen1El.value : '';
+        const gen2 = pGen2El ? pGen2El.value : '';
+
+        const sumEl = document.getElementById('postas-calc-sum');
+        const typeEl = document.getElementById('postas-calc-type');
+        const rangeEl = document.getElementById('postas-calc-range');
+
+        const postasTipo = document.querySelector('input[name="postas_tipo_especial"]:checked')?.value || 'estandar';
+
+        // 1. MODALIDAD TÁNDEM
+        if (postasTipo === 'tandem') {
+            if (sumEl) sumEl.textContent = (!isNaN(age1) && !isNaN(age2) && age1 > 0 && age2 > 0) ? `${age1 + age2} años (${age1} + ${age2})` : 'Modalidad Tándem';
+            if (rangeEl) rangeEl.textContent = 'Categoría Tándem';
+
+            if (gen1 && gen2) {
+                let finalCatName = '';
+                if (gen1 === 'Masculino' && gen2 === 'Masculino') {
+                    finalCatName = 'POSTAS TÁNDEM MASCULINA';
+                    if (typeEl) typeEl.textContent = 'Tándem Masculina (2 Caballeros)';
+                } else if (gen1 === 'Femenino' && gen2 === 'Femenino') {
+                    finalCatName = 'POSTAS TÁNDEM FEMENINA';
+                    if (typeEl) typeEl.textContent = 'Tándem Femenina (2 Damas)';
+                } else {
+                    finalCatName = 'POSTAS TÁNDEM MIXTA';
+                    if (typeEl) typeEl.textContent = 'Tándem Mixta (Dama y Caballero)';
+                }
+
+                if (inputCategoria) {
+                    inputCategoria.innerHTML = '';
+                    const opt = document.createElement('option');
+                    opt.value = finalCatName;
+                    opt.textContent = finalCatName;
+                    inputCategoria.appendChild(opt);
+                    inputCategoria.value = finalCatName;
+                }
+                updatePaymentStepVisibility();
+                return;
+            } else {
+                if (typeEl) typeEl.textContent = 'Tándem (Pendiente selección de géneros)';
+            }
+        }
+        // 2. MODALIDAD DISCA / ADAPTADO
+        else if (postasTipo === 'disca') {
+            if (sumEl) sumEl.textContent = (!isNaN(age1) && !isNaN(age2) && age1 > 0 && age2 > 0) ? `${age1 + age2} años (${age1} + ${age2})` : 'Modalidad Adaptada';
+            if (rangeEl) rangeEl.textContent = 'Categoría Disca (Bonificada)';
+
+            if (gen1 && gen2) {
+                let finalCatName = '';
+                if (gen1 === 'Masculino' && gen2 === 'Masculino') {
+                    finalCatName = 'POSTAS DISCA MASCULINA';
+                    if (typeEl) typeEl.textContent = 'Disca Masculina (2 Caballeros)';
+                } else if (gen1 === 'Femenino' && gen2 === 'Femenino') {
+                    finalCatName = 'POSTAS DISCA FEMENINA';
+                    if (typeEl) typeEl.textContent = 'Disca Femenina (2 Damas)';
+                } else {
+                    finalCatName = 'POSTAS DISCA MIXTA';
+                    if (typeEl) typeEl.textContent = 'Disca Mixta (Dama y Caballero)';
+                }
+
+                if (inputCategoria) {
+                    inputCategoria.innerHTML = '';
+                    const opt = document.createElement('option');
+                    opt.value = finalCatName;
+                    opt.textContent = finalCatName;
+                    inputCategoria.appendChild(opt);
+                    inputCategoria.value = finalCatName;
+                }
+                updatePaymentStepVisibility();
+                return;
+            } else {
+                if (typeEl) typeEl.textContent = 'Disca (Pendiente selección de géneros)';
+            }
+        }
+        // 3. MODALIDAD ESTÁNDAR (POR SUMATORIA DE EDADES)
+        else {
+            if (!isNaN(age1) && !isNaN(age2) && age1 > 0 && age2 > 0) {
+                const sumAge = age1 + age2;
+                if (sumEl) sumEl.textContent = `${sumAge} años (${age1} + ${age2})`;
+
+                let rangeStr = '';
+                if (sumAge <= 60) {
+                    rangeStr = 'HASTA 60 AÑOS';
+                } else if (sumAge <= 90) {
+                    rangeStr = 'HASTA 90 AÑOS';
+                } else {
+                    rangeStr = 'MÁS DE 90 AÑOS';
+                }
+                if (rangeEl) rangeEl.textContent = rangeStr;
+
+                if (gen1 && gen2) {
+                    let typeStr = '';
+                    if (gen1 === 'Masculino' && gen2 === 'Masculino') {
+                        typeStr = 'POSTAS MASCULINA';
+                        if (typeEl) typeEl.textContent = 'Masculina (2 Caballeros)';
+                    } else if (gen1 === 'Femenino' && gen2 === 'Femenino') {
+                        typeStr = 'POSTAS FEMENINA';
+                        if (typeEl) typeEl.textContent = 'Femenina (2 Damas)';
+                    } else {
+                        typeStr = 'POSTAS MIXTA';
+                        if (typeEl) typeEl.textContent = 'Mixta (Dama y Caballero)';
+                    }
+
+                    const finalCatName = `${typeStr} ${rangeStr}`;
+                    if (inputCategoria) {
+                        inputCategoria.innerHTML = '';
+                        const opt = document.createElement('option');
+                        opt.value = finalCatName;
+                        opt.textContent = finalCatName;
+                        inputCategoria.appendChild(opt);
+                        inputCategoria.value = finalCatName;
+                    }
+                    updatePaymentStepVisibility();
+                    return;
+                } else {
+                    if (typeEl) typeEl.textContent = 'Pendiente selección de género';
+                }
+            } else {
+                if (sumEl) sumEl.textContent = !isNaN(age1) && age1 > 0 ? `${age1}a + ?` : (!isNaN(age2) && age2 > 0 ? `? + ${age2}a` : '-');
+                if (typeEl) typeEl.textContent = '-';
+                if (rangeEl) rangeEl.textContent = '-';
+            }
+        }
+
+        if (inputCategoria) {
+            inputCategoria.innerHTML = '<option value="">Se calculará al ingresar fechas y géneros de ambos corredores</option>';
+            inputCategoria.value = '';
+        }
+        updatePaymentStepVisibility();
+    }
+
+    // 4.2 ASIGNACIÓN DE NOMBRE DE EQUIPO AUTOMÁTICO BASADO EN APELLIDOS
+    function getLastName(fullName) {
+        if (!fullName) return '';
+        const clean = fullName.trim();
+        if (clean.includes(',')) return clean.split(',')[0].trim();
+        const parts = clean.split(/\s+/).filter(Boolean);
+        if (parts.length === 0) return '';
+        if (parts.length === 1) return parts[0];
+        if (parts.length === 2) return parts[1];
+        const lowerSecond = parts[1].toLowerCase();
+        if (['de', 'del', 'di', 'da'].includes(lowerSecond)) {
+            return parts.slice(1).join(' ');
+        }
+        if (parts.length === 3) return parts[2];
+        const lowerPenultimate = parts[parts.length - 2].toLowerCase();
+        if (['de', 'del', 'di', 'da'].includes(lowerPenultimate)) {
+            return parts.slice(-2).join(' ');
+        }
+        return parts[parts.length - 1];
+    }
+
+    function updatePostasTeamNamePreview() {
+        const manualTeam = (document.getElementById('postas_equipo')?.value || '').trim();
+        const nom1 = (document.getElementById('postas_nombre_1')?.value || '').trim();
+        const nom2 = (document.getElementById('postas_nombre_2')?.value || '').trim();
+        
+        let resolvedTeam = manualTeam;
+        if (!resolvedTeam) {
+            const ape1 = getLastName(nom1);
+            const ape2 = getLastName(nom2);
+            if (ape1 && ape2) {
+                resolvedTeam = `${ape1} - ${ape2}`;
+            } else if (ape1) {
+                resolvedTeam = ape1;
+            } else if (ape2) {
+                resolvedTeam = ape2;
+            } else {
+                resolvedTeam = 'Apellido 1 - Apellido 2 (Automático)';
+            }
+        }
+        
+        const previewEl = document.getElementById('postas-preview-team-name');
+        if (previewEl) {
+            previewEl.textContent = resolvedTeam;
+        }
+        return resolvedTeam;
+    }
+
+    function setupPostasListeners() {
+        const pDay1 = document.getElementById('postas_birth_day_1');
+        const pMonth1 = document.getElementById('postas_birth_month_1');
+        const pYear1 = document.getElementById('postas_birth_year_1');
+        const pFecha1 = document.getElementById('postas_fecha_nacimiento_1');
+        const pEdad1 = document.getElementById('postas_edad_1');
+        const pGen1 = document.getElementById('postas_genero_1');
+        const pCuil1 = document.getElementById('postas_cuil_1');
+
+        const pDay2 = document.getElementById('postas_birth_day_2');
+        const pMonth2 = document.getElementById('postas_birth_month_2');
+        const pYear2 = document.getElementById('postas_birth_year_2');
+        const pFecha2 = document.getElementById('postas_fecha_nacimiento_2');
+        const pEdad2 = document.getElementById('postas_edad_2');
+        const pGen2 = document.getElementById('postas_genero_2');
+        const pCuil2 = document.getElementById('postas_cuil_2');
+
+        const pNom1 = document.getElementById('postas_nombre_1');
+        const pNom2 = document.getElementById('postas_nombre_2');
+        const pEquipo = document.getElementById('postas_equipo');
+
+        if (pNom1) pNom1.addEventListener('input', updatePostasTeamNamePreview);
+        if (pNom2) pNom2.addEventListener('input', updatePostasTeamNamePreview);
+        if (pEquipo) pEquipo.addEventListener('input', updatePostasTeamNamePreview);
+
+        if (pCuil1) {
+            pCuil1.addEventListener('input', (e) => {
+                e.target.value = e.target.value.replace(/\D/g, '');
+            });
+        }
+        if (pCuil2) {
+            pCuil2.addEventListener('input', (e) => {
+                e.target.value = e.target.value.replace(/\D/g, '');
+            });
+        }
+
+        const updatePostas1 = () => {
+            const d = pDay1 ? pDay1.value.trim() : '';
+            const m = pMonth1 ? pMonth1.value.trim() : '';
+            const y = pYear1 ? pYear1.value.trim() : '';
+            if (d.length === 2 && m.length === 2 && y.length === 4) {
+                if (pFecha1) pFecha1.value = `${d}/${m}/${y}`;
+                const age = calculateAge(`${d}/${m}/${y}`);
+                if (pEdad1) pEdad1.value = age > 0 ? `${age} años` : '';
+            } else {
+                if (pFecha1) pFecha1.value = '';
+                if (pEdad1) pEdad1.value = '';
+            }
+            recalculatePostasCategory();
+        };
+
+        const updatePostas2 = () => {
+            const d = pDay2 ? pDay2.value.trim() : '';
+            const m = pMonth2 ? pMonth2.value.trim() : '';
+            const y = pYear2 ? pYear2.value.trim() : '';
+            if (d.length === 2 && m.length === 2 && y.length === 4) {
+                if (pFecha2) pFecha2.value = `${d}/${m}/${y}`;
+                const age = calculateAge(`${d}/${m}/${y}`);
+                if (pEdad2) pEdad2.value = age > 0 ? `${age} años` : '';
+            } else {
+                if (pFecha2) pFecha2.value = '';
+                if (pEdad2) pEdad2.value = '';
+            }
+            recalculatePostasCategory();
+        };
+
+        if (pDay1 && pMonth1 && pYear1) {
+            pDay1.addEventListener('input', () => {
+                pDay1.value = pDay1.value.replace(/\D/g, '');
+                if (pDay1.value.length === 2 && pMonth1) pMonth1.focus();
+                updatePostas1();
+            });
+            pMonth1.addEventListener('input', () => {
+                pMonth1.value = pMonth1.value.replace(/\D/g, '');
+                if (pMonth1.value.length === 2 && pYear1) pYear1.focus();
+                updatePostas1();
+            });
+            pYear1.addEventListener('input', () => {
+                pYear1.value = pYear1.value.replace(/\D/g, '');
+                updatePostas1();
+            });
+            pMonth1.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && pMonth1.value.length === 0 && pDay1) pDay1.focus();
+            });
+            pYear1.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && pYear1.value.length === 0 && pMonth1) pMonth1.focus();
+            });
+        }
+
+        if (pDay2 && pMonth2 && pYear2) {
+            pDay2.addEventListener('input', () => {
+                pDay2.value = pDay2.value.replace(/\D/g, '');
+                if (pDay2.value.length === 2 && pMonth2) pMonth2.focus();
+                updatePostas2();
+            });
+            pMonth2.addEventListener('input', () => {
+                pMonth2.value = pMonth2.value.replace(/\D/g, '');
+                if (pMonth2.value.length === 2 && pYear2) pYear2.focus();
+                updatePostas2();
+            });
+            pYear2.addEventListener('input', () => {
+                pYear2.value = pYear2.value.replace(/\D/g, '');
+                updatePostas2();
+            });
+            pMonth2.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && pMonth2.value.length === 0 && pDay2) pDay2.focus();
+            });
+            pYear2.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && pYear2.value.length === 0 && pMonth2) pMonth2.focus();
+            });
+        }
+
+        if (pGen1) pGen1.addEventListener('change', recalculatePostasCategory);
+        if (pGen2) pGen2.addEventListener('change', recalculatePostasCategory);
+
+        const tipoRadios = document.querySelectorAll('input[name="postas_tipo_especial"]');
+        tipoRadios.forEach(radio => {
+            radio.addEventListener('change', recalculatePostasCategory);
+        });
+
+        // Actualización inicial
+        updatePostasTeamNamePreview();
+    }
+
+    // Inicializar listeners de postas
+    setupPostasListeners();
     btnNext.addEventListener('click', () => {
         if (validateStep(currentStep)) {
             goToStep(currentStep + 1);
@@ -1218,27 +1553,55 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             let error = null;
-            
-            if (isFieldEnabled('nombre') && isFieldRequired('nombre')) {
-                error = error || checkField(inputNombre, !inputNombre.value.trim(), 'El nombre y apellido es obligatorio.');
-            }
-            if (inputApellido && inputApellido.type !== 'hidden' && isFieldEnabled('apellido') && isFieldRequired('apellido')) {
-                error = error || checkField(inputApellido, !inputApellido.value.trim(), 'El apellido es obligatorio.');
-            }
-            
-            if (isFieldEnabled('cuil')) {
-                const isCuilReq = isFieldRequired('cuil');
-                const selectedDistId = document.getElementById('selected-distance-id').value;
-                const cuilVal = inputCuil.value.trim();
-                let isCuilInvalid = false;
-                let cuilErrorMsg = '';
+            const selectedDistId = document.getElementById('selected-distance-id')?.value;
 
-                if (selectedDistId === 'INFANTILES') {
-                    if (cuilVal.length > 0 && cuilVal.length !== 11) {
-                        isCuilInvalid = true;
-                        cuilErrorMsg = 'Si ingresas el CUIL, debe tener exactamente 11 números.';
-                    }
-                } else {
+            if (selectedDistId === 'POSTAS') {
+                // Validación para modalidad POSTAS (Duplas)
+                const pNom1 = document.getElementById('postas_nombre_1');
+                const pCuil1 = document.getElementById('postas_cuil_1');
+                const pFecha1 = document.getElementById('postas_fecha_nacimiento_1');
+                const pGen1 = document.getElementById('postas_genero_1');
+                const pTel1 = document.getElementById('postas_telefono_1');
+                const pTalle1 = document.getElementById('postas_talle_1');
+
+                const pNom2 = document.getElementById('postas_nombre_2');
+                const pCuil2 = document.getElementById('postas_cuil_2');
+                const pFecha2 = document.getElementById('postas_fecha_nacimiento_2');
+                const pGen2 = document.getElementById('postas_genero_2');
+                const pTel2 = document.getElementById('postas_telefono_2');
+                const pTalle2 = document.getElementById('postas_talle_2');
+
+                error = error || checkField(pNom1, !pNom1 || !pNom1.value.trim(), 'El nombre del Corredor 1 (Pedestre) es obligatorio.');
+                error = error || checkField(pCuil1, !pCuil1 || pCuil1.value.trim().length !== 11, 'El CUIL del Corredor 1 debe tener 11 números.');
+                error = error || checkField(pFecha1, !pFecha1 || !pFecha1.value, 'La fecha de nacimiento del Corredor 1 es obligatoria.');
+                error = error || checkField(pGen1, !pGen1 || !pGen1.value, 'Selecciona el género del Corredor 1.');
+                error = error || checkField(pTel1, !pTel1 || !pTel1.value.trim(), 'El teléfono del Corredor 1 es obligatorio.');
+                error = error || checkField(pTalle1, !pTalle1 || !pTalle1.value, 'Selecciona el talle de remera del Corredor 1.');
+
+                error = error || checkField(pNom2, !pNom2 || !pNom2.value.trim(), 'El nombre del Corredor 2 (MTB) es obligatorio.');
+                error = error || checkField(pCuil2, !pCuil2 || pCuil2.value.trim().length !== 11, 'El CUIL del Corredor 2 debe tener 11 números.');
+                error = error || checkField(pFecha2, !pFecha2 || !pFecha2.value, 'La fecha de nacimiento del Corredor 2 es obligatoria.');
+                error = error || checkField(pGen2, !pGen2 || !pGen2.value, 'Selecciona el género del Corredor 2.');
+                error = error || checkField(pTel2, !pTel2 || !pTel2.value.trim(), 'El teléfono del Corredor 2 es obligatorio.');
+                error = error || checkField(pTalle2, !pTalle2 || !pTalle2.value, 'Selecciona el talle de remera del Corredor 2.');
+
+                const catVal = inputCategoria ? inputCategoria.value : '';
+                error = error || checkField(inputCategoria, !catVal || !catVal.startsWith('POSTAS'), 'Asegúrate de completar las fechas y géneros de ambos corredores para calcular la categoría.');
+            } else {
+                // Validación para modalidad INDIVIDUAL
+                if (isFieldEnabled('nombre') && isFieldRequired('nombre')) {
+                    error = error || checkField(inputNombre, !inputNombre.value.trim(), 'El nombre y apellido es obligatorio.');
+                }
+                if (inputApellido && inputApellido.type !== 'hidden' && isFieldEnabled('apellido') && isFieldRequired('apellido')) {
+                    error = error || checkField(inputApellido, !inputApellido.value.trim(), 'El apellido es obligatorio.');
+                }
+                
+                if (isFieldEnabled('cuil')) {
+                    const isCuilReq = isFieldRequired('cuil');
+                    const cuilVal = inputCuil.value.trim();
+                    let isCuilInvalid = false;
+                    let cuilErrorMsg = '';
+
                     if (isCuilReq) {
                         if (!cuilVal || cuilVal.length !== 11) {
                             isCuilInvalid = true;
@@ -1248,27 +1611,36 @@ document.addEventListener('DOMContentLoaded', () => {
                         isCuilInvalid = true;
                         cuilErrorMsg = 'Si ingresas el CUIL, debe tener exactamente 11 números.';
                     }
+                    error = error || checkField(inputCuil, isCuilInvalid, cuilErrorMsg);
                 }
-                error = error || checkField(inputCuil, isCuilInvalid, cuilErrorMsg);
-            }
-            
-            if (isFieldEnabled('fecha_nacimiento') && isFieldRequired('fecha_nacimiento')) {
-                error = error || checkField(inputFechaNacimiento, !inputFechaNacimiento.value, 'La fecha de nacimiento es obligatoria.');
-            }
-            if (isFieldEnabled('genero') && isFieldRequired('genero')) {
-                error = error || checkField(inputGenero, !inputGenero.value, 'Debes seleccionar tu género.');
-            }
-            
-            if (isFieldEnabled('fecha_nacimiento')) {
-                const ageVal = parseInt(inputEdad.value);
-                error = error || checkField(inputFechaNacimiento, isNaN(ageVal) || ageVal < 4, isNaN(ageVal) ? 'Fecha de nacimiento inválida.' : 'La edad mínima para participar es de 4 años.');
-            }
+                
+                if (isFieldEnabled('fecha_nacimiento') && isFieldRequired('fecha_nacimiento')) {
+                    error = error || checkField(inputFechaNacimiento, !inputFechaNacimiento.value, 'La fecha de nacimiento es obligatoria.');
+                }
+                if (isFieldEnabled('genero') && isFieldRequired('genero')) {
+                    error = error || checkField(inputGenero, !inputGenero.value, 'Debes seleccionar tu género.');
+                }
+                
+                if (isFieldEnabled('fecha_nacimiento')) {
+                    const ageVal = parseInt(inputEdad.value);
+                    error = error || checkField(inputFechaNacimiento, isNaN(ageVal) || ageVal < 4, isNaN(ageVal) ? 'Fecha de nacimiento inválida.' : 'La edad mínima para participar es de 4 años.');
+                }
 
-            if (isFieldEnabled('telefono') && isFieldRequired('telefono')) {
-                error = error || checkField(inputTelefono, !inputTelefono.value.trim(), 'El teléfono es obligatorio.');
-            }
-            if (isFieldEnabled('talle_remera') && isFieldRequired('talle_remera')) {
-                error = error || checkField(inputTalleRemera, !inputTalleRemera.value, 'Debes seleccionar el talle de remera.');
+                if (isFieldEnabled('telefono') && isFieldRequired('telefono')) {
+                    error = error || checkField(inputTelefono, !inputTelefono.value.trim(), 'El teléfono es obligatorio.');
+                }
+                if (isFieldEnabled('talle_remera') && isFieldRequired('talle_remera')) {
+                    error = error || checkField(inputTalleRemera, !inputTalleRemera.value, 'Debes seleccionar el talle de remera.');
+                }
+
+                // Validar la distancia seleccionada
+                const distance = document.getElementById('selected-distance-id')?.value;
+                const distancesContainer = document.getElementById('distances-container');
+                error = error || checkField(distancesContainer, !distance, 'Debes seleccionar una distancia para correr.');
+                
+                // Validar que la categoría asignada sea válida
+                const catVal = inputCategoria ? inputCategoria.value : '';
+                error = error || checkField(inputCategoria, !catVal || catVal === 'Se definirá al seleccionar la distancia' || catVal.includes('calculará'), 'Por favor, asegúrate de completar tus datos para asignar la categoría.');
             }
 
             // Validar campos personalizados dinámicos
@@ -1282,15 +1654,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 });
             }
-
-            // Validar la distancia seleccionada
-            const distance = document.getElementById('selected-distance-id').value;
-            const distancesContainer = document.getElementById('distances-container');
-            error = error || checkField(distancesContainer, !distance, 'Debes seleccionar una distancia para correr.');
-            
-            // Validar que la categoría asignada sea válida
-            const catVal = inputCategoria.value;
-            error = error || checkField(inputCategoria, !catVal || catVal === 'Se definirá al seleccionar la distancia', 'Por favor, asegúrate de seleccionar una distancia válida.');
 
             if (error) {
                 if (firstInvalidEl) {
@@ -1308,9 +1671,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateSummary() {
         const cost = parseFloat(document.getElementById('selected-distance-price').value) || 0;
-        const nomVal = inputNombre ? inputNombre.value.trim() : '';
-        const apeVal = inputApellido && inputApellido.value ? ' ' + inputApellido.value.trim() : '';
-        summaryCorredor.textContent = `${nomVal}${apeVal}`.trim();
+        const selectedDist = document.getElementById('selected-distance-id')?.value;
+        
+        if (selectedDist === 'POSTAS') {
+            const teamName = updatePostasTeamNamePreview();
+            const nom1 = (document.getElementById('postas_nombre_1')?.value || '').trim();
+            const nom2 = (document.getElementById('postas_nombre_2')?.value || '').trim();
+            summaryCorredor.textContent = `[${teamName}] 1) ${nom1} (Pedestre) & 2) ${nom2} (MTB)`;
+        } else {
+            const nomVal = inputNombre ? inputNombre.value.trim() : '';
+            const apeVal = inputApellido && inputApellido.value ? ' ' + inputApellido.value.trim() : '';
+            summaryCorredor.textContent = `${nomVal}${apeVal}`.trim();
+        }
+        
         summaryDistancia.textContent = document.getElementById('selected-distance-id').value;
         summaryCategoria.textContent = inputCategoria.value || 'General';
         summaryMonto.textContent = `$${cost.toLocaleString('es-AR')}`;
@@ -1520,39 +1893,100 @@ document.addEventListener('DOMContentLoaded', () => {
         form.classList.add('hidden');
         loadingScreen.classList.remove('hidden');
 
-        // Formatear fecha de nacimiento a DD/MM/YYYY
-        let formattedBirthdate = inputFechaNacimiento.value;
-        if (formattedBirthdate === '__/__/____') {
-            formattedBirthdate = '';
-        } else if (formattedBirthdate) {
-            const dateParts = formattedBirthdate.split('-');
-            if (dateParts.length === 3) {
-                formattedBirthdate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+        const selectedDist = document.getElementById('selected-distance-id')?.value;
+        let formData;
+
+        if (selectedDist === 'POSTAS') {
+            const teamName = updatePostasTeamNamePreview();
+            const manualEq = (document.getElementById('postas_equipo')?.value || '').trim();
+            const nom1 = (document.getElementById('postas_nombre_1')?.value || '').trim();
+            const cuil1 = (document.getElementById('postas_cuil_1')?.value || '').trim();
+            const fecha1 = (document.getElementById('postas_fecha_nacimiento_1')?.value || '').trim();
+            const edad1 = (document.getElementById('postas_edad_1')?.value || '').replace(' años', '').trim();
+            const gen1 = document.getElementById('postas_genero_1')?.value || '';
+            const tel1 = (document.getElementById('postas_telefono_1')?.value || '').trim();
+            const talle1 = document.getElementById('postas_talle_1')?.value || '';
+
+            const nom2 = (document.getElementById('postas_nombre_2')?.value || '').trim();
+            const cuil2 = (document.getElementById('postas_cuil_2')?.value || '').trim();
+            const fecha2 = (document.getElementById('postas_fecha_nacimiento_2')?.value || '').trim();
+            const edad2 = (document.getElementById('postas_edad_2')?.value || '').replace(' años', '').trim();
+            const gen2 = document.getElementById('postas_genero_2')?.value || '';
+            const tel2 = (document.getElementById('postas_telefono_2')?.value || '').trim();
+            const talle2 = document.getElementById('postas_talle_2')?.value || '';
+
+            const duoType = document.getElementById('postas-calc-type')?.textContent || 'Dupla';
+            const sumEdades = document.getElementById('postas-calc-sum')?.textContent || '';
+
+            formData = {
+                nombre: `[${teamName}] 1) ${nom1} (Pedestre) & 2) ${nom2} (MTB)`,
+                apellido: '',
+                cuil: `${cuil1} / ${cuil2}`,
+                fecha_nacimiento: `${fecha1} / ${fecha2}`,
+                edad: `${edad1}a + ${edad2}a = ${sumEdades}`,
+                categoria: inputCategoria.value,
+                telefono: `Pedestre: ${tel1} | MTB: ${tel2}`,
+                genero: duoType,
+                talle_remera: `1) ${talle1} (Pedestre) | 2) ${talle2} (MTB)`,
+                team_origen: teamName,
+                distancia: 'POSTAS (10K + 25K DUPLAS)',
+                costo: document.getElementById('selected-distance-price').value,
+                comprobante_base64: uploadedFileBase64,
+                comprobante_nombre: uploadedFileName,
+                comprobante_tipo: uploadedFileType,
+                timestamp: new Date().toISOString(),
+                // Columnas desglosadas adicionales para Google Sheets
+                custom_nombre_equipo: teamName,
+                custom_nombre_equipo_manual: manualEq,
+                custom_corredor_pedestre: nom1,
+                custom_cuil_pedestre: cuil1,
+                custom_fecha_pedestre: fecha1,
+                custom_edad_pedestre: edad1,
+                custom_genero_pedestre: gen1,
+                custom_telefono_pedestre: tel1,
+                custom_talle_pedestre: talle1,
+                custom_corredor_mtb: nom2,
+                custom_cuil_mtb: cuil2,
+                custom_fecha_mtb: fecha2,
+                custom_edad_mtb: edad2,
+                custom_genero_mtb: gen2,
+                custom_telefono_mtb: tel2,
+                custom_talle_mtb: talle2
+            };
+        } else {
+            // Formatear fecha de nacimiento a DD/MM/YYYY
+            let formattedBirthdate = inputFechaNacimiento.value;
+            if (formattedBirthdate === '__/__/____') {
+                formattedBirthdate = '';
+            } else if (formattedBirthdate) {
+                const dateParts = formattedBirthdate.split('-');
+                if (dateParts.length === 3) {
+                    formattedBirthdate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+                }
             }
+
+            // Formatear género a Damas/Caballeros
+            const formattedGender = inputGenero.value === 'Femenino' ? 'Damas' : (inputGenero.value === 'Masculino' ? 'Caballeros' : inputGenero.value);
+
+            formData = {
+                nombre: isFieldEnabled('nombre') ? inputNombre.value.trim() : '',
+                apellido: isFieldEnabled('apellido') ? inputApellido.value.trim() : '',
+                cuil: isFieldEnabled('cuil') ? inputCuil.value.trim() : '',
+                fecha_nacimiento: isFieldEnabled('fecha_nacimiento') ? formattedBirthdate : '',
+                edad: isFieldEnabled('fecha_nacimiento') ? inputEdad.value.replace(' años', '') : '',
+                categoria: inputCategoria.value,
+                telefono: isFieldEnabled('telefono') ? inputTelefono.value.trim() : '',
+                genero: isFieldEnabled('genero') ? formattedGender : '',
+                talle_remera: isFieldEnabled('talle_remera') ? inputTalleRemera.value : '',
+                team_origen: isFieldEnabled('team_origen') ? document.getElementById('team_origen').value.trim() : '',
+                distancia: document.getElementById('selected-distance-id').value,
+                costo: document.getElementById('selected-distance-price').value,
+                comprobante_base64: uploadedFileBase64,
+                comprobante_nombre: uploadedFileName,
+                comprobante_tipo: uploadedFileType,
+                timestamp: new Date().toISOString()
+            };
         }
-
-        // Formatear género a Damas/Caballeros
-        const formattedGender = inputGenero.value === 'Femenino' ? 'Damas' : (inputGenero.value === 'Masculino' ? 'Caballeros' : inputGenero.value);
-
-        // Compile payload
-        const formData = {
-            nombre: isFieldEnabled('nombre') ? inputNombre.value.trim() : '',
-            apellido: isFieldEnabled('apellido') ? inputApellido.value.trim() : '',
-            cuil: isFieldEnabled('cuil') ? inputCuil.value.trim() : '',
-            fecha_nacimiento: isFieldEnabled('fecha_nacimiento') ? formattedBirthdate : '',
-            edad: isFieldEnabled('fecha_nacimiento') ? inputEdad.value.replace(' años', '') : '',
-            categoria: inputCategoria.value,
-            telefono: isFieldEnabled('telefono') ? inputTelefono.value.trim() : '',
-            genero: isFieldEnabled('genero') ? formattedGender : '',
-            talle_remera: isFieldEnabled('talle_remera') ? inputTalleRemera.value : '',
-            team_origen: isFieldEnabled('team_origen') ? document.getElementById('team_origen').value.trim() : '',
-            distancia: document.getElementById('selected-distance-id').value,
-            costo: document.getElementById('selected-distance-price').value,
-            comprobante_base64: uploadedFileBase64,
-            comprobante_nombre: uploadedFileName,
-            comprobante_tipo: uploadedFileType,
-            timestamp: new Date().toISOString()
-        };
 
         // Incluir campos personalizados en el payload de envío
         if (config && config.formFields) {
@@ -1787,9 +2221,360 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // -------------------------------------------------------------
+    // GESTIÓN DE CIRCUITOS DEL DUATLÓN (PEDESTRE 10K & MTB 25K)
+    // -------------------------------------------------------------
+    let currentCircuitTab = 'pedestre'; // 'pedestre', 'mtb', o 'both'
+    let circuitLayers = {
+        pedestre: null,
+        mtb: null,
+        markers: []
+    };
+
+    function ensureTrackMap() {
+        if (trackMap) return trackMap;
+        const mapContainer = document.getElementById('map-track');
+        if (!mapContainer) return null;
+
+        const streetMap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap'
+        });
+        const satelliteMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles © Esri'
+        });
+
+        trackMap = L.map('map-track', {
+            scrollWheelZoom: false,
+            layers: [streetMap]
+        });
+
+        const baseMaps = {
+            "Mapa de Calles": streetMap,
+            "Vista Satélite": satelliteMap
+        };
+
+        L.control.layers(baseMaps).addTo(trackMap);
+
+        trackMap.on('click', () => {
+            if (trackMap.scrollWheelZoom.enabled()) trackMap.scrollWheelZoom.disable();
+            else trackMap.scrollWheelZoom.enable();
+        });
+
+        if (L.Browser.mobile) {
+            trackMap.dragging.disable();
+            mapContainer.style.position = 'relative';
+            const msgDiv = document.createElement('div');
+            msgDiv.style.position = 'absolute';
+            msgDiv.style.top = '50%';
+            msgDiv.style.left = '50%';
+            msgDiv.style.transform = 'translate(-50%, -50%)';
+            msgDiv.style.background = 'rgba(15, 23, 42, 0.9)';
+            msgDiv.style.color = '#fff';
+            msgDiv.style.padding = '0.6rem 1.2rem';
+            msgDiv.style.borderRadius = '30px';
+            msgDiv.style.fontSize = '0.85rem';
+            msgDiv.style.fontWeight = 'bold';
+            msgDiv.style.zIndex = '9999';
+            msgDiv.style.pointerEvents = 'none';
+            msgDiv.style.opacity = '0';
+            msgDiv.style.transition = 'opacity 0.2s ease';
+            msgDiv.style.textAlign = 'center';
+            msgDiv.style.boxShadow = '0 4px 15px rgba(0,0,0,0.5)';
+            msgDiv.style.border = '1px solid rgba(255,255,255,0.1)';
+            msgDiv.innerHTML = '🖐️ Usa dos dedos para mover el mapa';
+            mapContainer.appendChild(msgDiv);
+
+            let msgTimeout;
+            mapContainer.addEventListener('touchmove', (e) => {
+                if (e.touches.length === 1) {
+                    msgDiv.style.opacity = '1';
+                    clearTimeout(msgTimeout);
+                    msgTimeout = setTimeout(() => { msgDiv.style.opacity = '0'; }, 1000);
+                } else if (e.touches.length > 1) {
+                    trackMap.dragging.enable();
+                    msgDiv.style.opacity = '0';
+                }
+            }, { passive: true });
+
+            mapContainer.addEventListener('touchend', () => {
+                trackMap.dragging.disable();
+            });
+        }
+
+        return trackMap;
+    }
+
+    async function parseGpxPoints(url) {
+        if (!url || url === '#' || url.trim() === '') return null;
+        try {
+            const res = await fetch(url);
+            if (!res.ok) return null;
+            const txt = await res.text();
+            const xml = new DOMParser().parseFromString(txt, 'text/xml');
+            const pts = [];
+            const trkpts = xml.getElementsByTagName('trkpt');
+            for (let i = 0; i < trkpts.length; i++) {
+                const lat = parseFloat(trkpts[i].getAttribute('lat'));
+                const lon = parseFloat(trkpts[i].getAttribute('lon'));
+                if (!isNaN(lat) && !isNaN(lon)) pts.push([lat, lon]);
+            }
+            return pts.length > 0 ? pts : null;
+        } catch (e) {
+            console.warn('Error al parsear GPX desde:', url, e);
+            return null;
+        }
+    }
+
+    async function renderCircuitOnMap(mode = 'pedestre') {
+        const mapContainer = document.getElementById('map-track');
+        if (!mapContainer) return;
+
+        const map = ensureTrackMap();
+        if (!map) return;
+
+        const circuits = (config && config.circuits) || {};
+        const pData = circuits.pedestre || {};
+        const mData = circuits.mtb || {};
+
+        const pGpx = pData.gpxLink || config?.gpxLink;
+        const mGpx = mData.gpxLink;
+
+        // Limpiar capas anteriores
+        if (circuitLayers.pedestre) {
+            map.removeLayer(circuitLayers.pedestre);
+            circuitLayers.pedestre = null;
+        }
+        if (circuitLayers.mtb) {
+            map.removeLayer(circuitLayers.mtb);
+            circuitLayers.mtb = null;
+        }
+        if (trackPolyline) {
+            map.removeLayer(trackPolyline);
+            trackPolyline = null;
+        }
+        circuitLayers.markers.forEach(m => map.removeLayer(m));
+        circuitLayers.markers = [];
+
+        const allBounds = [];
+
+        // 1. Tramo Pedestre (Cian brillante)
+        if (mode === 'pedestre' || mode === 'both') {
+            const ptsPedestre = await parseGpxPoints(pGpx);
+            if (ptsPedestre && ptsPedestre.length > 0) {
+                circuitLayers.pedestre = L.polyline(ptsPedestre, {
+                    color: '#00f2fe',
+                    weight: 5,
+                    opacity: 0.95
+                }).addTo(map);
+                circuitLayers.pedestre.bindPopup('<b>🏃 Circuito Pedestre (10K)</b><br>Tramo 1 - 10 km Pedestres');
+                allBounds.push(circuitLayers.pedestre.getBounds());
+
+                const marker = L.marker(ptsPedestre[0]).addTo(map)
+                    .bindPopup('<b>🏃 Largada / Transición Pedestre 10K</b>');
+                circuitLayers.markers.push(marker);
+            }
+        }
+
+        // 2. Tramo MTB (Naranja fuego)
+        if (mode === 'mtb' || mode === 'both') {
+            const ptsMtb = await parseGpxPoints(mGpx);
+            if (ptsMtb && ptsMtb.length > 0) {
+                circuitLayers.mtb = L.polyline(ptsMtb, {
+                    color: '#ff8c00',
+                    weight: 5,
+                    opacity: 0.95
+                }).addTo(map);
+                circuitLayers.mtb.bindPopup('<b>🚴 Circuito Mountain Bike (25K)</b><br>Tramo 2 - 25 km MTB');
+                allBounds.push(circuitLayers.mtb.getBounds());
+
+                const marker = L.marker(ptsMtb[0]).addTo(map)
+                    .bindPopup('<b>🚴 Largada / Transición MTB 25K</b>');
+                circuitLayers.markers.push(marker);
+            }
+        }
+
+        // Si se cargaron tracks, encuadrar la cámara
+        if (allBounds.length > 0) {
+            let combinedBounds = allBounds[0];
+            for (let b = 1; b < allBounds.length; b++) {
+                combinedBounds = combinedBounds.extend(allBounds[b]);
+            }
+            map.fitBounds(combinedBounds, { padding: [30, 30] });
+            document.getElementById('interactive-map-card')?.classList.remove('hidden');
+        }
+    }
+
+    function setupDuathlonCircuits() {
+        const circuitsPanel = document.getElementById('duathlon-circuits-panel');
+        if (!circuitsPanel) return;
+
+        const circuits = (config && config.circuits) || {
+            pedestre: {
+                name: "Circuito Pedestre (10K)",
+                distanceKm: "10 KMS",
+                discipline: "Pedestrismo",
+                color: "#00f2fe",
+                gpxLink: "./IMAGENES/circuito_pedestre_10k.gpx",
+                kmlLink: "",
+                stravaLink: "https://strava.app.link/Ulz4T6kMG5b",
+                garminLink: "",
+                googleEarthLink: "",
+                altitudeMapImage: "./IMAGENES/MAPADEALTURA15.jpg",
+                detail: "Tramo 1: 10 km pedestre con largada en el Polideportivo Malargüe."
+            },
+            mtb: {
+                name: "Circuito MTB (25K)",
+                distanceKm: "25 KMS",
+                discipline: "Mountain Bike",
+                color: "#ff8c00",
+                gpxLink: "./IMAGENES/circuito_mtb_25k.gpx",
+                kmlLink: "",
+                stravaLink: "",
+                garminLink: "https://connect.garmin.com/modern/activity/23966685622?share_unique_id=7",
+                googleEarthLink: "https://earth.google.com/web/@-35.438479,-69.599445,1400a,30000d",
+                altitudeMapImage: "./IMAGENES/MAPADEALTURA15.jpg",
+                detail: "Tramo 2: 25 km Mountain Bike por senderos y caminos de Malargüe."
+            }
+        };
+
+        const btnPedestre = document.getElementById('btn-circuit-pedestre');
+        const btnMtb = document.getElementById('btn-circuit-mtb');
+        const btnBoth = document.getElementById('btn-circuit-both');
+
+        const titleEl = document.getElementById('circuit-active-title');
+        const badgeEl = document.getElementById('circuit-active-badge');
+        const detailEl = document.getElementById('circuit-active-detail');
+
+        const gpxBtn = document.getElementById('circuit-gpx-btn');
+        const kmlBtn = document.getElementById('circuit-kml-btn');
+        const stravaBtn = document.getElementById('circuit-strava-btn');
+        const garminBtn = document.getElementById('circuit-garmin-btn');
+        const earthBtn = document.getElementById('circuit-earth-btn');
+
+        function updateLinkButton(btn, url, isDownload = false) {
+            if (!btn) return;
+            if (url && url.trim() !== '' && url !== '#') {
+                btn.href = url;
+                btn.classList.remove('hidden');
+                if (isDownload) btn.setAttribute('download', '');
+            } else {
+                btn.classList.add('hidden');
+            }
+        }
+
+        function updateCircuitDisplay(tab) {
+            currentCircuitTab = tab;
+
+            // Actualizar estilo botones
+            [btnPedestre, btnMtb, btnBoth].forEach(btn => {
+                if (btn) {
+                    btn.classList.remove('active');
+                    btn.style.background = 'transparent';
+                }
+            });
+
+            if (tab === 'pedestre') {
+                if (btnPedestre) {
+                    btnPedestre.classList.add('active');
+                    btnPedestre.style.background = 'var(--accent-cyan)';
+                    btnPedestre.style.color = '#0f1219';
+                }
+                if (btnMtb) btnMtb.style.color = 'var(--accent-orange)';
+                if (btnBoth) btnBoth.style.color = '#fff';
+
+                const data = circuits.pedestre || {};
+                if (titleEl) titleEl.textContent = data.name || 'Circuito Pedestre (10K)';
+                if (badgeEl) {
+                    badgeEl.textContent = 'Tramo 1 - 10 km Pedestres';
+                    badgeEl.style.color = 'var(--accent-cyan)';
+                    badgeEl.style.background = 'rgba(0, 242, 254, 0.15)';
+                }
+                if (detailEl) detailEl.textContent = data.detail || '10 km de pedestrismo competitivo con largada en el Polideportivo Malargüe.';
+
+                updateLinkButton(gpxBtn, data.gpxLink, true);
+                updateLinkButton(kmlBtn, data.kmlLink);
+                updateLinkButton(stravaBtn, data.stravaLink);
+                updateLinkButton(garminBtn, data.garminLink);
+                updateLinkButton(earthBtn, data.googleEarthLink);
+
+                if (data.altitudeMapImage && data.altitudeMapImage.trim() !== '') {
+                    altimetryImage.src = data.altitudeMapImage;
+                    document.getElementById('altimetry-card')?.classList.remove('hidden');
+                }
+
+            } else if (tab === 'mtb') {
+                if (btnMtb) {
+                    btnMtb.classList.add('active');
+                    btnMtb.style.background = 'var(--accent-orange)';
+                    btnMtb.style.color = '#0f1219';
+                }
+                if (btnPedestre) btnPedestre.style.color = 'var(--accent-cyan)';
+                if (btnBoth) btnBoth.style.color = '#fff';
+
+                const data = circuits.mtb || {};
+                if (titleEl) titleEl.textContent = data.name || 'Circuito MTB (25K)';
+                if (badgeEl) {
+                    badgeEl.textContent = 'Tramo 2 - 25 km Mountain Bike';
+                    badgeEl.style.color = 'var(--accent-orange)';
+                    badgeEl.style.background = 'rgba(255, 140, 0, 0.15)';
+                }
+                if (detailEl) detailEl.textContent = data.detail || '25 km de Mountain Bike por senderos y caminos de Malargüe.';
+
+                updateLinkButton(gpxBtn, data.gpxLink, true);
+                updateLinkButton(kmlBtn, data.kmlLink);
+                updateLinkButton(stravaBtn, data.stravaLink);
+                updateLinkButton(garminBtn, data.garminLink);
+                updateLinkButton(earthBtn, data.googleEarthLink);
+
+                if (data.altitudeMapImage && data.altitudeMapImage.trim() !== '') {
+                    altimetryImage.src = data.altitudeMapImage;
+                    document.getElementById('altimetry-card')?.classList.remove('hidden');
+                }
+
+            } else if (tab === 'both') {
+                if (btnBoth) {
+                    btnBoth.classList.add('active');
+                    btnBoth.style.background = 'rgba(255, 255, 255, 0.2)';
+                    btnBoth.style.color = '#fff';
+                }
+                if (btnPedestre) btnPedestre.style.color = 'var(--accent-cyan)';
+                if (btnMtb) btnMtb.style.color = 'var(--accent-orange)';
+
+                if (titleEl) titleEl.textContent = 'Duatlón Completo: Pedestre (10K) + MTB (25K)';
+                if (badgeEl) {
+                    badgeEl.textContent = 'Comparativa de Trazados en Mapa';
+                    badgeEl.style.color = '#fff';
+                    badgeEl.style.background = 'rgba(255, 255, 255, 0.15)';
+                }
+                if (detailEl) detailEl.textContent = 'Visualización conjunta en el mapa: Línea Celeste para Pedestre (10K) y Línea Naranja para Mountain Bike (25K).';
+
+                updateLinkButton(gpxBtn, circuits.pedestre?.gpxLink || circuits.mtb?.gpxLink, true);
+                updateLinkButton(kmlBtn, circuits.pedestre?.kmlLink || circuits.mtb?.kmlLink);
+                updateLinkButton(stravaBtn, circuits.pedestre?.stravaLink || circuits.mtb?.stravaLink);
+                updateLinkButton(garminBtn, circuits.mtb?.garminLink || circuits.pedestre?.garminLink);
+                updateLinkButton(earthBtn, circuits.pedestre?.googleEarthLink || circuits.mtb?.googleEarthLink);
+            }
+
+            renderCircuitOnMap(tab);
+        }
+
+        if (btnPedestre) btnPedestre.addEventListener('click', () => updateCircuitDisplay('pedestre'));
+        if (btnMtb) btnMtb.addEventListener('click', () => updateCircuitDisplay('mtb'));
+        if (btnBoth) btnBoth.addEventListener('click', () => updateCircuitDisplay('both'));
+
+        // Carga inicial
+        updateCircuitDisplay('pedestre');
+    }
+
     async function loadGpxMap() {
         const mapContainer = document.getElementById('map-track');
         if (!mapContainer) return;
+
+        // Si existen circuitos de duatlón configurados, usamos su renderizador
+        if (config && config.circuits) {
+            renderCircuitOnMap(currentCircuitTab);
+            return;
+        }
 
         // 1. Obtener la distancia seleccionada
         const selectedDistanceId = document.getElementById('selected-distance-id').value;

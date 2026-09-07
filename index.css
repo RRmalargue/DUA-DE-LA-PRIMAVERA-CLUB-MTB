@@ -129,23 +129,24 @@ h1, h2, h3, h4 {
 }
 
 .logo-header-container {
-    max-width: 110px;
-    max-height: 110px;
+    max-width: 155px;
+    max-height: 155px;
     transition: all 0.3s ease;
     z-index: 100;
 }
 
 @media (max-width: 1200px) {
     .logo-header-container {
-        max-width: 95px;
+        max-width: 135px;
+        max-height: 135px;
     }
 }
 
 @media (max-width: 768px) {
     .logo-header-container {
         margin: 0 auto;
-        max-width: 90px;
-        max-height: 90px;
+        max-width: 120px;
+        max-height: 120px;
         display: block !important;
     }
     .hero-section {
@@ -174,13 +175,14 @@ h1, h2, h3, h4 {
 /* Poster banner styling */
 .poster-banner-container {
     width: 100%;
-    height: 320px;
-    overflow: hidden;
-    border-bottom: 1px solid var(--border-color);
+    height: auto;
+    min-height: auto;
+    overflow: visible;
+    border-bottom: none;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: rgba(0, 0, 0, 0.5);
+    background: transparent;
 }
 
 .poster-banner-img {

@@ -2,10 +2,10 @@
 window.RACE_CONFIG = {
   "raceName": "DUATLON DE LA PRIMAVERA CLUB MTB",
   "googleScriptUrl": "https://script.google.com/macros/s/AKfycbwUZxa21EUXzZGrkNq7DdaY_N_4UYg_90ytzCu9FWoEow5COgtb27q3mnYQFmgZ-2xQ/exec",
-  "raceDescription": " REGLAMENTO\n\nDUATLON A REALIZARSE EL DIA 20 DE SETIEMBRE DE 2026\nEN LAS MODALIDADES PEDESTRE-MOUNTAIN BIKE\nLARGA PEDESTRE 10 KMS Y A CONTINUACION 25 KMS DE MTB\nORGANIZADO POR CLUB MTB MALARGUE.\nLUGAR: POLIDEPORTIVO MALARGUE\nHORARIO DE LARGADA 10:00 AM\n\nCOSTOS DE INSCRIPCION\nPOSTAS: 70.000 PESOS HASTA EL 31 DE AGOSTO, DESPUES DE ESA FECHA 75.000 PESOS\nINDIVIDUAL 35.000 PESOS HASTA EL 31 DE AGOSTO DESPUES DE ESA FECHA 40.000 PESOS\nCIERRE DE INSCRIPCIONES SABADO 19 DE SETIEMBRE.\nCATEGORIAS\nINDIVIDUAL DAMAS Y CABALLEROS\nHASTA 29 AÑOS\nHASTA 40 AÑOS\nMAS DE 40 AÑOS\n\nPOSTAS MASCULINA, FEMENINA Y MIXTA (POR SUMATORIA DE EDAD)\nHASTA 60 AÑOS\nHASTA 90 AÑOS\nMAS DE 90 AÑOS\n\nDATOS A TENER EN CUENTA\n\nMENORES DEBERÁN CONTAR CON AUTORIZACION DE LOS PADRES\nFICHA MEDICA TODOS LOS PARTICIPANTES\nDESLINDE DE RESPONSABILIDAD FIRMADO\nRECLAMOS 48 HS DESPUES DEL EVENTO,(POR ESCRITO)\n",
-  "logoImage": "./IMAGENES/LOGO.jpg",
+  "raceDescription": " REGLAMENTO\n\nDUATLON A REALIZARSE EL DIA 1 DE NOVIEMBRE DE 2026\nEN LAS MODALIDADES PEDESTRE-MOUNTAIN BIKE\nLARGA PEDESTRE 10 KMS Y A CONTINUACION 25 KMS DE MTB\nORGANIZADO POR CLUB MTB MALARGUE.\nLUGAR: POLIDEPORTIVO MALARGUE\nHORARIO DE LARGADA 10:00 AM\n\nCOSTOS DE INSCRIPCION\nPOSTAS: 70.000 PESOS HASTA EL 31 DE AGOSTO, DESPUES DE ESA FECHA 75.000 PESOS\nINDIVIDUAL 35.000 PESOS HASTA EL 31 DE AGOSTO DESPUES DE ESA FECHA 40.000 PESOS\nCIERRE DE INSCRIPCIONES SABADO 31 DE OCTUBRE.\nCATEGORIAS\nINDIVIDUAL DAMAS Y CABALLEROS\nHASTA 29 AÑOS\nHASTA 40 AÑOS\nMAS DE 40 AÑOS\n\nPOSTAS MASCULINA, FEMENINA Y MIXTA (POR SUMATORIA DE EDAD)\nHASTA 60 AÑOS\nHASTA 90 AÑOS\nMAS DE 90 AÑOS\n\nDATOS A TENER EN CUENTA\n\nMENORES DEBERÁN CONTAR CON AUTORIZACION DE LOS PADRES\nFICHA MEDICA TODOS LOS PARTICIPANTES\nDESLINDE DE RESPONSABILIDAD FIRMADO\nRECLAMOS 48 HS DESPUES DEL EVENTO,(POR ESCRITO)\n",
+  "logoImage": "./IMAGENES/LOGO CLUB.png",
   "contactWhatsapp": "5492604552146",
-  "posterImage": "./IMAGENES/AFICHE TERCER.jpg",
+  "posterImage": "",
   "tshirtImage": "./IMAGENES/REMERA TERCER.jpg",
   "altitudeMapImage": "./IMAGENES/MAPADEALTURA15.jpg",
   "kitImage": "",
@@ -14,16 +14,44 @@ window.RACE_CONFIG = {
   "stravaLink": "",
   "garminLink": "",
   "googleEarthLink": "",
-  "startLocationMapLink": "https://www.google.com/maps/search/?api=1&query=-35.438479,-69.599445",
+  "startLocationMapLink": "https://www.google.com/maps/search/?api=1&query=-35.468421,-69.591072",
   "deslindeLink": "./IMAGENES/DESLINDE DE RESPONSABILIDAD Y ASUNCIÓN DE RIESGOS.pdf",
   "clasificacionesLink": "",
-  "paymentDetails": "ASOCIACION CLUB TECER TIEMPO MALARGUE\n\nAlias: ACTTM2026\n\n.",
+  "paymentDetails": "A NOMBRE DE MARIANO MOYANO/VERONICA RUIZ\n\nALIAS: CLUB.MTB.MALARGUE",
+  "circuits": {
+    "pedestre": {
+      "name": "Circuito Pedestre (10K)",
+      "distanceKm": "10 KMS",
+      "discipline": "Pedestrismo",
+      "color": "#00f2fe",
+      "gpxLink": "./IMAGENES/circuito_pedestre_10k.gpx",
+      "kmlLink": "",
+      "stravaLink": "httphttps://strava.app.link/YAdF74MVi3b",
+      "garminLink": "",
+      "googleEarthLink": "",
+      "altitudeMapImage": "./IMAGENES/MAPADEALTURA15.jpg",
+      "detail": "Tramo 1: 10 km pedestre con largada en el Polideportivo Malargüe."
+    },
+    "mtb": {
+      "name": "Circuito MTB (25K)",
+      "distanceKm": "25 KMS",
+      "discipline": "Mountain Bike",
+      "color": "#ff8c00",
+      "gpxLink": "./IMAGENES/MTB DUA2026.gpx",
+      "kmlLink": "",
+      "stravaLink": "",
+      "garminLink": "https://connect.garmin.com/modern/activity/23966685622?share_unique_id=7",
+      "googleEarthLink": "https://earth.google.com/web/@-35.438479,-69.599445,1400a,30000d",
+      "altitudeMapImage": "./IMAGENES/MAPADEALTURA15.jpg",
+      "detail": "Tramo 2: 25 km Mountain Bike por senderos y caminos de Malargüe."
+    }
+  },
   "distances": [
     {
-      "id": "15 KMS",
-      "name": "COMPETITIVA",
-      "price": 50000,
-      "detail": "RECORRIDO COMPETITIVO, POR SENDEROS TECNICO, CON TREPADAS Y LUGARES MUY ATRACTIVOS DE MALARGUE, PUESTO DE HIDRATACION A LOS 2,5 KMS Y 8 KMS",
+      "id": "INDIVIDUAL",
+      "name": "INDIVIDUAL (10K + 25K)",
+      "price": 40000,
+      "detail": "Modalidad Individual: 10 km pedestre y a continuación 25 km Mountain Bike.\nCosto: $35.000 hasta el 31 de Agosto | $40.000 desde el 1 de Septiembre.\nEl mismo corredor realiza ambos tramos.",
       "gpxLink": "./IMAGENES/Zepp20260806144255.gpx",
       "stravaLink": "https://strava.app.link/Ulz4T6kMG5b",
       "garminLink": "https://connect.garmin.com/modern/activity/23966685622?share_unique_id=7",
@@ -32,136 +60,165 @@ window.RACE_CONFIG = {
       "autoCategory": true,
       "categories": [
         {
-          "id": "prejuveniles",
-          "name": "PREJUVENILES 16 A 19 AÑOS",
-          "minAge": 16,
-          "maxAge": 19,
-          "requiresPayment": true
-        },
-        {
-          "id": "juveniles",
-          "name": "JUVENILES 20 A 29 AÑOS",
-          "minAge": 20,
+          "id": "ind_damas_hasta_29",
+          "name": "INDIVIDUAL DAMAS HASTA 29 AÑOS",
+          "minAge": 14,
           "maxAge": 29,
           "requiresPayment": true
         },
         {
-          "id": "master_a",
-          "name": "Master A (30 a 39 años)",
+          "id": "ind_damas_hasta_40",
+          "name": "INDIVIDUAL DAMAS HASTA 40 AÑOS",
           "minAge": 30,
-          "maxAge": 39,
+          "maxAge": 40,
           "requiresPayment": true
         },
         {
-          "id": "master_b",
-          "name": "Master B (40 a 49 años)",
-          "minAge": 40,
-          "maxAge": 49,
-          "requiresPayment": true
-        },
-        {
-          "id": "master_c",
-          "name": "Master C (50 a 59 años)",
-          "minAge": 50,
-          "maxAge": 59,
-          "requiresPayment": true
-        },
-        {
-          "id": "master_d",
-          "name": "Master D (60 años o más)",
-          "minAge": 60,
+          "id": "ind_damas_mas_40",
+          "name": "INDIVIDUAL DAMAS MÁS DE 40 AÑOS",
+          "minAge": 41,
           "maxAge": 120,
           "requiresPayment": true
-        }
-      ]
-    },
-    {
-      "id": "INFANTILES",
-      "name": "INFANTILES",
-      "price": 18000,
-      "detail": "RECORRIDO PARA LOS MAS PEQUEÑOS, SE DESARROLLARÁ EN EL LUGAR DE LARGADA, 100 MTS, 200 MTS, 400 MTS, 800 MTS Y 12000 MTS.",
-      "gpxLink": "./IMAGENES/circuito infantiles.gpx",
-      "stravaLink": "https://strava.app.link/ItiUAM7LG5b",
-      "garminLink": "https://connect.garmin.com/modern/activity/23828931697?share_unique_id=22",
-      "googleEarthLink": "",
-      "altitudeMapImage": "./IMAGENES/altura infantiles.jpg",
-      "autoCategory": true,
-      "categories": [
-        {
-          "id": "infantiles1",
-          "name": "4 Y 5 AÑOS",
-          "minAge": 4,
-          "maxAge": 5,
-          "requiresPayment": true
         },
         {
-          "id": "infantiles2",
-          "name": "6 Y 7 AÑOS",
-          "minAge": 6,
-          "maxAge": 7,
-          "requiresPayment": true
-        },
-        {
-          "id": "infantiles3",
-          "name": "8 Y 9 AÑOS",
-          "minAge": 8,
-          "maxAge": 9,
-          "requiresPayment": true
-        },
-        {
-          "id": "infantiles4",
-          "name": "10 Y 11 AÑOS",
-          "minAge": 10,
-          "maxAge": 11,
-          "requiresPayment": true
-        },
-        {
-          "id": "infantiles5",
-          "name": "12 Y 13 AÑOS",
-          "minAge": 12,
-          "maxAge": 13,
-          "requiresPayment": true
-        },
-        {
-          "id": "infantiles6",
-          "name": "14 Y 15 AÑOS",
+          "id": "ind_caballeros_hasta_29",
+          "name": "INDIVIDUAL CABALLEROS HASTA 29 AÑOS",
           "minAge": 14,
-          "maxAge": 15,
+          "maxAge": 29,
+          "requiresPayment": true
+        },
+        {
+          "id": "ind_caballeros_hasta_40",
+          "name": "INDIVIDUAL CABALLEROS HASTA 40 AÑOS",
+          "minAge": 30,
+          "maxAge": 40,
+          "requiresPayment": true
+        },
+        {
+          "id": "ind_caballeros_mas_40",
+          "name": "INDIVIDUAL CABALLEROS MÁS DE 40 AÑOS",
+          "minAge": 41,
+          "maxAge": 120,
           "requiresPayment": true
         }
       ]
     },
     {
-      "id": "5 KMS",
-      "name": "COMPETITIVA",
-      "price": 35000,
-      "detail": "EL RECORRIDO DE 5 KMS TRANSITARA POR SENDEROS TECNICOS, ARROYOS SECOS, Y ES LA DISTANCIA IDEAL PARA LOS QUE SE ESTAN INICIANDO EN EL CROSS-TRAIL.\nPUESTO DE HIDRATACION A LOS 2,5 KMS.",
-      "gpxLink": "./IMAGENES/5 K 3 TIEMPO.gpx",
-      "stravaLink": "https://strava.app.link/ItiUAM7LG5b",
-      "garminLink": "https://connect.garmin.com/modern/activity/23828931697?share_unique_id=22",
+      "id": "POSTAS",
+      "name": "POSTAS (10K + 25K DUPLAS)",
+      "price": 75000,
+      "detail": "Modalidad Postas (Duplas): Corredor 1 realiza 10 km pedestre y Corredor 2 realiza 25 km MTB.\nCosto por dupla: $70.000 hasta el 31 de Agosto | $75.000 desde el 1 de Septiembre.\nCategorías por sumatoria de edades de ambos integrantes.",
+      "gpxLink": "./IMAGENES/Zepp20260806144255.gpx",
+      "stravaLink": "https://strava.app.link/Ulz4T6kMG5b",
+      "garminLink": "https://connect.garmin.com/modern/activity/23966685622?share_unique_id=7",
       "googleEarthLink": "https://earth.google.com/web/@-35.438479,-69.599445,1400a,30000d",
-      "altitudeMapImage": "./IMAGENES/MAPADEALTURA5.jpg",
-      "autoCategory": false,
+      "altitudeMapImage": "./IMAGENES/MAPADEALTURA15.jpg",
+      "autoCategory": true,
+      "isPostas": true,
       "categories": [
         {
-          "id": "damas_5_kms_libre",
-          "name": "LIBRE",
+          "id": "postas_masc_hasta_60",
+          "name": "POSTAS MASCULINA HASTA 60 AÑOS",
           "minAge": 0,
-          "maxAge": 120,
+          "maxAge": 60,
           "requiresPayment": true
         },
         {
-          "id": "caballeros_5_kms_libre",
-          "name": "LIBRE",
-          "minAge": 0,
-          "maxAge": 120,
+          "id": "postas_masc_hasta_90",
+          "name": "POSTAS MASCULINA HASTA 90 AÑOS",
+          "minAge": 61,
+          "maxAge": 90,
           "requiresPayment": true
         },
         {
-          "id": "disca1",
-          "name": "DISCA LIBRE",
-          "minAge": 1,
-          "maxAge": 80,
+          "id": "postas_masc_mas_90",
+          "name": "POSTAS MASCULINA MÁS DE 90 AÑOS",
+          "minAge": 91,
+          "maxAge": 200,
+          "requiresPayment": true
+        },
+        {
+          "id": "postas_fem_hasta_60",
+          "name": "POSTAS FEMENINA HASTA 60 AÑOS",
+          "minAge": 0,
+          "maxAge": 60,
+          "requiresPayment": true
+        },
+        {
+          "id": "postas_fem_hasta_90",
+          "name": "POSTAS FEMENINA HASTA 90 AÑOS",
+          "minAge": 61,
+          "maxAge": 90,
+          "requiresPayment": true
+        },
+        {
+          "id": "postas_fem_mas_90",
+          "name": "POSTAS FEMENINA MÁS DE 90 AÑOS",
+          "minAge": 91,
+          "maxAge": 200,
+          "requiresPayment": true
+        },
+        {
+          "id": "postas_mix_hasta_60",
+          "name": "POSTAS MIXTA HASTA 60 AÑOS",
+          "minAge": 0,
+          "maxAge": 60,
+          "requiresPayment": true
+        },
+        {
+          "id": "postas_mix_hasta_90",
+          "name": "POSTAS MIXTA HASTA 90 AÑOS",
+          "minAge": 61,
+          "maxAge": 90,
+          "requiresPayment": true
+        },
+        {
+          "id": "postas_mix_mas_90",
+          "name": "POSTAS MIXTA MÁS DE 90 AÑOS",
+          "minAge": 91,
+          "maxAge": 200,
+          "requiresPayment": true
+        },
+        {
+          "id": "postas_tandem_masc",
+          "name": "POSTAS TÁNDEM MASCULINA",
+          "minAge": 0,
+          "maxAge": 200,
+          "requiresPayment": true
+        },
+        {
+          "id": "postas_tandem_fem",
+          "name": "POSTAS TÁNDEM FEMENINA",
+          "minAge": 0,
+          "maxAge": 200,
+          "requiresPayment": true
+        },
+        {
+          "id": "postas_tandem_mix",
+          "name": "POSTAS TÁNDEM MIXTA",
+          "minAge": 0,
+          "maxAge": 200,
+          "requiresPayment": true
+        },
+        {
+          "id": "postas_disca_masc",
+          "name": "POSTAS DISCA MASCULINA",
+          "minAge": 0,
+          "maxAge": 200,
+          "requiresPayment": false
+        },
+        {
+          "id": "postas_disca_fem",
+          "name": "POSTAS DISCA FEMENINA",
+          "minAge": 0,
+          "maxAge": 200,
+          "requiresPayment": false
+        },
+        {
+          "id": "postas_disca_mix",
+          "name": "POSTAS DISCA MIXTA",
+          "minAge": 0,
+          "maxAge": 200,
           "requiresPayment": false
         }
       ]
@@ -178,7 +235,7 @@ window.RACE_CONFIG = {
     "secondary": "#ff007f",
     "secondaryGlow": "rgba(255, 0, 127, 0.35)"
   },
-  "themeBackground": "snow",
+  "themeBackground": "torrecillas",
   "borderRadiusStyle": "20px",
   "formFields": [
     {

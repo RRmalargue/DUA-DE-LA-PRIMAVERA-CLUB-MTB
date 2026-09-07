@@ -48,10 +48,21 @@
                 <p class="subtitle">Desafía tus límites en la naturaleza. Mira los detalles e inscríbete a continuación.</p>
             </header>
 
-            <!-- 1. AFICHE (Race Poster Banner) -->
-            <div class="poster-banner-container" id="poster-banner-container" style="margin-bottom: 2rem;">
-                <img id="poster-banner" src="" alt="Afiche Oficial de la Carrera" class="poster-banner-img" style="max-height: 450px; width: 100%; object-fit: contain; border-radius: var(--radius-md); box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+            <!-- 1. AFICHE OFICIAL DE LA CARRERA (TORRECILLAS) -->
+            <div class="poster-banner-container" id="poster-banner-container" style="margin-bottom: 2.2rem; display: flex; justify-content: center; width: 100%; height: auto; background: transparent; overflow: visible;">
+                <iframe src="afiche.html?embed=true" id="poster-live-frame" title="Afiche Oficial Duatlón de la Primavera" style="width: 100%; max-width: 600px; height: 900px; border: none; border-radius: var(--radius-md); box-shadow: 0 15px 45px rgba(0,0,0,0.8), 0 0 30px rgba(0, 242, 254, 0.2); overflow: hidden; display: block;" scrolling="no"></iframe>
+                <img id="poster-banner" src="" alt="Afiche Oficial de la Carrera" class="poster-banner-img hidden" style="max-height: 850px; width: 100%; object-fit: contain; border-radius: var(--radius-md); box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
             </div>
+            <script>
+                window.addEventListener('message', function(e) {
+                    if (e.data && e.data.type === 'resize-poster') {
+                        var frame = document.getElementById('poster-live-frame');
+                        if (frame && e.data.height) {
+                            frame.style.height = (e.data.height + 4) + 'px';
+                        }
+                    }
+                });
+            </script>
 
             <!-- 2. BOX DE TEXTO (Race Description) -->
             <div class="info-card" id="race-description-card" style="margin-bottom: 2rem; background: rgba(30, 30, 30, 0.65); border: 1px solid var(--border-color); backdrop-filter: blur(10px); display: flex; flex-direction: column;">
@@ -118,6 +129,57 @@
                         </a>
                         <a href="#" id="start-location-btn" class="btn-secondary" target="_blank">
                             <i class="fa-solid fa-location-dot" style="color: var(--accent-orange);"></i> Largada (Google Maps)
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Selector de Circuitos Oficiales del Duatlón (Pedestre y MTB) -->
+                <div id="duathlon-circuits-panel" style="margin-top: 1.5rem; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(0, 242, 254, 0.25); border-radius: var(--radius-md); padding: 1.3rem; margin-bottom: 1.5rem;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.8rem; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.8rem;">
+                        <div>
+                            <h3 style="margin: 0; color: #fff; font-size: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fa-solid fa-route" style="color: var(--accent-cyan);"></i> Circuitos Oficiales del Duatlón
+                            </h3>
+                            <span style="font-size: 0.85rem; color: var(--text-muted);">Selecciona un circuito para ver su trazado individual o visualiza ambos juntos:</span>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;" id="circuit-tab-buttons">
+                            <button type="button" class="btn-circuit-tab active" data-circuit="pedestre" id="btn-circuit-pedestre" style="padding: 0.6rem 1.1rem; border-radius: var(--radius-sm); border: 1px solid var(--accent-cyan); background: var(--accent-cyan); color: #0f1219; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; transition: all 0.2s;">
+                                <i class="fa-solid fa-person-running"></i> Pedestre 10K
+                            </button>
+                            <button type="button" class="btn-circuit-tab" data-circuit="mtb" id="btn-circuit-mtb" style="padding: 0.6rem 1.1rem; border-radius: var(--radius-sm); border: 1px solid var(--accent-orange); background: transparent; color: var(--accent-orange); font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; transition: all 0.2s;">
+                                <i class="fa-solid fa-bicycle"></i> MTB 25K
+                            </button>
+                            <button type="button" class="btn-circuit-tab" data-circuit="both" id="btn-circuit-both" style="padding: 0.6rem 1.1rem; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.3); background: transparent; color: #fff; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; transition: all 0.2s;">
+                                <i class="fa-solid fa-layer-group"></i> Ver Ambos en Mapa
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Ficha descriptiva del circuito activo -->
+                    <div id="circuit-active-info" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius-sm); padding: 1rem; margin-bottom: 1rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.4rem;">
+                            <strong id="circuit-active-title" style="color: var(--accent-cyan); font-size: 1.15rem;">Circuito Pedestre (10K)</strong>
+                            <span id="circuit-active-badge" style="background: rgba(0, 242, 254, 0.15); color: var(--accent-cyan); font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.8rem;">Tramo 1 - 10 km Pedestres</span>
+                        </div>
+                        <p id="circuit-active-detail" style="margin: 0; color: #fff; font-size: 0.95rem; line-height: 1.5; white-space: pre-line;">-</p>
+                    </div>
+
+                    <!-- Botones de descarga y enlaces del circuito activo -->
+                    <div class="downloads-grid" id="circuit-downloads-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.8rem;">
+                        <a href="#" id="circuit-gpx-btn" class="btn-secondary gpx-btn" download target="_blank" style="height: 44px; font-size: 0.92rem;">
+                            <i class="fa-solid fa-route"></i> Descargar GPX
+                        </a>
+                        <a href="#" id="circuit-kml-btn" class="btn-secondary kml-btn hidden" download target="_blank" style="height: 44px; font-size: 0.92rem;">
+                            <i class="fa-solid fa-earth-americas"></i> Descargar KML
+                        </a>
+                        <a href="#" id="circuit-strava-btn" class="btn-secondary hidden" target="_blank" style="background: rgba(252, 76, 2, 0.1) !important; border-color: #fc4c02 !important; color: #fc4c02 !important; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; height: 44px; border-radius: var(--radius-md); font-weight: 600; font-size: 0.92rem;">
+                            <i class="fa-brands fa-strava"></i> Strava
+                        </a>
+                        <a href="#" id="circuit-garmin-btn" class="btn-secondary hidden" target="_blank" style="background: rgba(0, 150, 214, 0.1) !important; border-color: #0096d6 !important; color: #0096d6 !important; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; height: 44px; border-radius: var(--radius-md); font-weight: 600; font-size: 0.92rem;">
+                            <i class="fa-solid fa-compass"></i> Garmin
+                        </a>
+                        <a href="#" id="circuit-earth-btn" class="btn-secondary hidden" target="_blank" style="background: rgba(66, 133, 244, 0.1) !important; border-color: #4285f4 !important; color: #4285f4 !important; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; height: 44px; border-radius: var(--radius-md); font-weight: 600; font-size: 0.92rem;">
+                            <i class="fa-solid fa-earth-americas"></i> Google Earth
                         </a>
                     </div>
                 </div>
@@ -195,66 +257,260 @@
                                 <input type="hidden" id="selected-distance-price" name="costo">
                             </div>
 
-                            <!-- Datos Personales -->
-                            <div class="input-group">
-                                <label for="nombre">Nombre y Apellido <span class="requirement">*</span></label>
-                                <input type="text" id="nombre" name="nombre" required placeholder="Ej: Juan Pérez" autocomplete="name">
-                                <input type="hidden" id="apellido" name="apellido">
-                            </div>
-                            <div class="input-group">
-                                <label for="cuil">CUIL <span class="requirement" id="cuil-req-indicator">* (11 dígitos exactos)</span></label>
-                                <input type="text" id="cuil" name="cuil" required maxlength="11" placeholder="Ej: 20443332221" title="Solo números, sin guiones. Exactamente 11 dígitos." autocomplete="off">
-                            </div>
-                            <div class="input-group">
-                                <label for="fecha_nacimiento">Fecha de Nacimiento <span class="requirement">*</span></label>
-                                <div class="date-input-container" style="display: flex; align-items: center; gap: 0.4rem;">
-                                    <input type="text" id="birth_day" placeholder="DD" maxlength="2" style="width: 55px; text-align: center; font-size: 1.05rem; font-weight: 700; padding: 0.7rem 0.4rem;" required title="Día (2 dígitos)">
-                                    <span style="font-weight: 700; color: var(--text-muted); font-size: 1.2rem; user-select: none;">/</span>
-                                    <input type="text" id="birth_month" placeholder="MM" maxlength="2" style="width: 55px; text-align: center; font-size: 1.05rem; font-weight: 700; padding: 0.7rem 0.4rem;" required title="Mes (2 dígitos)">
-                                    <span style="font-weight: 700; color: var(--text-muted); font-size: 1.2rem; user-select: none;">/</span>
-                                    <input type="text" id="birth_year" placeholder="AAAA" maxlength="4" style="width: 75px; text-align: center; font-size: 1.05rem; font-weight: 700; padding: 0.7rem 0.4rem;" required title="Año (4 dígitos)">
-                                    
-                                    <input type="hidden" id="fecha_nacimiento" name="fecha_nacimiento" required>
+                            <!-- 1. CONTENEDOR MODALIDAD INDIVIDUAL -->
+                            <div id="individual-fields-container" style="grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.2rem;">
+                                <div class="input-group">
+                                    <label for="nombre">Nombre y Apellido <span class="requirement">*</span></label>
+                                    <input type="text" id="nombre" name="nombre" placeholder="Ej: Juan Pérez" autocomplete="name">
+                                    <input type="hidden" id="apellido" name="apellido">
                                 </div>
-                            </div>
-                            <div class="input-group">
-                                <label for="genero">Género <span class="requirement">*</span></label>
-                                <select id="genero" name="genero" required autocomplete="sex">
-                                    <option value="" disabled selected>Selecciona tu género...</option>
-                                    <option value="Femenino">Femenino (Damas)</option>
-                                    <option value="Masculino">Masculino (Caballeros)</option>
-                                </select>
-                            </div>
-                            <div class="input-group">
-                                <label for="edad">Edad Calculada</label>
-                                <input type="text" id="edad" name="edad" readonly placeholder="Completa tu fecha de nacimiento">
-                            </div>
-                            <div class="input-group">
-                                <label for="telefono">Teléfono de Contacto <span class="requirement">*</span></label>
-                                <input type="tel" id="telefono" name="telefono" required placeholder="Ej: +54 9 261 555-5555" autocomplete="tel">
-                            </div>
-                            <div class="input-group">
-                                <label for="talle_remera">Talle de Remera <span class="requirement">*</span></label>
-                                <select id="talle_remera" name="talle_remera" required>
-                                    <option value="" disabled selected>Selecciona tu talle...</option>
-                                    <option value="XS">XS</option>
-                                    <option value="S">S</option>
-                                    <option value="M">M</option>
-                                    <option value="L">L</option>
-                                    <option value="XL">XL</option>
-                                    <option value="XXL">XXL</option>
-                                </select>
-
-                                <!-- Tshirt preview directly inside the talle selector cell -->
-                                <div class="info-card" id="tshirt-preview-card" style="margin-top: 0.8rem; border-color: rgba(255,255,255,0.05); background: rgba(0,0,0,0.15);">
-                                    <div class="info-card-content" style="text-align: center; padding: 0.5rem;">
-                                        <img id="tshirt-image" src="" alt="Remera oficial de la carrera" style="max-height: 140px; object-fit: contain; border-radius: var(--radius-sm);">
+                                <div class="input-group">
+                                    <label for="cuil">CUIL <span class="requirement" id="cuil-req-indicator">* (11 dígitos exactos)</span></label>
+                                    <input type="text" id="cuil" name="cuil" maxlength="11" placeholder="Ej: 20443332221" title="Solo números, sin guiones. Exactamente 11 dígitos." autocomplete="off">
+                                </div>
+                                <div class="input-group">
+                                    <label for="fecha_nacimiento">Fecha de Nacimiento <span class="requirement">*</span></label>
+                                    <div class="date-input-container" style="display: flex; align-items: center; gap: 0.4rem;">
+                                        <input type="text" id="birth_day" placeholder="DD" maxlength="2" style="width: 55px; text-align: center; font-size: 1.05rem; font-weight: 700; padding: 0.7rem 0.4rem;" title="Día (2 dígitos)">
+                                        <span style="font-weight: 700; color: var(--text-muted); font-size: 1.2rem; user-select: none;">/</span>
+                                        <input type="text" id="birth_month" placeholder="MM" maxlength="2" style="width: 55px; text-align: center; font-size: 1.05rem; font-weight: 700; padding: 0.7rem 0.4rem;" title="Mes (2 dígitos)">
+                                        <span style="font-weight: 700; color: var(--text-muted); font-size: 1.2rem; user-select: none;">/</span>
+                                        <input type="text" id="birth_year" placeholder="AAAA" maxlength="4" style="width: 75px; text-align: center; font-size: 1.05rem; font-weight: 700; padding: 0.7rem 0.4rem;" title="Año (4 dígitos)">
+                                        <input type="hidden" id="fecha_nacimiento" name="fecha_nacimiento">
                                     </div>
                                 </div>
+                                <div class="input-group">
+                                    <label for="genero">Género <span class="requirement">*</span></label>
+                                    <select id="genero" name="genero" autocomplete="sex">
+                                        <option value="" disabled selected>Selecciona tu género...</option>
+                                        <option value="Femenino">Femenino (Damas)</option>
+                                        <option value="Masculino">Masculino (Caballeros)</option>
+                                    </select>
+                                </div>
+                                <div class="input-group">
+                                    <label for="edad">Edad Calculada</label>
+                                    <input type="text" id="edad" name="edad" readonly placeholder="Completa tu fecha de nacimiento">
+                                </div>
+                                <div class="input-group">
+                                    <label for="telefono">Teléfono de Contacto <span class="requirement">*</span></label>
+                                    <input type="tel" id="telefono" name="telefono" placeholder="Ej: +54 9 260 455-2146" autocomplete="tel">
+                                </div>
+                                <div class="input-group">
+                                    <label for="talle_remera">Talle de Remera <span class="requirement">*</span></label>
+                                    <select id="talle_remera" name="talle_remera">
+                                        <option value="" disabled selected>Selecciona tu talle...</option>
+                                        <option value="XS">XS</option>
+                                        <option value="S">S</option>
+                                        <option value="M">M</option>
+                                        <option value="L">L</option>
+                                        <option value="XL">XL</option>
+                                        <option value="XXL">XXL</option>
+                                    </select>
+
+                                    <!-- Tshirt preview directly inside the talle selector cell -->
+                                    <div class="info-card" id="tshirt-preview-card" style="margin-top: 0.8rem; border-color: rgba(255,255,255,0.05); background: rgba(0,0,0,0.15);">
+                                        <div class="info-card-content" style="text-align: center; padding: 0.5rem;">
+                                            <img id="tshirt-image" src="" alt="Remera oficial de la carrera" style="max-height: 140px; object-fit: contain; border-radius: var(--radius-sm);">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <label for="team_origen">Team o Lugar de Origen <span style="font-weight: normal; color: var(--text-muted);">(Opcional)</span></label>
+                                    <input type="text" id="team_origen" name="team_origen" placeholder="Ej: Club MTB Malargüe o San Rafael" autocomplete="organization">
+                                </div>
                             </div>
-                            <div class="input-group">
-                                <label for="team_origen">Team o Lugar de Origen <span style="font-weight: normal; color: var(--text-muted);">(Opcional)</span></label>
-                                <input type="text" id="team_origen" name="team_origen" placeholder="Ej: Club Aconcagua o San Rafael" autocomplete="organization">
+
+                            <!-- 2. CONTENEDOR MODALIDAD POSTAS (DUPLAS PEDESTRISMO 10K + MTB 25K) -->
+                            <div id="postas-fields-container" class="hidden" style="grid-column: 1 / -1;">
+                                <div style="background: rgba(0, 242, 254, 0.08); border: 1px solid rgba(0, 242, 254, 0.35); border-radius: var(--radius-md); padding: 1.2rem; margin-bottom: 1.5rem;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.8rem;">
+                                        <h3 style="color: var(--accent-cyan); font-size: 1.25rem; margin: 0; display: flex; align-items: center; gap: 0.6rem;">
+                                            <i class="fa-solid fa-users"></i> Modalidad Postas (Dupla de 2 Integrantes)
+                                        </h3>
+                                        <span style="background: rgba(0, 242, 254, 0.2); color: var(--accent-cyan); font-weight: 700; font-size: 0.85rem; padding: 0.25rem 0.6rem; border-radius: 20px;">10K Pedestre + 25K MTB</span>
+                                    </div>
+                                    <p style="color: var(--text-muted); font-size: 0.92rem; margin-bottom: 1rem; line-height: 1.5;">
+                                        El <strong>Corredor 1</strong> realiza el tramo pedestre (10 km) y el <strong>Corredor 2</strong> realiza el tramo de ciclismo (25 km de MTB). La categoría se asigna <strong>automáticamente según la sumatoria de las dos edades</strong> y los géneros.
+                                    </p>
+                                    <div class="input-group" style="margin-bottom: 0;">
+                                        <label style="font-weight: 700; color: var(--accent-orange); display: block; margin-bottom: 0.6rem;">
+                                            <i class="fa-solid fa-flag-checkered"></i> Modalidad de Posta:
+                                        </label>
+                                        <div style="display: flex; gap: 0.8rem; flex-wrap: wrap;">
+                                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; background: rgba(255,255,255,0.06); padding: 0.6rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); user-select: none;">
+                                                <input type="radio" name="postas_tipo_especial" value="estandar" checked style="accent-color: var(--accent-orange); cursor: pointer; width: 18px; height: 18px;">
+                                                <span><strong>Estándar</strong> (Por Sumatoria de Edad)</span>
+                                            </label>
+                                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; background: rgba(255,255,255,0.06); padding: 0.6rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); user-select: none;">
+                                                <input type="radio" name="postas_tipo_especial" value="tandem" style="accent-color: var(--accent-cyan); cursor: pointer; width: 18px; height: 18px;">
+                                                <span><i class="fa-solid fa-bicycle" style="color: var(--accent-cyan);"></i> <strong>Posta Tándem</strong></span>
+                                            </label>
+                                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; background: rgba(255,255,255,0.06); padding: 0.6rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); user-select: none;">
+                                                <input type="radio" name="postas_tipo_especial" value="disca" style="accent-color: #00e676; cursor: pointer; width: 18px; height: 18px;">
+                                                <span><i class="fa-solid fa-wheelchair" style="color: #00e676;"></i> <strong>Posta Disca (Adaptada)</strong></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
+                                    <!-- CORREDOR 1: PEDESTRISMO 10K -->
+                                    <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 107, 53, 0.4); border-radius: var(--radius-md); padding: 1.2rem;">
+                                        <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1rem; border-bottom: 1px solid rgba(255, 107, 53, 0.25); padding-bottom: 0.6rem;">
+                                            <span style="background: var(--accent-orange); color: #000; font-weight: 900; border-radius: 50%; width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.95rem;">1</span>
+                                            <div>
+                                                <h4 style="color: var(--accent-orange); margin: 0; font-size: 1.1rem;"><i class="fa-solid fa-person-running"></i> 10 K Pedestre</h4>
+                                                <span style="color: var(--text-muted); font-size: 0.8rem; font-weight: 600;">Tramo 1 Pedestrismo</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="input-group">
+                                            <label for="postas_nombre_1">Nombre y Apellido <span class="requirement">*</span></label>
+                                            <input type="text" id="postas_nombre_1" name="postas_nombre_1" placeholder="Ej: Juan Pérez">
+                                        </div>
+
+                                        <div class="input-group">
+                                            <label for="postas_cuil_1">CUIL <span class="requirement">* (11 dígitos)</span></label>
+                                            <input type="text" id="postas_cuil_1" name="postas_cuil_1" maxlength="11" placeholder="Ej: 20443332221">
+                                        </div>
+
+                                        <div class="input-group">
+                                            <label for="postas_fecha_nacimiento_1">Fecha de Nacimiento <span class="requirement">*</span></label>
+                                            <div class="date-input-container" style="display: flex; align-items: center; gap: 0.4rem;">
+                                                <input type="text" id="postas_birth_day_1" placeholder="DD" maxlength="2" style="width: 55px; text-align: center; font-size: 1.05rem; font-weight: 700; padding: 0.7rem 0.4rem;" title="Día (2 dígitos)">
+                                                <span style="font-weight: 700; color: var(--text-muted); font-size: 1.2rem;">/</span>
+                                                <input type="text" id="postas_birth_month_1" placeholder="MM" maxlength="2" style="width: 55px; text-align: center; font-size: 1.05rem; font-weight: 700; padding: 0.7rem 0.4rem;" title="Mes (2 dígitos)">
+                                                <span style="font-weight: 700; color: var(--text-muted); font-size: 1.2rem;">/</span>
+                                                <input type="text" id="postas_birth_year_1" placeholder="AAAA" maxlength="4" style="width: 75px; text-align: center; font-size: 1.05rem; font-weight: 700; padding: 0.7rem 0.4rem;" title="Año (4 dígitos)">
+                                                <input type="hidden" id="postas_fecha_nacimiento_1">
+                                            </div>
+                                        </div>
+
+                                        <div class="input-group">
+                                            <label for="postas_genero_1">Género <span class="requirement">*</span></label>
+                                            <select id="postas_genero_1" name="postas_genero_1">
+                                                <option value="" disabled selected>Selecciona género...</option>
+                                                <option value="Femenino">Femenino (Damas)</option>
+                                                <option value="Masculino">Masculino (Caballeros)</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="input-group">
+                                            <label for="postas_edad_1">Edad (10 K Pedestre)</label>
+                                            <input type="text" id="postas_edad_1" readonly placeholder="Completa fecha de nacimiento">
+                                        </div>
+
+                                        <div class="input-group">
+                                            <label for="postas_telefono_1">Teléfono <span class="requirement">*</span></label>
+                                            <input type="tel" id="postas_telefono_1" name="postas_telefono_1" placeholder="Ej: +54 9 260 455-2146">
+                                        </div>
+
+                                        <div class="input-group">
+                                            <label for="postas_talle_1">Talle de Remera <span class="requirement">*</span></label>
+                                            <select id="postas_talle_1" name="postas_talle_1">
+                                                <option value="" disabled selected>Selecciona talle...</option>
+                                                <option value="XS">XS</option>
+                                                <option value="S">S</option>
+                                                <option value="M">M</option>
+                                                <option value="L">L</option>
+                                                <option value="XL">XL</option>
+                                                <option value="XXL">XXL</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- CORREDOR 2: MOUNTAIN BIKE 25K -->
+                                    <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(0, 242, 254, 0.4); border-radius: var(--radius-md); padding: 1.2rem;">
+                                        <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1rem; border-bottom: 1px solid rgba(0, 242, 254, 0.25); padding-bottom: 0.6rem;">
+                                            <span style="background: var(--accent-cyan); color: #000; font-weight: 900; border-radius: 50%; width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.95rem;">2</span>
+                                            <div>
+                                                <h4 style="color: var(--accent-cyan); margin: 0; font-size: 1.1rem;"><i class="fa-solid fa-bicycle"></i> 25 K MTB</h4>
+                                                <span style="color: var(--text-muted); font-size: 0.8rem; font-weight: 600;">Tramo 2 Mountain Bike</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="input-group">
+                                            <label for="postas_nombre_2">Nombre y Apellido <span class="requirement">*</span></label>
+                                            <input type="text" id="postas_nombre_2" name="postas_nombre_2" placeholder="Ej: Carlos Gómez">
+                                        </div>
+
+                                        <div class="input-group">
+                                            <label for="postas_cuil_2">CUIL <span class="requirement">* (11 dígitos)</span></label>
+                                            <input type="text" id="postas_cuil_2" name="postas_cuil_2" maxlength="11" placeholder="Ej: 20387776661">
+                                        </div>
+
+                                        <div class="input-group">
+                                            <label for="postas_fecha_nacimiento_2">Fecha de Nacimiento <span class="requirement">*</span></label>
+                                            <div class="date-input-container" style="display: flex; align-items: center; gap: 0.4rem;">
+                                                <input type="text" id="postas_birth_day_2" placeholder="DD" maxlength="2" style="width: 55px; text-align: center; font-size: 1.05rem; font-weight: 700; padding: 0.7rem 0.4rem;" title="Día (2 dígitos)">
+                                                <span style="font-weight: 700; color: var(--text-muted); font-size: 1.2rem;">/</span>
+                                                <input type="text" id="postas_birth_month_2" placeholder="MM" maxlength="2" style="width: 55px; text-align: center; font-size: 1.05rem; font-weight: 700; padding: 0.7rem 0.4rem;" title="Mes (2 dígitos)">
+                                                <span style="font-weight: 700; color: var(--text-muted); font-size: 1.2rem;">/</span>
+                                                <input type="text" id="postas_birth_year_2" placeholder="AAAA" maxlength="4" style="width: 75px; text-align: center; font-size: 1.05rem; font-weight: 700; padding: 0.7rem 0.4rem;" title="Año (4 dígitos)">
+                                                <input type="hidden" id="postas_fecha_nacimiento_2">
+                                            </div>
+                                        </div>
+
+                                        <div class="input-group">
+                                            <label for="postas_genero_2">Género <span class="requirement">*</span></label>
+                                            <select id="postas_genero_2" name="postas_genero_2">
+                                                <option value="" disabled selected>Selecciona género...</option>
+                                                <option value="Femenino">Femenino (Damas)</option>
+                                                <option value="Masculino">Masculino (Caballeros)</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="input-group">
+                                            <label for="postas_edad_2">Edad (25 K MTB)</label>
+                                            <input type="text" id="postas_edad_2" readonly placeholder="Completa fecha de nacimiento">
+                                        </div>
+
+                                        <div class="input-group">
+                                            <label for="postas_telefono_2">Teléfono <span class="requirement">*</span></label>
+                                            <input type="tel" id="postas_telefono_2" name="postas_telefono_2" placeholder="Ej: +54 9 260 411-2233">
+                                        </div>
+
+                                        <div class="input-group">
+                                            <label for="postas_talle_2">Talle de Remera <span class="requirement">*</span></label>
+                                            <select id="postas_talle_2" name="postas_talle_2">
+                                                <option value="" disabled selected>Selecciona talle...</option>
+                                                <option value="XS">XS</option>
+                                                <option value="S">S</option>
+                                                <option value="M">M</option>
+                                                <option value="L">L</option>
+                                                <option value="XL">XL</option>
+                                                <option value="XXL">XXL</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- TARJETA DINÁMICA DE SUMATORIA EN VIVO -->
+                                <div id="postas-summary-badge" style="background: linear-gradient(135deg, rgba(0, 242, 254, 0.12), rgba(255, 107, 53, 0.12)); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.2rem; display: flex; flex-wrap: wrap; justify-content: space-around; align-items: center; gap: 1rem; text-align: center; margin-bottom: 1.5rem;">
+                                    <div>
+                                        <span style="font-size: 0.8rem; color: var(--text-muted); display: block; text-transform: uppercase; font-weight: 700;">Sumatoria de Edades</span>
+                                        <strong id="postas-calc-sum" style="font-size: 1.7rem; color: var(--accent-cyan);">-</strong>
+                                    </div>
+                                    <div>
+                                        <span style="font-size: 0.8rem; color: var(--text-muted); display: block; text-transform: uppercase; font-weight: 700;">Composición de Dupla</span>
+                                        <strong id="postas-calc-type" style="font-size: 1.25rem; color: #fff;">-</strong>
+                                    </div>
+                                    <div>
+                                        <span style="font-size: 0.8rem; color: var(--text-muted); display: block; text-transform: uppercase; font-weight: 700;">Rango de Categoría</span>
+                                        <strong id="postas-calc-range" style="font-size: 1.25rem; color: var(--success);">-</strong>
+                                    </div>
+                                </div>
+
+                                <!-- NOMBRE DEL EQUIPO (AL FINAL DE LA SECCIÓN POSTAS, CON SUGERENCIA AUTOMÁTICA DE APELLIDOS) -->
+                                <div style="background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.2rem; margin-bottom: 1.5rem;">
+                                    <label for="postas_equipo" style="font-weight: 700; color: var(--accent-cyan); display: block; margin-bottom: 0.4rem;">
+                                        <i class="fa-solid fa-users"></i> Nombre del Equipo / Dupla <span style="font-weight: normal; color: var(--text-muted); font-size: 0.85rem;">(Opcional - Si no lo completas, se asignarán automáticamente los apellidos de ambos integrantes)</span>
+                                    </label>
+                                    <input type="text" id="postas_equipo" name="postas_equipo" placeholder="Ej: Los Galgos (o déjalo en blanco para usar apellidos)" style="width: 100%;">
+                                    <div id="postas-auto-team-preview" style="margin-top: 0.6rem; font-size: 0.9rem; color: var(--text-muted); background: rgba(0,0,0,0.2); padding: 0.6rem 0.9rem; border-radius: var(--radius-sm); border-left: 3px solid var(--accent-orange);">
+                                        Nombre oficial que se asignará al equipo: <strong id="postas-preview-team-name" style="color: var(--accent-orange); font-size: 1.05rem;">-</strong>
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- Contenedor para campos personalizados dinámicos -->
@@ -460,7 +716,8 @@
                     const bgOverlay = document.getElementById('bg-overlay');
                     if (bgOverlay) {
                         const BACKGROUND_THEMES = {
-                            default: './assets/trail_background.jpg',
+                            default: './IMAGENES/TORRECILLAS.jpg',
+                            torrecillas: './IMAGENES/TORRECILLAS.jpg',
                             snow: './assets/snow_mountain.jpg',
                             sunset: './assets/sunset_ridge.jpg',
                             rocky: './assets/rocky_valley.jpg',
