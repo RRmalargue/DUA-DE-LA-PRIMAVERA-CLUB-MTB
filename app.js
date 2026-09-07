@@ -19,12 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const altimetryImage = document.getElementById('altimetry-image');
     const paymentDetailsText = document.getElementById('payment-details-text');
     const deslindeDownload = document.getElementById('deslinde-download');
-    const gpxBtn = document.getElementById('gpx-btn');
-    const kmlBtn = document.getElementById('kml-btn');
-    const stravaBtn = document.getElementById('strava-btn');
-    const garminBtn = document.getElementById('garmin-btn');
-    const earthBtn = document.getElementById('earth-btn');
-    const startLocationBtn = document.getElementById('start-location-btn');
     const distancesContainer = document.getElementById('distances-container');
 
     // Leaflet.js variables for interactive GPX maps
@@ -333,11 +327,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         
-        if (config.tshirtImage) {
+        if (config.tshirtImage && tshirtImage) {
             tshirtImage.src = config.tshirtImage;
-            document.getElementById('tshirt-preview-card').classList.remove('hidden');
+            document.getElementById('tshirt-preview-card')?.classList.remove('hidden');
         } else {
-            document.getElementById('tshirt-preview-card').classList.add('hidden');
+            document.getElementById('tshirt-preview-card')?.classList.add('hidden');
         }
 
         const kitButtonContainer = document.getElementById('kit-button-container');
@@ -360,19 +354,20 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        if (config.altitudeMapImage) {
+        if (config.altitudeMapImage && altimetryImage) {
             altimetryImage.src = config.altitudeMapImage;
-            document.getElementById('altimetry-card').classList.remove('hidden');
+            document.getElementById('altimetry-card')?.classList.remove('hidden');
         } else {
-            document.getElementById('altimetry-card').classList.add('hidden');
+            document.getElementById('altimetry-card')?.classList.add('hidden');
         }
 
-        // Datos de pago
         // Datos de pago con resaltado de Alias y CBU e interactividad para copiar
-        let payText = config.paymentDetails || 'No se han configurado los detalles de pago.';
-        payText = payText.replace(/Alias:\s*([^\n\r]+)/gi, '<strong>Alias:</strong> <span class="highlight-pay clickable-copy" data-copy="$1" title="Toca para copiar">$1 <i class="fa-solid fa-copy" style="font-size: 0.8rem; margin-left: 0.25rem; opacity: 0.7;"></i></span>');
-        payText = payText.replace(/CBU:\s*([^\n\r]+)/gi, '<strong>CBU:</strong> <span class="highlight-pay clickable-copy" data-copy="$1" title="Toca para copiar">$1 <i class="fa-solid fa-copy" style="font-size: 0.8rem; margin-left: 0.25rem; opacity: 0.7;"></i></span>');
-        paymentDetailsText.innerHTML = payText;
+        if (paymentDetailsText) {
+            let payText = config.paymentDetails || 'No se han configurado los detalles de pago.';
+            payText = payText.replace(/Alias:\s*([^\n\r]+)/gi, '<strong>Alias:</strong> <span class="highlight-pay clickable-copy" data-copy="$1" title="Toca para copiar">$1 <i class="fa-solid fa-copy" style="font-size: 0.8rem; margin-left: 0.25rem; opacity: 0.7;"></i></span>');
+            payText = payText.replace(/CBU:\s*([^\n\r]+)/gi, '<strong>CBU:</strong> <span class="highlight-pay clickable-copy" data-copy="$1" title="Toca para copiar">$1 <i class="fa-solid fa-copy" style="font-size: 0.8rem; margin-left: 0.25rem; opacity: 0.7;"></i></span>');
+            paymentDetailsText.innerHTML = payText;
+        }
 
         // Escuchar clics para copiar al portapapeles con retroalimentación visual
         paymentDetailsText.addEventListener('click', (e) => {
@@ -397,49 +392,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Links de descargas y mapas
-        deslindeDownload.href = config.deslindeLink || '#';
-        
-        if (config.gpxLink && config.gpxLink !== '#') {
-            gpxBtn.href = config.gpxLink;
-            gpxBtn.classList.remove('hidden');
-        } else {
-            gpxBtn.classList.add('hidden');
-        }
-
-        if (config.kmlLink && config.kmlLink !== '#') {
-            kmlBtn.href = config.kmlLink;
-            kmlBtn.classList.remove('hidden');
-        } else {
-            kmlBtn.classList.add('hidden');
-        }
-
-        if (config.stravaLink && config.stravaLink !== '#') {
-            stravaBtn.href = config.stravaLink;
-            stravaBtn.classList.remove('hidden');
-        } else {
-            stravaBtn.classList.add('hidden');
-        }
-
-        if (config.garminLink && config.garminLink !== '#') {
-            garminBtn.href = config.garminLink;
-            garminBtn.classList.remove('hidden');
-        } else {
-            garminBtn.classList.add('hidden');
-        }
-
-        if (config.googleEarthLink && config.googleEarthLink !== '#') {
-            earthBtn.href = config.googleEarthLink;
-            earthBtn.classList.remove('hidden');
-        } else {
-            earthBtn.classList.add('hidden');
-        }
-
-        if (config.startLocationMapLink && config.startLocationMapLink !== '#') {
-            startLocationBtn.href = config.startLocationMapLink;
-            startLocationBtn.classList.remove('hidden');
-        } else {
-            startLocationBtn.classList.add('hidden');
-        }
+        if (deslindeDownload) deslindeDownload.href = config.deslindeLink || '#';
 
         // Renderizado de tarjetas de distancia
         distancesContainer.innerHTML = '';
@@ -727,7 +680,9 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('dashboard-dist-price').textContent = `$${currentDist.price.toLocaleString('es-AR')}`;
             document.getElementById('dashboard-dist-detail').textContent = currentDist.detail || 'Circuito competitivo de trail running con senderos naturales y paisajes desafiantes.';
 
-            // Descargas específicas de la distancia (si están presentes en el DOM)
+            // Limpieza proactiva: si por caché del navegador quedó la vieja barra de botones, eliminarla del DOM
+            const legacyGrid = document.querySelector('#dashboard-details .downloads-grid');
+            if (legacyGrid) legacyGrid.remove();
             const gpxBtn = document.getElementById('gpx-btn');
             const kmlBtn = document.getElementById('kml-btn');
             const stravaBtn = document.getElementById('strava-btn');
@@ -2354,6 +2309,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 const marker = L.marker(ptsPedestre[0]).addTo(map)
                     .bindPopup('<b>🏃 Largada / Transición Pedestre 10K</b>');
                 circuitLayers.markers.push(marker);
+            } else if (mode === 'pedestre') {
+                // Fallback elegante si aún no está el archivo GPX pedestre
+                const malargueCenter = [-35.4691, -69.5917];
+                map.setView(malargueCenter, 14);
+                const marker = L.marker(malargueCenter).addTo(map)
+                    .bindPopup('<b>🏃 Circuito Pedestre (10K)</b><br>Largada y Llegada: Polideportivo Malargüe.<br><i>Trazado oficial de 10 km.</i>');
+                circuitLayers.markers.push(marker);
             }
         }
 
@@ -2382,8 +2344,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 combinedBounds = combinedBounds.extend(allBounds[b]);
             }
             map.fitBounds(combinedBounds, { padding: [30, 30] });
-            document.getElementById('interactive-map-card')?.classList.remove('hidden');
         }
+        document.getElementById('interactive-map-card')?.classList.remove('hidden');
+        setTimeout(() => {
+            if (map) map.invalidateSize();
+        }, 200);
     }
 
     function setupDuathlonCircuits() {
@@ -2398,7 +2363,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 color: "#00f2fe",
                 gpxLink: "./IMAGENES/circuito_pedestre_10k.gpx",
                 kmlLink: "",
-                stravaLink: "https://strava.app.link/Ulz4T6kMG5b",
+                stravaLink: "https://strava.app.link/YAdF74MVi3b",
                 garminLink: "",
                 googleEarthLink: "",
                 altitudeMapImage: "./IMAGENES/MAPADEALTURA15.jpg",
@@ -2544,8 +2509,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (btnMtb) btnMtb.addEventListener('click', () => updateCircuitDisplay('mtb'));
         if (btnBoth) btnBoth.addEventListener('click', () => updateCircuitDisplay('both'));
 
-        // Carga inicial
-        updateCircuitDisplay('pedestre');
+        // Carga inicial: activar MTB 25K por defecto (tiene GPX oficial verificado)
+        updateCircuitDisplay('mtb');
     }
 
     async function loadGpxMap() {

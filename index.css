@@ -1341,3 +1341,9 @@ input[readonly] {
         opacity: 0;
     }
 }
+
+/* Ocultar definitivamente botones viejos de descarga en dashboard-details */
+#dashboard-details .downloads-grid {
+    display: none !important;
+}
+
