@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inscripciones | Trail Running Portal</title>
     <meta name="description" content="Inscríbete a la carrera de trail de forma rápida y sencilla. Completa tus datos, selecciona tu distancia y asegura tu lugar.">
-    <link rel="stylesheet" href="./index.css?v=6.1">
+    <link rel="stylesheet" href="./index.css?v=6.7">
     <!-- PWA Manifest & Mobile Config -->
     <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#00f2fe">
@@ -335,6 +335,10 @@ El mismo corredor realiza ambos tramos.</p>
                                             <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; background: rgba(255,255,255,0.06); padding: 0.6rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); user-select: none;">
                                                 <input type="radio" name="postas_tipo_especial" value="estandar" checked style="accent-color: var(--accent-orange); cursor: pointer; width: 18px; height: 18px;">
                                                 <span><strong>Estándar</strong> (Por Sumatoria de Edad)</span>
+                                            </label>
+                                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; background: rgba(255,255,255,0.06); padding: 0.6rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); user-select: none;">
+                                                <input type="radio" name="postas_tipo_especial" value="libre" style="accent-color: #ffd600; cursor: pointer; width: 18px; height: 18px;">
+                                                <span><i class="fa-solid fa-bolt" style="color: #ffd600;"></i> <strong>Posta Libre</strong> (Sin Sumatoria de Edad)</span>
                                             </label>
                                             <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; background: rgba(255,255,255,0.06); padding: 0.6rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); user-select: none;">
                                                 <input type="radio" name="postas_tipo_especial" value="tandem" style="accent-color: var(--accent-cyan); cursor: pointer; width: 18px; height: 18px;">
@@ -770,6 +774,6 @@ El mismo corredor realiza ambos tramos.</p>
             });
         }
     </script>
-    <script src="./app.js?v=6.2"></script>
+    <script src="./app.js?v=6.7"></script>
 </body>
 </html>

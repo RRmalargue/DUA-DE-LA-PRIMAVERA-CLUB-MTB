@@ -2,7 +2,7 @@
 window.RACE_CONFIG = {
   "raceName": "DUATLON DE LA PRIMAVERA CLUB MTB",
   "googleScriptUrl": "https://script.google.com/macros/s/AKfycbwUZxa21EUXzZGrkNq7DdaY_N_4UYg_90ytzCu9FWoEow5COgtb27q3mnYQFmgZ-2xQ/exec",
-  "raceDescription": " REGLAMENTO\n\nDUATLON A REALIZARSE EL DIA 1 DE NOVIEMBRE DE 2026\nEN LAS MODALIDADES PEDESTRE-MOUNTAIN BIKE\nLARGA PEDESTRE 10 KMS Y A CONTINUACION 25 KMS DE MTB\nORGANIZADO POR CLUB MTB MALARGUE.\nLUGAR: POLIDEPORTIVO MALARGUE\nHORARIO DE LARGADA 10:00 AM\n\nCOSTOS DE INSCRIPCION\nPOSTAS: 75.000 PESOS\nINDIVIDUAL: 40.000 PESOS\nCONTACTO / WHATSAPP: 2604697855 / 2604236123\nCIERRE DE INSCRIPCIONES SABADO 31 DE OCTUBRE.\nCATEGORIAS\nINDIVIDUAL DAMAS Y CABALLEROS\nHASTA 29 AÑOS\nHASTA 40 AÑOS\nMAS DE 40 AÑOS\n\nPOSTAS MASCULINA, FEMENINA Y MIXTA (POR SUMATORIA DE EDAD)\nHASTA 60 AÑOS\nHASTA 90 AÑOS\nMAS DE 90 AÑOS\n\nDATOS A TENER EN CUENTA\n\nMENORES DEBERÁN CONTAR CON AUTORIZACION DE LOS PADRES\nFICHA MEDICA TODOS LOS PARTICIPANTES\nDESLINDE DE RESPONSABILIDAD FIRMADO\nRECLAMOS 48 HS DESPUES DEL EVENTO,(POR ESCRITO)\n",
+  "raceDescription": " REGLAMENTO\n\nDUATLON A REALIZARSE EL DIA 1 DE NOVIEMBRE DE 2026\nEN LAS MODALIDADES PEDESTRE-MOUNTAIN BIKE\nLARGA PEDESTRE 10 KMS Y A CONTINUACION 25 KMS DE MTB\nORGANIZADO POR CLUB MTB MALARGUE.\nLUGAR: POLIDEPORTIVO MALARGUE\nHORARIO DE LARGADA 10:00 AM\n\nCOSTOS DE INSCRIPCION\nPOSTAS: 75.000 PESOS\nINDIVIDUAL: 40.000 PESOS\nCONTACTO / WHATSAPP: 2604697855 / 2604236123\nCIERRE DE INSCRIPCIONES SABADO 31 DE OCTUBRE.\nCATEGORIAS\nINDIVIDUAL DAMAS Y CABALLEROS\nHASTA 29 AÑOS\nHASTA 40 AÑOS\nMAS DE 40 AÑOS\n\nPOSTAS MASCULINA, FEMENINA Y MIXTA (POR SUMATORIA DE EDAD)\nHASTA 60 AÑOS\nHASTA 90 AÑOS\nMAS DE 90 AÑOS\nPOSTA LIBRE (SIN SUMATORIA DE EDAD)\n\nDATOS A TENER EN CUENTA\n\nMENORES DEBERÁN CONTAR CON AUTORIZACION DE LOS PADRES\nFICHA MEDICA TODOS LOS PARTICIPANTES\nDESLINDE DE RESPONSABILIDAD FIRMADO\nRECLAMOS 48 HS DESPUES DEL EVENTO,(POR ESCRITO)\n",
   "logoImage": "./IMAGENES/LOGO CLUB.png",
   "contactWhatsapp": "5492604697855",
   "posterImage": "",
@@ -24,13 +24,13 @@ window.RACE_CONFIG = {
       "distanceKm": "10 KMS",
       "discipline": "Pedestrismo",
       "color": "#00f2fe",
-      "gpxLink": "./IMAGENES/circuito_pedestre_10k.gpx",
+      "gpxLink": "./IMAGENES/10 K PEDESTRE DUA.gpx",
       "kmlLink": "",
       "stravaLink": "https://strava.app.link/YAdF74MVi3b",
       "garminLink": "",
       "googleEarthLink": "",
-      "altitudeMapImage": "./IMAGENES/MAPADEALTURA15.jpg",
-      "detail": "Tramo 1: 10 km pedestre con largada en el Polideportivo Malargüe."
+      "altitudeMapImage": "./IMAGENES/ALTIMETRIA_PEDESTRE_10K.svg",
+      "detail": "10 km pedestre con largada en el Polideportivo Malargüe."
     },
     "mtb": {
       "name": "Circuito MTB (25K)",
@@ -40,10 +40,10 @@ window.RACE_CONFIG = {
       "gpxLink": "./IMAGENES/MTB DUA2026.gpx",
       "kmlLink": "",
       "stravaLink": "",
-      "garminLink": "https://connect.garmin.com/modern/activity/23966685622?share_unique_id=7",
+      "garminLink": "https://connect.garmin.com/modern/activity/23e_unique_id=7",
       "googleEarthLink": "https://earth.google.com/web/@-35.438479,-69.599445,1400a,30000d",
       "altitudeMapImage": "./IMAGENES/ALTIMETRIA_MTB_25K.jpg",
-      "detail": "Tramo 2: 25 km Mountain Bike por senderos y caminos de Malargüe."
+      "detail": "25 km Mountain Bike por senderos y caminos de Malargüe."
     }
   },
   "distances": [
@@ -107,7 +107,7 @@ window.RACE_CONFIG = {
       "id": "POSTAS",
       "name": "POSTAS (10K + 25K DUPLAS)",
       "price": 75000,
-      "detail": "Modalidad Postas (Duplas): Corredor 1 realiza 10 km pedestre y Corredor 2 realiza 25 km MTB.\nCosto por dupla: $75.000.\nCategorías por sumatoria de edades de ambos integrantes.",
+      "detail": "Modalidad Postas (Duplas): Corredor 1 realiza 10 km pedestre y Corredor 2 realiza 25 km MTB.\nCosto por dupla: $75.000.\nCategorías por sumatoria de edades y opción Posta Libre (sin sumatoria de edad).",
       "gpxLink": "./IMAGENES/MTB DUA2026.gpx",
       "stravaLink": "https://strava.app.link/Ulz4T6kMG5b",
       "garminLink": "https://connect.garmin.com/modern/activity/23966685622?share_unique_id=7",
@@ -220,6 +220,13 @@ window.RACE_CONFIG = {
           "minAge": 0,
           "maxAge": 200,
           "requiresPayment": false
+        },
+        {
+          "id": "postas_libre",
+          "name": "POSTA LIBRE",
+          "minAge": 0,
+          "maxAge": 200,
+          "requiresPayment": true
         }
       ]
     }
@@ -276,8 +283,8 @@ window.RACE_CONFIG = {
     {
       "id": "talle_remera",
       "label": "Talle de Remera",
-      "required": true,
-      "enabled": true,
+      "required": false,
+      "enabled": false,
       "isDefault": true
     },
     {
