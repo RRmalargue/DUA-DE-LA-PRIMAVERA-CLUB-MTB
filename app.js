@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // IMPORTANT: Reemplazar esta URL con el Web App URL provisto por Google Apps Script al publicar el script.
     // Si la URL contiene 'https://script.google.com/macros/s/AKfycbwweMpaxheND7uCNibwxZPxV0fUqgXUTAGqUXeXcgwT84oGQFM5oIKtjfAhlhPTuQUT/exec', el sistema funcionará en MODO DEMOSTRACIÓN (simulación).
-    let GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzHS9ynr4_4yra_VMVXT01nGcGIRm1-GtAVUcqRKy-OtSAgiGVe2WznKi1arEDdHl7y/exec';
+    let GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx36D70znSB3u3fBsH5U4_8zpUUpL36Tt0RKe22KcePboTQsKmCeUORji4ox_w7JpD2/exec';
 
     // HTML Elements
     const form = document.getElementById('registration-form');
