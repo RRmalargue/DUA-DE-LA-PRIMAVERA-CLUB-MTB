@@ -1968,23 +1968,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 comprobante_nombre: uploadedFileName,
                 comprobante_tipo: uploadedFileType,
                 timestamp: new Date().toISOString(),
-                // Columnas desglosadas adicionales para Google Sheets
-                custom_nombre_equipo: teamName,
-                custom_nombre_equipo_manual: manualEq,
-                custom_corredor_pedestre: nom1,
-                custom_cuil_pedestre: cuil1,
-                custom_fecha_pedestre: fecha1,
-                custom_edad_pedestre: edad1,
-                custom_genero_pedestre: gen1,
-                custom_telefono_pedestre: tel1,
-                custom_talle_pedestre: isFieldEnabled('talle_remera') ? talle1 : '',
-                custom_corredor_mtb: nom2,
-                custom_cuil_mtb: cuil2,
-                custom_fecha_mtb: fecha2,
-                custom_edad_mtb: edad2,
-                custom_genero_mtb: gen2,
-                custom_telefono_mtb: tel2,
-                custom_talle_mtb: isFieldEnabled('talle_remera') ? talle2 : ''
+                // Desglose oficial de Postas para Google Sheets (26 columnas)
+                nombre_equipo: teamName,
+                corredor_pedestre: nom1,
+                cuil_pedestre: cuil1,
+                fecha_pedestre: fecha1,
+                edad_pedestre: edad1,
+                genero_pedestre: gen1,
+                telefono_pedestre: tel1,
+                corredor_mtb: nom2,
+                cuil_mtb: cuil2,
+                fecha_mtb: fecha2,
+                edad_mtb: edad2,
+                genero_mtb: gen2,
+                telefono_mtb: tel2
             };
         } else {
             // Formatear fecha de nacimiento a DD/MM/YYYY
