@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inscripciones | Trail Running Portal</title>
     <meta name="description" content="Inscríbete a la carrera de trail de forma rápida y sencilla. Completa tus datos, selecciona tu distancia y asegura tu lugar.">
-    <link rel="stylesheet" href="./index.css?v=7.6">
+    <link rel="stylesheet" href="./index.css?v=7.7">
     <!-- PWA Manifest & Mobile Config -->
     <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#00f2fe">
@@ -658,7 +658,7 @@ El mismo corredor realiza ambos tramos.</p>
 
                                         <!-- BOTÓN INSTANTÁNEO DE CONFIRMAR INSCRIPCIÓN DIRECTO TRAS SUBIR COMPROBANTE -->
                                         <button type="button" id="btn-submit-instant" class="btn-submit btn-quick-confirm" style="width: 100%; margin-top: 0.9rem; padding: 0.85rem 1.2rem; font-size: 1.05rem; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 0.6rem; cursor: pointer; text-decoration: none;">
-                                            <i class="fa-solid fa-circle-check"></i> Confirmar Inscripción
+                                            <i class="fa-solid fa-circle-check"></i> Confirmar Inscripción <i class="fa-brands fa-whatsapp" style="color: #25d366; font-size: 1.25rem;"></i>
                                         </button>
                                     </div>
                                 </div>
@@ -683,7 +683,7 @@ El mismo corredor realiza ambos tramos.</p>
                         </button>
                         <!-- Submit button initially hidden, replaces Next on Step 2 -->
                         <button type="submit" class="btn-submit hidden" id="btn-submit" disabled>
-                            <span>Confirmar Inscripción</span>
+                            <span>Confirmar Inscripción <i class="fa-brands fa-whatsapp" style="color: #25d366; font-size: 1.15rem; margin-left: 4px;"></i></span>
                         </button>
                     </div>
 
@@ -696,13 +696,28 @@ El mismo corredor realiza ambos tramos.</p>
 
                 <!-- Status Screens (Success / Error Loading) -->
                 <div class="status-screen hidden" id="success-screen">
-                    <div class="status-icon"><i class="fa-solid fa-check"></i></div>
-                    <h2>¡Inscripción Recibida!</h2>
-                    <p>
-                        Tu ficha y comprobante se han enviado correctamente. Estaremos verificando los datos y te notificaremos a tu correo electrónico una vez que tu pago esté acreditado.
+                    <div class="status-icon"><i class="fa-solid fa-circle-check" style="color: #25d366;"></i></div>
+                    <h2>¡Inscripción Confirmada con Éxito!</h2>
+                    <p style="margin-bottom: 1.2rem; color: #e0e0e0;">
+                        Tus datos y comprobante ya fueron guardados en la planilla oficial de la organización.
                     </p>
+
+                    <!-- Tarjeta destacada de WhatsApp -->
+                    <div style="background: rgba(37, 211, 102, 0.12); border: 1.5px solid rgba(37, 211, 102, 0.45); border-radius: var(--radius-md); padding: 1.25rem; margin: 1.2rem 0 1.8rem 0; text-align: center; box-shadow: 0 8px 25px rgba(0,0,0,0.4);">
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 0.6rem; color: #25d366; font-size: 1.15rem; font-weight: 800; margin-bottom: 0.5rem;">
+                            <i class="fa-brands fa-whatsapp" style="font-size: 1.6rem;"></i>
+                            <span>Abriendo WhatsApp...</span>
+                        </div>
+                        <p style="font-size: 0.9rem; color: #d1d5db; margin-bottom: 1.1rem; line-height: 1.5;">
+                            Se abrirá tu WhatsApp para enviar el comprobante y el resumen de tu inscripción a la organización (<strong>2604552146</strong>). Si no se abrió automáticamente, presiona el siguiente botón:
+                        </p>
+                        <a id="wa-confirm-btn" href="#" target="_blank" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.7rem; background: linear-gradient(135deg, #25d366, #128c7e); color: #ffffff; font-weight: 800; font-size: 1.05rem; padding: 0.95rem 1.8rem; border-radius: 50px; text-decoration: none; box-shadow: 0 4px 18px rgba(37, 211, 102, 0.45); transition: transform 0.2s, box-shadow 0.2s; border: none;">
+                            <i class="fa-brands fa-whatsapp" style="font-size: 1.4rem;"></i> Enviar Mensaje por WhatsApp
+                        </a>
+                    </div>
+
                     <div style="text-align: center;">
-                        <button class="btn-secondary" onclick="window.location.reload()" style="display: inline-flex;">
+                        <button class="btn-secondary" onclick="window.location.reload()" style="display: inline-flex; align-items: center; gap: 0.5rem;">
                             <i class="fa-solid fa-rotate-left"></i> Registrar nueva inscripción
                         </button>
                     </div>
@@ -712,7 +727,7 @@ El mismo corredor realiza ambos tramos.</p>
                     <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem 0;">
                         <div class="spinner" style="width: 50px; height: 50px; border-width: 4px; border-top-color: var(--accent-orange); margin-bottom: 1.5rem;"></div>
                         <h2>Procesando Inscripción...</h2>
-                        <p style="margin-top: 0.5rem;">Subiendo comprobante de pago y registrando tus datos. No cierres la ventana.</p>
+                        <p style="margin-top: 0.5rem;">Subiendo comprobante de pago y conectando con WhatsApp. No cierres la ventana.</p>
                     </div>
                 </div>
             </div>
@@ -822,6 +837,6 @@ El mismo corredor realiza ambos tramos.</p>
             });
         }
     </script>
-    <script src="./app.js?v=7.6"></script>
+    <script src="./app.js?v=7.7"></script>
 </body>
 </html>

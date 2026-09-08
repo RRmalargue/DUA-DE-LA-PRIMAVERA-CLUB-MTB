@@ -424,78 +424,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Cargar Auspiciantes (Sponsors)
-        const sponsorsContainer = document.getElementById('sponsors-container');
-        if (sponsorsContainer) {
-            sponsorsContainer.innerHTML = '';
-            const sponsorsList = (config.sponsors && config.sponsors.length > 0) 
-                ? config.sponsors 
-                : [
-                    'Auspiciante 1',
-                    'Auspiciante 2',
-                    'Auspiciante 3',
-                    'Auspiciante 4'
-                ];
-
-            // Detectar si hay un único sponsor y es una imagen
-            const isSingleImage = sponsorsList.length === 1 && 
-                (sponsorsList[0].startsWith('data:') || 
-                 sponsorsList[0].startsWith('./') || 
-                 sponsorsList[0].startsWith('http') || 
-                 sponsorsList[0].startsWith('assets/') ||
-                 sponsorsList[0].toLowerCase().endsWith('.png') ||
-                 sponsorsList[0].toLowerCase().endsWith('.jpg') ||
-                 sponsorsList[0].toLowerCase().endsWith('.jpeg'));
-
-            if (isSingleImage) {
-                // Formato de afiche único (A4 o vertical)
-                sponsorsContainer.style.display = 'block';
-                sponsorsContainer.style.textAlign = 'center';
-                sponsorsContainer.innerHTML = `
-                    <div style="margin: 0 auto; max-width: 480px; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border-color); box-shadow: 0 8px 24px rgba(0,0,0,0.35); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); background: rgba(255, 255, 255, 0.02);" class="single-sponsor-poster-container">
-                        <img src="${sponsorsList[0]}" alt="Auspiciantes Oficiales" style="width: 100%; height: auto; max-height: 650px; object-fit: contain; display: block; filter: grayscale(12%); transition: all 0.3s ease;" class="single-sponsor-img">
-                    </div>
-                `;
-                
-                // Añadir interactividad de hover premium
-                const singleCont = sponsorsContainer.querySelector('.single-sponsor-poster-container');
-                const singleImg = sponsorsContainer.querySelector('.single-sponsor-img');
-                if (singleCont && singleImg) {
-                    singleCont.addEventListener('mouseenter', () => {
-                        singleCont.style.transform = 'translateY(-4px) scale(1.015)';
-                        singleCont.style.borderColor = 'var(--accent-cyan)';
-                        singleCont.style.boxShadow = '0 12px 30px rgba(0, 242, 254, 0.25)';
-                        singleImg.style.filter = 'grayscale(0%)';
-                    });
-                    singleCont.style.cursor = 'pointer';
-                    singleCont.addEventListener('mouseleave', () => {
-                        singleCont.style.transform = 'none';
-                        singleCont.style.borderColor = '';
-                        singleCont.style.boxShadow = '';
-                        singleImg.style.filter = 'grayscale(12%)';
-                    });
-                }
-            } else {
-                // Formato de grilla normal (múltiples logos)
-                sponsorsContainer.style.display = 'flex';
-                sponsorsContainer.style.justifyContent = 'center';
-                sponsorsContainer.style.alignItems = 'center';
-                sponsorsContainer.style.gap = '1rem';
-                sponsorsContainer.style.flexWrap = 'wrap';
-
-                sponsorsList.forEach(sponsor => {
-                    const card = document.createElement('div');
-                    card.className = 'sponsor-logo-card';
-                    
-                    if (sponsor.startsWith('data:') || sponsor.startsWith('./') || sponsor.startsWith('http') || sponsor.startsWith('assets/')) {
-                        card.innerHTML = `<img src="${sponsor}" alt="Sponsor" class="sponsor-img">`;
-                    } else {
-                        card.innerHTML = `<span class="sponsor-placeholder-text"><i class="fa-solid fa-medal" style="color: var(--accent-cyan); margin-right: 0.3rem;"></i> ${sponsor}</span>`;
-                    }
-                    
-                    sponsorsContainer.appendChild(card);
-                });
-            }
+        // Auspiciantes / Sponsors removidos a pedido del usuario
+        const sponsorsCard = document.getElementById('sponsors-card');
+        if (sponsorsCard) {
+            sponsorsCard.remove();
         }
 
         // Configurar selector y pestañas de circuitos oficiales del Duatlón
@@ -2250,6 +2182,53 @@ document.addEventListener('DOMContentLoaded', () => {
             console.warn('No se pudo guardar en localStorage:', storageErr);
         }
 
+        function triggerWhatsAppSubmissionNotification(data, isPostas) {
+            const orgPhone = '5492604552146';
+            const raceTitle = (config && config.raceName) ? config.raceName : 'DUATLÓN DE LA PRIMAVERA CLUB MTB';
+            let msg = '';
+            
+            if (isPostas) {
+                msg = `¡Hola! 👋 Acabo de confirmar la inscripción de nuestra DUPLA para el *${raceTitle}* 🚴‍♂️🏃‍♂️\n\n` +
+                      `👥 *Equipo:* ${data.nombre_equipo || 'Dupla'}\n` +
+                      `⚡ *Categoría:* ${data.categoria || 'Postas'}\n` +
+                      `📏 *Distancia:* ${data.distancia || 'Postas 10K + 25K'}\n\n` +
+                      `🏃 *Pedestre (10K):* ${data.corredor_pedestre || '-'}\n` +
+                      `📋 *DNI/CUIL:* ${data.cuil_pedestre || '-'}\n` +
+                      `📱 *Tel:* ${data.telefono_pedestre || '-'}\n\n` +
+                      `🚴 *MTB (25K):* ${data.corredor_mtb || '-'}\n` +
+                      `📋 *DNI/CUIL:* ${data.cuil_mtb || '-'}\n` +
+                      `📱 *Tel:* ${data.telefono_mtb || '-'}\n\n` +
+                      `💰 *Monto:* $${data.costo || '0'}\n` +
+                      `✅ *Comprobante:* Ya adjuntado y subido en el portal.`;
+            } else {
+                const runnerName = `${data.nombre || ''} ${data.apellido || ''}`.trim();
+                msg = `¡Hola! 👋 Acabo de confirmar mi inscripción individual para el *${raceTitle}* 🚴‍♂️🏃‍♂️\n\n` +
+                      `👤 *Corredor:* ${runnerName}\n` +
+                      `📋 *DNI/CUIL:* ${data.cuil || '-'}\n` +
+                      `⚡ *Categoría:* ${data.categoria || '-'}\n` +
+                      `📏 *Distancia:* ${data.distancia || '-'}\n` +
+                      `📱 *Teléfono:* ${data.telefono || '-'}\n` +
+                      `💰 *Monto:* $${data.costo || '0'}\n\n` +
+                      `✅ *Comprobante:* Ya adjuntado y subido en el portal.`;
+            }
+
+            const waLink = `https://api.whatsapp.com/send?phone=${orgPhone}&text=${encodeURIComponent(msg)}`;
+            
+            const waConfirmBtn = document.getElementById('wa-confirm-btn');
+            if (waConfirmBtn) {
+                waConfirmBtn.href = waLink;
+            }
+
+            // Redirigir a WhatsApp de forma automática en móvil y PC
+            setTimeout(() => {
+                try {
+                    window.location.href = waLink;
+                } catch (navErr) {
+                    console.warn('Error redirigiendo a WhatsApp:', navErr);
+                }
+            }, 750);
+        }
+
         // CHECK IF IN MOCK/DEMO MODE
         if (GOOGLE_SCRIPT_URL === 'TU_SCRIPT_URL_AQUI' || GOOGLE_SCRIPT_URL.trim() === '') {
             // Simulamos retraso de envío de red de 2 segundos en modo Demo
@@ -2259,7 +2238,8 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 loadingScreen.classList.add('hidden');
                 successScreen.classList.remove('hidden');
-            }, 2500);
+                triggerWhatsAppSubmissionNotification(formData, selectedDist === 'POSTAS');
+            }, 2000);
             return;
         }
 
@@ -2277,6 +2257,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // En modo 'no-cors' la respuesta es opaca, por lo que asumimos éxito al no lanzar error de red
             loadingScreen.classList.add('hidden');
             successScreen.classList.remove('hidden');
+            triggerWhatsAppSubmissionNotification(formData, selectedDist === 'POSTAS');
 
         } catch (error) {
             console.error('Error al enviar registro:', error);
@@ -2952,7 +2933,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (config && config.clasificacionesLink && config.clasificacionesLink.trim() !== '') {
                 window.open(config.clasificacionesLink, '_blank');
             } else {
-                showCustomAlert('No todavía no, después de la carrera, estarán disponibles las clasificaciones. ¡Éxitos en tu carrera CROSS TRAIL TERCER TIEMPO!');
+                const raceName = (config && config.raceName) ? config.raceName : 'DUATLÓN DE LA PRIMAVERA CLUB MTB';
+                showCustomAlert(`No, todavía no. Después de la carrera estarán disponibles las clasificaciones.\n\n¡Éxitos en tu carrera ${raceName}!`);
             }
         });
     }

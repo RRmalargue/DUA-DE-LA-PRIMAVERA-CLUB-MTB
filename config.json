@@ -230,9 +230,7 @@
     }
   ],
   "categories": [],
-  "sponsors": [
-    "./IMAGENES/sponsor_auto_0_1786408456064.png"
-  ],
+  "sponsors": [],
   "themeColors": {
     "primary": "#00f2fe",
     "primaryGlow": "rgba(0, 242, 254, 0.35)",
