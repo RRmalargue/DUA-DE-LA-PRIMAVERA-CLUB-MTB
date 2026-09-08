@@ -52,10 +52,10 @@
       "price": 40000,
       "detail": "Modalidad Individual: 10 km pedestre y a continuación 25 km Mountain Bike.\nCosto: $40.000.\nEl mismo corredor realiza ambos tramos.",
       "gpxLink": "./IMAGENES/MTB DUA2026.gpx",
-      "stravaLink": "https://strava.app.link/Ulz4T6kMG5b",
-      "garminLink": "https://connect.garmin.com/modern/activity/23966685622?share_unique_id=7",
-      "googleEarthLink": "https://earth.google.com/web/@-35.438479,-69.599445,1400a,30000d",
-      "altitudeMapImage": "./IMAGENES/ALTIMETRIA_MTB_25K.jpg",
+      "stravaLink": "",
+      "garminLink": "",
+      "googleEarthLink": "",
+      "altitudeMapImage": "",
       "autoCategory": true,
       "categories": [
         {
@@ -109,11 +109,10 @@
       "detail": "Modalidad Postas (Duplas): Corredor 1 realiza 10 km pedestre y Corredor 2 realiza 25 km MTB.\nCosto por dupla: $75.000.\nCategorías por sumatoria de edades y opción Posta Libre (sin sumatoria de edad).",
       "gpxLink": "./IMAGENES/MTB DUA2026.gpx",
       "stravaLink": "https://strava.app.link/Ulz4T6kMG5b",
-      "garminLink": "https://connect.garmin.com/modern/activity/23966685622?share_unique_id=7",
-      "googleEarthLink": "https://earth.google.com/web/@-35.438479,-69.599445,1400a,30000d",
+      "garminLink": "",
+      "googleEarthLink": "",
       "altitudeMapImage": "./IMAGENES/ALTIMETRIA_MTB_25K.jpg",
       "autoCategory": true,
-      "isPostas": true,
       "categories": [
         {
           "id": "postas_masc_hasta_60",
