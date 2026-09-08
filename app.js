@@ -742,12 +742,15 @@ document.addEventListener('DOMContentLoaded', () => {
         // Alternar entre Formulario Individual y Formulario de Postas (Duplas)
         const indContainer = document.getElementById('individual-fields-container');
         const postasContainer = document.getElementById('postas-fields-container');
+        const ebikeIndContainer = document.getElementById('ebike-individual-container');
         if (selectedId === 'POSTAS') {
             if (indContainer) indContainer.classList.add('hidden');
             if (postasContainer) postasContainer.classList.remove('hidden');
+            if (ebikeIndContainer) ebikeIndContainer.style.display = 'none';
         } else {
             if (indContainer) indContainer.classList.remove('hidden');
             if (postasContainer) postasContainer.classList.add('hidden');
+            if (ebikeIndContainer) ebikeIndContainer.style.display = 'flex';
         }
 
         // Recalcular categoría
@@ -957,18 +960,20 @@ document.addEventListener('DOMContentLoaded', () => {
             // 1. Filtrar por rango de edad
             let candidates = currentDist.categories.filter(cat => age >= cat.minAge && age <= cat.maxAge);
 
-            // 2. Filtrar por género
+            // 2. Filtrar por género (preservando siempre la categoría EBIKE LIBRE)
             const genderClean = (gender || '').toLowerCase();
             if (genderClean.includes('fem') || genderClean.includes('dam')) {
                 candidates = candidates.filter(cat => {
                     const name = cat.name.toLowerCase();
                     const id = cat.id.toLowerCase();
+                    if (id.includes('ebike') || name.includes('ebike')) return true;
                     return !(name.includes('caballeros') || name.includes('masculino') || id.includes('caballeros') || id.includes('masculino') || id.startsWith('m_'));
                 });
             } else if (genderClean.includes('masc') || genderClean.includes('cab')) {
                 candidates = candidates.filter(cat => {
                     const name = cat.name.toLowerCase();
                     const id = cat.id.toLowerCase();
+                    if (id.includes('ebike') || name.includes('ebike')) return true;
                     return !(name.includes('damas') || name.includes('femenino') || id.includes('damas') || id.includes('femenino') || id.startsWith('f_'));
                 });
             }
@@ -980,10 +985,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     opt.textContent = cat.name;
                     inputCategoria.appendChild(opt);
                 });
+
+                const checkEbike = document.getElementById('check-ebike-individual');
+                if (checkEbike && checkEbike.checked) {
+                    const ebikeCat = candidates.find(c => c.name.includes('EBIKE'));
+                    if (ebikeCat) {
+                        inputCategoria.value = ebikeCat.name;
+                        return;
+                    }
+                }
+
                 if (previousSelection && candidates.some(c => c.name === previousSelection)) {
                     inputCategoria.value = previousSelection;
                 } else {
-                    inputCategoria.value = candidates[0].name;
+                    const standardCat = candidates.find(c => !c.name.includes('EBIKE')) || candidates[0];
+                    inputCategoria.value = standardCat.name;
                 }
                 return;
             }
@@ -1050,6 +1066,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const indBadgeCat = document.getElementById('individual-calc-category');
         const indBadgeDetails = document.getElementById('individual-calc-details');
+        const checkEbike = document.getElementById('check-ebike-individual');
+
+        // Si el corredor tildó la opción de Bicicleta Eléctrica E-Bike
+        if (checkEbike && checkEbike.checked && distanceVal === 'INDIVIDUAL') {
+            if (birthDateVal && birthDateVal.indexOf('/') !== -1 && birthDateVal.split('/').length === 3) {
+                const age = calculateAge(birthDateVal);
+                if (age > 0 && !isNaN(age)) {
+                    inputEdad.value = `${age} años`;
+                }
+            }
+            populateCategoryOptions(30, genderVal || 'Masculino', distanceVal);
+            inputCategoria.value = 'EBIKE LIBRE';
+            if (indBadgeCat) indBadgeCat.textContent = 'EBIKE LIBRE ⚡';
+            if (indBadgeDetails) indBadgeDetails.textContent = '(Bicicleta Eléctrica - Sin límite de edad)';
+            if (labelCategoria) labelCategoria.textContent = 'Categoría Oficial: EBIKE LIBRE ⚡';
+            updatePaymentStepVisibility();
+            return;
+        }
 
         if (!birthDateVal || birthDateVal.indexOf('/') === -1 || birthDateVal.split('/').length !== 3 || !genderVal) {
             inputEdad.value = '';
@@ -1082,8 +1116,29 @@ document.addEventListener('DOMContentLoaded', () => {
     if (inputCategoria) {
         ['change', 'click', 'input'].forEach(evt => {
             inputCategoria.addEventListener(evt, () => {
+                const checkEbike = document.getElementById('check-ebike-individual');
+                if (checkEbike) {
+                    if (inputCategoria.value === 'EBIKE LIBRE') {
+                        checkEbike.checked = true;
+                    } else {
+                        checkEbike.checked = false;
+                    }
+                }
+                const indBadgeCat = document.getElementById('individual-calc-category');
+                const indBadgeDetails = document.getElementById('individual-calc-details');
+                if (inputCategoria.value === 'EBIKE LIBRE') {
+                    if (indBadgeCat) indBadgeCat.textContent = 'EBIKE LIBRE ⚡';
+                    if (indBadgeDetails) indBadgeDetails.textContent = '(Bicicleta Eléctrica - Sin límite de edad)';
+                }
                 updatePaymentStepVisibility();
             });
+        });
+    }
+
+    const checkEbikeInd = document.getElementById('check-ebike-individual');
+    if (checkEbikeInd) {
+        checkEbikeInd.addEventListener('change', () => {
+            recalculateCategory();
         });
     }
 
@@ -1240,6 +1295,36 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const finalCatName = 'POSTA LIBRE';
+            if (inputCategoria) {
+                inputCategoria.innerHTML = '';
+                const opt = document.createElement('option');
+                opt.value = finalCatName;
+                opt.textContent = finalCatName;
+                inputCategoria.appendChild(opt);
+                inputCategoria.value = finalCatName;
+            }
+            updatePaymentStepVisibility();
+            return;
+        }
+
+        // 0.B MODALIDAD E-BIKE LIBRE (BICICLETA ELÉCTRICA)
+        if (postasTipo === 'ebike') {
+            if (sumEl) sumEl.textContent = (!isNaN(age1) && !isNaN(age2) && age1 > 0 && age2 > 0) ? `Sin sumatoria (${age1} + ${age2} años)` : 'Bicicleta Eléctrica';
+            if (rangeEl) rangeEl.textContent = 'EBIKE LIBRE';
+
+            if (gen1 && gen2) {
+                if (gen1 === 'Masculino' && gen2 === 'Masculino') {
+                    if (typeEl) typeEl.textContent = 'E-Bike Libre (2 Caballeros)';
+                } else if (gen1 === 'Femenino' && gen2 === 'Femenino') {
+                    if (typeEl) typeEl.textContent = 'E-Bike Libre (2 Damas)';
+                } else {
+                    if (typeEl) typeEl.textContent = 'E-Bike Libre (Mixta)';
+                }
+            } else {
+                if (typeEl) typeEl.textContent = 'E-Bike Libre (Bicicleta Eléctrica)';
+            }
+
+            const finalCatName = 'EBIKE LIBRE';
             if (inputCategoria) {
                 inputCategoria.innerHTML = '';
                 const opt = document.createElement('option');
