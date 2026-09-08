@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inscripciones | Trail Running Portal</title>
-    <meta name="description" content="Inscríbete a la carrera de trail de forma rápida y sencilla. Completa tus datos, selecciona tu distancia y asegura tu lugar.">
-    <link rel="stylesheet" href="./index.css?v=7.7">
+    <title>Inscripciones | Duatlón de la Primavera 2026</title>
+    <meta name="description" content="Inscríbete al Duatlón de la Primavera 2026 - Club MTB Malargüe de forma rápida y sencilla. Completa tus datos, selecciona tu modalidad y asegura tu lugar.">
+    <link rel="stylesheet" href="./index.css?v=7.9">
     <!-- PWA Manifest & Mobile Config -->
     <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#00f2fe">
@@ -43,7 +43,6 @@
 
             <!-- Header Section with dynamic title -->
             <header class="hero-section" style="margin-bottom: 1.5rem;">
-                <span class="badge" id="race-badge">Trail Running</span>
                 <h1 class="main-title" id="race-title">CARRERA DE MONTAÑA</h1>
                 <p class="subtitle">Desafía tus límites en la naturaleza. Mira los detalles e inscríbete a continuación.</p>
             </header>
@@ -84,10 +83,13 @@
                     </button>
                 </div>
 
-                <!-- Botón de Kit de Competidor (oculto por defecto) -->
-                <div id="kit-button-container" class="hidden" style="margin-top: 1.5rem; text-align: center; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1.2rem;">
-                    <a href="#" id="kit-image-btn" class="btn-secondary" target="_blank" style="background: rgba(0, 242, 254, 0.1) !important; border-color: var(--accent-cyan) !important; color: var(--accent-cyan) !important; display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem; padding: 0.85rem 1.8rem; text-decoration: none; font-weight: 700; border-radius: var(--radius-md); transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,242,254,0.15);">
-                        <i class="fa-solid fa-gift"></i> Ver Kit de Competidor (A4)
+                <!-- Botones de Descarga y Visualización de Deslinde de Responsabilidad -->
+                <div id="deslinde-button-container" style="margin-top: 1.2rem; text-align: center; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1.2rem; display: flex; justify-content: center; gap: 0.8rem; flex-wrap: wrap;">
+                    <a href="./IMAGENES/DESLINDE DE RESPONSABILIDAD Y ASUNCIÓN DE RIESGOS.pdf" id="btn-deslinde-pdf" class="btn-secondary" target="_blank" download="DESLINDE_DUATLON_PRIMAVERA_2026.pdf" style="background: rgba(255, 107, 53, 0.12) !important; border: 1.5px solid var(--accent-orange) !important; color: var(--accent-orange) !important; display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem; padding: 0.8rem 1.4rem; text-decoration: none; font-weight: 700; border-radius: var(--radius-md); transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(255,107,53,0.15);">
+                        <i class="fa-solid fa-file-pdf" style="font-size: 1.2rem;"></i> Descargar Deslinde (PDF)
+                    </a>
+                    <a href="./deslinde.html" id="btn-deslinde-web" class="btn-secondary" target="_blank" style="background: rgba(0, 242, 254, 0.1) !important; border: 1.5px solid var(--accent-cyan) !important; color: var(--accent-cyan) !important; display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem; padding: 0.8rem 1.4rem; text-decoration: none; font-weight: 700; border-radius: var(--radius-md); transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,242,254,0.15);">
+                        <i class="fa-solid fa-print" style="font-size: 1.2rem;"></i> Ver / Imprimir Deslinde
                     </a>
                 </div>
             </div>
@@ -391,6 +393,20 @@ El mismo corredor realiza ambos tramos.</p>
                                                     <div class="posta-type-desc">Atletas adaptados en cualquiera de los dos tramos (Bonificada)</div>
                                                 </div>
                                             </label>
+
+                                            <!-- 5. E-BIKE LIBRE -->
+                                            <label class="posta-type-card" data-type="ebike">
+                                                <input type="radio" name="postas_tipo_especial" value="ebike" class="posta-radio-input">
+                                                <div class="posta-type-content">
+                                                    <div class="posta-type-top">
+                                                        <span class="posta-custom-radio"><i class="fa-solid fa-circle-dot"></i></span>
+                                                        <span class="posta-type-badge badge-cyan" style="background: rgba(0, 242, 254, 0.2); color: var(--accent-cyan);"><i class="fa-solid fa-bolt"></i> ELÉCTRICA</span>
+                                                    </div>
+                                                    <div class="posta-type-title"><i class="fa-solid fa-bolt" style="color: #ffd600;"></i> E-Bike Libre</div>
+                                                    <div class="posta-type-subtitle">Bicicleta Eléctrica</div>
+                                                    <div class="posta-type-desc">Tramo de 25K MTB con bicicleta eléctrica (Damas, Caballeros o Mixto)</div>
+                                                </div>
+                                            </label>
                                         </div>
                                     </div>
                                 </div>
@@ -558,6 +574,14 @@ El mismo corredor realiza ambos tramos.</p>
                             <!-- Contenedor para campos personalizados dinámicos -->
                             <div id="custom-fields-container" style="grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem;"></div>
 
+                            <!-- Opción Bicicleta Eléctrica E-Bike para Individual -->
+                            <div id="ebike-individual-container" style="grid-column: 1 / -1; margin-top: 0.6rem; margin-bottom: 0.2rem; background: rgba(0, 242, 254, 0.06); border: 1px solid rgba(0, 242, 254, 0.3); border-radius: var(--radius-sm); padding: 0.85rem 1.1rem; display: flex; align-items: center; justify-content: space-between; gap: 0.8rem;">
+                                <label for="check-ebike-individual" style="display: flex; align-items: center; gap: 0.8rem; cursor: pointer; margin: 0; font-weight: 700; color: #ffffff; font-size: 0.98rem; width: 100%;">
+                                    <input type="checkbox" id="check-ebike-individual" style="width: 22px; height: 22px; accent-color: var(--accent-cyan); cursor: pointer; flex-shrink: 0;">
+                                    <span><i class="fa-solid fa-bolt" style="color: #ffd600; margin-right: 0.4rem; font-size: 1.1rem;"></i> Participo con <strong>Bicicleta Eléctrica (Categoría EBIKE LIBRE)</strong></span>
+                                </label>
+                            </div>
+
                             <!-- Categoría Asignada en Paso 1 (Destacada y editable en casos múltiples) -->
                             <div class="input-group" style="grid-column: 1 / -1; margin-top: 1rem;">
                                 <label for="categoria" id="categoria-label" style="font-weight: 700; color: var(--accent-cyan);"><i class="fa-solid fa-ranking-star"></i> Categoría Oficial Asignada</label>
@@ -716,6 +740,16 @@ El mismo corredor realiza ambos tramos.</p>
                         </a>
                     </div>
 
+                    <!-- Recordatorio de Deslinde -->
+                    <div style="background: rgba(255, 107, 53, 0.1); border: 1px dashed var(--accent-orange); border-radius: var(--radius-md); padding: 1rem; margin-bottom: 1.5rem; text-align: center;">
+                        <p style="margin: 0 0 0.6rem 0; font-size: 0.92rem; color: #ffab91;">
+                            <i class="fa-solid fa-file-signature"></i> <strong>Importante:</strong> Descarga, imprime y firma el Deslinde de Responsabilidad para presentar al retirar tu dorsal.
+                        </p>
+                        <a href="./IMAGENES/DESLINDE DE RESPONSABILIDAD Y ASUNCIÓN DE RIESGOS.pdf" target="_blank" download="DESLINDE_DUATLON_PRIMAVERA_2026.pdf" class="btn-secondary" style="font-size: 0.85rem; padding: 0.5rem 1.2rem; display: inline-flex; align-items: center; gap: 0.4rem; color: #fff; border-color: var(--accent-orange);">
+                            <i class="fa-solid fa-download"></i> Descargar Deslinde (PDF)
+                        </a>
+                    </div>
+
                     <div style="text-align: center;">
                         <button class="btn-secondary" onclick="window.location.reload()" style="display: inline-flex; align-items: center; gap: 0.5rem;">
                             <i class="fa-solid fa-rotate-left"></i> Registrar nueva inscripción
@@ -750,7 +784,7 @@ El mismo corredor realiza ambos tramos.</p>
         </main>
 
         <footer class="app-footer">
-            <p>&copy; 2026 <span id="footer-race-name">Trail Running Portal</span>. Todos los derechos reservados.</p>
+            <p>&copy; 2026 <span id="footer-race-name">Club MTB Malargüe</span>. Todos los derechos reservados.</p>
             <p style="margin-top: 0.3rem; font-size: 0.8rem; color: var(--text-muted);">
                 Diseño y Programación: <a href="https://wa.me/5492604552146" target="_blank" style="color: var(--accent-cyan); font-weight: 700; text-decoration: none; transition: color 0.2s;"><i class="fa-solid fa-laptop-code"></i> RR Cómputos! (Tel: 2604552146)</a>
             </p>
@@ -761,7 +795,7 @@ El mismo corredor realiza ambos tramos.</p>
     </div>
 
     <!-- App JavaScript Configuration -->
-    <script src="./config.js?v=6.2"></script>
+    <script src="./config.js?v=7.9"></script>
     <script>
         (function() {
             const config = window.RACE_CONFIG;
@@ -837,6 +871,6 @@ El mismo corredor realiza ambos tramos.</p>
             });
         }
     </script>
-    <script src="./app.js?v=7.7"></script>
+    <script src="./app.js?v=7.9"></script>
 </body>
 </html>

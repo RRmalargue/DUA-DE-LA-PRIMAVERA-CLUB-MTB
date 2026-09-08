@@ -95,6 +95,11 @@ h1, h2, h3, h4 {
     max-width: 760px;
 }
 
+#race-badge,
+.hero-section .badge {
+    display: none !important;
+}
+
 .badge {
     background: var(--accent-orange-dim);
     color: var(--accent-orange);

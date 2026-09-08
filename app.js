@@ -178,9 +178,18 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderRaceDetails() {
         if (!config) return;
 
+        // Eliminar completamente cualquier insignia o rastro de "Trail Running"
+        const oldBadge = document.getElementById('race-badge');
+        if (oldBadge) oldBadge.remove();
+        document.querySelectorAll('.badge, span, p, h1, h2, h3').forEach(el => {
+            if (el.id !== 'race-title' && el.textContent.trim().toLowerCase() === 'trail running') {
+                el.remove();
+            }
+        });
+
         // Configuración de la interfaz
-        raceTitle.textContent = config.raceName || 'CARRERA DE TRAIL';
-        footerRaceName.textContent = config.raceName || 'Trail Running Portal';
+        raceTitle.textContent = config.raceName || 'DUATLON DE LA PRIMAVERA CLUB MTB';
+        footerRaceName.textContent = config.raceName || 'Club MTB Malargüe';
         
         // Carga de descripción de la carrera
         const raceDescriptionText = document.getElementById('race-description-text');
@@ -640,7 +649,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (currentDist) {
             document.getElementById('dashboard-dist-title').textContent = `${currentDist.id} - ${currentDist.name}`;
             document.getElementById('dashboard-dist-price').textContent = `$${currentDist.price.toLocaleString('es-AR')}`;
-            document.getElementById('dashboard-dist-detail').textContent = currentDist.detail || 'Circuito competitivo de trail running con senderos naturales y paisajes desafiantes.';
+            document.getElementById('dashboard-dist-detail').textContent = currentDist.detail || 'Circuito competitivo de duatlón con pedestrismo y mountain bike.';
 
             // Limpieza proactiva: si por caché del navegador quedó la vieja barra de botones, eliminarla del DOM
             const legacyGrid = document.querySelector('#dashboard-details .downloads-grid');

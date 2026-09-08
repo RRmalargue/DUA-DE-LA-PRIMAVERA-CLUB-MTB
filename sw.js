@@ -1,5 +1,5 @@
 // sw.js - Service Worker para habilitar la instalación de la PWA
-const CACHE_NAME = 'trail-portal-v7.8';
+const CACHE_NAME = 'trail-portal-v7.9';
 const ASSETS = [
     './index.html',
     './afiche.html',
@@ -41,10 +41,29 @@ self.addEventListener('fetch', (e) => {
     if (e.request.method !== 'GET' || !e.request.url.startsWith(self.location.origin)) {
         return;
     }
+
+    // Network-First para HTML, JS, CSS y JSON para evitar servir contenido viejo
+    const url = e.request.url;
+    if (url.endsWith('.html') || url.endsWith('/') || url.endsWith('.json') || url.endsWith('.js') || url.endsWith('.css')) {
+        e.respondWith(
+            fetch(e.request)
+                .then((networkResponse) => {
+                    if (networkResponse && networkResponse.status === 200) {
+                        const responseClone = networkResponse.clone();
+                        caches.open(CACHE_NAME).then((cache) => cache.put(e.request, responseClone));
+                    }
+                    return networkResponse;
+                })
+                .catch(() => caches.match(e.request))
+        );
+        return;
+    }
+
+    // Cache-First para imágenes y assets estáticos pesados
     e.respondWith(
         caches.match(e.request).then((cachedResponse) => {
-            // Devolver del caché si existe, si no hacer fetch normal
             return cachedResponse || fetch(e.request);
         })
     );
 });
+
