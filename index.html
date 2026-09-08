@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inscripciones | Trail Running Portal</title>
     <meta name="description" content="Inscríbete a la carrera de trail de forma rápida y sencilla. Completa tus datos, selecciona tu distancia y asegura tu lugar.">
-    <link rel="stylesheet" href="./index.css?v=7.0">
+    <link rel="stylesheet" href="./index.css?v=7.4">
     <!-- PWA Manifest & Mobile Config -->
     <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#00f2fe">
@@ -338,26 +338,70 @@ El mismo corredor realiza ambos tramos.</p>
                                     <p style="color: var(--text-muted); font-size: 0.92rem; margin-bottom: 1rem; line-height: 1.5;">
                                         El <strong>Corredor 1</strong> realiza el tramo pedestre (10 km) y el <strong>Corredor 2</strong> realiza el tramo de ciclismo (25 km de MTB). La categoría se asigna <strong>automáticamente según la sumatoria de las dos edades</strong> y los géneros.
                                     </p>
-                                    <div class="input-group" style="margin-bottom: 0;">
-                                        <label style="font-weight: 700; color: var(--accent-orange); display: block; margin-bottom: 0.6rem;">
-                                            <i class="fa-solid fa-flag-checkered"></i> Modalidad de Posta:
-                                        </label>
-                                        <div style="display: flex; gap: 0.8rem; flex-wrap: wrap;">
-                                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; background: rgba(255,255,255,0.06); padding: 0.6rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); user-select: none;">
-                                                <input type="radio" name="postas_tipo_especial" value="estandar" checked style="accent-color: var(--accent-orange); cursor: pointer; width: 18px; height: 18px;">
-                                                <span><strong>Estándar</strong> (Por Sumatoria de Edad)</span>
+                                    <div class="postas-selector-container" style="margin-top: 1rem; margin-bottom: 0;">
+                                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.8rem; flex-wrap: wrap; gap: 0.5rem;">
+                                            <label style="font-weight: 800; color: #ffffff; font-size: 1.05rem; display: flex; align-items: center; gap: 0.6rem; text-transform: uppercase; letter-spacing: 0.03em;">
+                                                <i class="fa-solid fa-flag-checkered" style="color: var(--accent-orange); font-size: 1.2rem;"></i> Modalidad de Posta:
                                             </label>
-                                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; background: rgba(255,255,255,0.06); padding: 0.6rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); user-select: none;">
-                                                <input type="radio" name="postas_tipo_especial" value="libre" style="accent-color: #ffd600; cursor: pointer; width: 18px; height: 18px;">
-                                                <span><i class="fa-solid fa-bolt" style="color: #ffd600;"></i> <strong>Posta Libre</strong> (Sin Sumatoria de Edad)</span>
+                                            <span style="font-size: 0.8rem; background: rgba(0, 242, 254, 0.15); color: var(--accent-cyan); padding: 0.25rem 0.7rem; border-radius: 20px; font-weight: 700; border: 1px solid rgba(0, 242, 254, 0.3);">
+                                                <i class="fa-solid fa-hand-pointer"></i> Selecciona una modalidad
+                                            </span>
+                                        </div>
+                                        <div class="postas-types-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.9rem;">
+                                            <!-- 1. ESTANDAR -->
+                                            <label class="posta-type-card active" data-type="estandar">
+                                                <input type="radio" name="postas_tipo_especial" value="estandar" checked class="posta-radio-input">
+                                                <div class="posta-type-content">
+                                                    <div class="posta-type-top">
+                                                        <span class="posta-custom-radio"><i class="fa-solid fa-circle-dot"></i></span>
+                                                        <span class="posta-type-badge badge-orange"><i class="fa-solid fa-calculator"></i> OFICIAL</span>
+                                                    </div>
+                                                    <div class="posta-type-title">Estándar</div>
+                                                    <div class="posta-type-subtitle">Por Sumatoria de Edad</div>
+                                                    <div class="posta-type-desc">Categorías: -60, 61-80, 81-100, 101+ (Damas, Caballeros o Mixto)</div>
+                                                </div>
                                             </label>
-                                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; background: rgba(255,255,255,0.06); padding: 0.6rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); user-select: none;">
-                                                <input type="radio" name="postas_tipo_especial" value="tandem" style="accent-color: var(--accent-cyan); cursor: pointer; width: 18px; height: 18px;">
-                                                <span><i class="fa-solid fa-bicycle" style="color: var(--accent-cyan);"></i> <strong>Posta Tándem</strong></span>
+
+                                            <!-- 2. POSTA LIBRE -->
+                                            <label class="posta-type-card" data-type="libre">
+                                                <input type="radio" name="postas_tipo_especial" value="libre" class="posta-radio-input">
+                                                <div class="posta-type-content">
+                                                    <div class="posta-type-top">
+                                                        <span class="posta-custom-radio"><i class="fa-solid fa-circle-dot"></i></span>
+                                                        <span class="posta-type-badge badge-yellow"><i class="fa-solid fa-bolt"></i> POPULAR</span>
+                                                    </div>
+                                                    <div class="posta-type-title"><i class="fa-solid fa-bolt" style="color: #ffd600;"></i> Posta Libre</div>
+                                                    <div class="posta-type-subtitle">Sin Sumatoria de Edad</div>
+                                                    <div class="posta-type-desc">Categoría Única sin límite de edad (Damas, Caballeros o Mixto)</div>
+                                                </div>
                                             </label>
-                                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; background: rgba(255,255,255,0.06); padding: 0.6rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); user-select: none;">
-                                                <input type="radio" name="postas_tipo_especial" value="disca" style="accent-color: #00e676; cursor: pointer; width: 18px; height: 18px;">
-                                                <span><i class="fa-solid fa-wheelchair" style="color: #00e676;"></i> <strong>Posta Disca (Adaptada)</strong></span>
+
+                                            <!-- 3. TANDEM -->
+                                            <label class="posta-type-card" data-type="tandem">
+                                                <input type="radio" name="postas_tipo_especial" value="tandem" class="posta-radio-input">
+                                                <div class="posta-type-content">
+                                                    <div class="posta-type-top">
+                                                        <span class="posta-custom-radio"><i class="fa-solid fa-circle-dot"></i></span>
+                                                        <span class="posta-type-badge badge-cyan"><i class="fa-solid fa-bicycle"></i> ESPECIAL</span>
+                                                    </div>
+                                                    <div class="posta-type-title"><i class="fa-solid fa-bicycle" style="color: var(--accent-cyan);"></i> Posta Tándem</div>
+                                                    <div class="posta-type-subtitle">Bicicleta Doble</div>
+                                                    <div class="posta-type-desc">Tramo de ciclismo realizado en bicicleta tándem</div>
+                                                </div>
+                                            </label>
+
+                                            <!-- 4. DISCA / ADAPTADA -->
+                                            <label class="posta-type-card" data-type="disca">
+                                                <input type="radio" name="postas_tipo_especial" value="disca" class="posta-radio-input">
+                                                <div class="posta-type-content">
+                                                    <div class="posta-type-top">
+                                                        <span class="posta-custom-radio"><i class="fa-solid fa-circle-dot"></i></span>
+                                                        <span class="posta-type-badge badge-green"><i class="fa-solid fa-wheelchair"></i> INCLUSIVA</span>
+                                                    </div>
+                                                    <div class="posta-type-title"><i class="fa-solid fa-wheelchair" style="color: #00e676;"></i> Posta Adaptada</div>
+                                                    <div class="posta-type-subtitle">Disca (Adaptada)</div>
+                                                    <div class="posta-type-desc">Atletas adaptados en cualquiera de los dos tramos (Bonificada)</div>
+                                                </div>
                                             </label>
                                         </div>
                                     </div>
@@ -538,27 +582,27 @@ El mismo corredor realiza ambos tramos.</p>
 
                     <!-- STEP 2: Payment & Receipt Upload + Tshirt preview -->
                     <div class="form-step-content hidden" id="step-2">
-                        <div class="step-header">
-                            <h2>Pago y Comprobante</h2>
-                            <p>Realiza la transferencia e ingresa tu comprobante para finalizar la inscripción.</p>
+                        <div class="step-header" style="margin-bottom: 1.2rem;">
+                            <h2 style="margin-bottom: 0.3rem;">Pago y Comprobante</h2>
+                            <p style="margin-bottom: 0;">Realiza la transferencia e ingresa tu comprobante para finalizar la inscripción.</p>
                         </div>
 
                         <div class="form-grid grid-2">
-                            <!-- Left Column: Payment details & Summary & Tshirt Preview -->
+                            <!-- Left Column: Payment details & Summary -->
                             <div>
-                                <div class="payment-info-box">
+                                <div class="payment-info-box" style="margin-bottom: 1rem; padding: 1rem 1.2rem;">
                                     <div class="payment-info-title"><i class="fa-solid fa-bank"></i> Cuentas Habilitadas</div>
                                     <div class="payment-details" id="payment-details-text">
                                         <!-- Loaded dynamically -->
                                     </div>
-                                    <div style="margin-top: 0.8rem; background: rgba(0, 242, 254, 0.05); border: 1px dashed rgba(0, 242, 254, 0.25); border-radius: var(--radius-sm); padding: 0.6rem; text-align: center; font-size: 0.85rem; color: var(--accent-cyan);">
+                                    <div style="margin-top: 0.6rem; background: rgba(0, 242, 254, 0.05); border: 1px dashed rgba(0, 242, 254, 0.25); border-radius: var(--radius-sm); padding: 0.5rem; text-align: center; font-size: 0.82rem; color: var(--accent-cyan);">
                                         <i class="fa-solid fa-circle-info" style="margin-right: 0.3rem;"></i>
-                                        <strong>👉 COPIA EL ALIAS:</strong> ¡Toca sobre el Alias o CBU resaltado para copiarlo automáticamente!
+                                        <strong>👉 TOCA EL ALIAS O CBU:</strong> ¡Cópialo con un solo toque!
                                     </div>
                                 </div>
 
-                                <div class="summary-box">
-                                    <div class="summary-title"><i class="fa-solid fa-file-invoice-dollar"></i> Resumen de Ficha</div>
+                                <div class="summary-box" style="margin-bottom: 0; padding: 1rem 1.2rem;">
+                                    <div class="summary-title" style="margin-bottom: 0.6rem;"><i class="fa-solid fa-file-invoice-dollar"></i> Resumen de Ficha</div>
                                     <div class="summary-row">
                                         <span>Corredor:</span>
                                         <span id="summary-corredor">-</span>
@@ -575,37 +619,47 @@ El mismo corredor realiza ambos tramos.</p>
                                         <span>Total a transferir:</span>
                                         <span id="summary-monto">-</span>
                                     </div>
+
+                                    <!-- Descargar Deslinde integrado y compacto -->
+                                    <div style="margin-top: 0.9rem; padding-top: 0.7rem; border-top: 1px dashed var(--border-color); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+                                        <div style="font-size: 0.8rem; color: var(--text-muted);">
+                                            <i class="fa-solid fa-file-contract" style="color: var(--accent-cyan); margin-right: 0.2rem;"></i> Deslinde obligatorio:
+                                        </div>
+                                        <a href="#" id="deslinde-download" class="btn-secondary" target="_blank" download style="padding: 0.35rem 0.8rem; font-size: 0.8rem; border-radius: var(--radius-sm); text-decoration: none;">
+                                            <i class="fa-solid fa-download"></i> Descargar PDF
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- Right Column: Upload receipt & Waiver download -->
+                            <!-- Right Column: Upload receipt & Immediate Confirmation -->
                             <div>
-                                <div class="input-group mb-2">
-                                    <label>Descargar Deslinde</label>
-                                    <a href="#" id="deslinde-download" class="btn-secondary" target="_blank" download>
-                                        <i class="fa-solid fa-download"></i> Descargar Deslinde de Responsabilidad
-                                    </a>
-                                    <span style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.4rem;">
-                                        * Debes imprimirlo, firmarlo y presentarlo físicamente el día de la acreditación.
-                                    </span>
+                                <div class="beacon-alert" style="margin-bottom: 0.6rem; padding: 0.5rem 0.8rem; font-size: 0.85rem;">
+                                    <span class="beacon-dot"></span>
+                                    <span class="beacon-text">Es obligatorio subir el comprobante de pago para finalizar</span>
                                 </div>
 
-                                <div class="input-group">
-                                    <!-- Alert Beacon -->
-                                    <div class="beacon-alert">
-                                        <span class="beacon-dot"></span>
-                                        <span class="beacon-text">Es obligatorio subir el comprobante de pago para poder enviar la inscripción</span>
-                                    </div>
-                                    <label>Adjuntar Comprobante de Pago <span class="requirement">*</span></label>
+                                <div class="input-group" style="margin-bottom: 0.8rem;">
+                                    <label style="font-weight: 700; color: #fff; margin-bottom: 0.4rem; display: flex; align-items: center; gap: 0.5rem;">
+                                        <i class="fa-solid fa-receipt" style="color: var(--accent-orange);"></i> Adjuntar Comprobante de Pago <span class="requirement">*</span>
+                                    </label>
                                     <div class="file-upload-box" id="file-dropzone">
                                         <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
-                                        <p>Arrastra aquí tu comprobante de pago</p>
+                                        <p>Toca o arrastra aquí tu comprobante de pago</p>
                                         <span>Formatos: JPG, PNG, PDF (Máx. 5MB)</span>
                                         <input type="file" id="comprobante" class="file-input" accept=".jpg,.jpeg,.png,.pdf" required>
                                     </div>
                                     
-                                    <!-- File Preview Container -->
+                                    <!-- File Preview Container (Rich & Instant Confirmation) -->
                                     <div id="file-preview-container" class="file-preview hidden">
+                                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem;">
+                                            <span style="color: var(--success); font-weight: 800; font-size: 0.95rem; display: flex; align-items: center; gap: 0.4rem;">
+                                                <i class="fa-solid fa-circle-check"></i> ¡Comprobante listo!
+                                            </span>
+                                            <button type="button" class="remove-file-btn" id="btn-remove-file" title="Cambiar archivo" style="display: flex; align-items: center; gap: 0.3rem; font-size: 0.82rem; padding: 0.25rem 0.6rem; border-radius: var(--radius-sm); background: rgba(255,82,82,0.15); color: #ff5252;">
+                                                <i class="fa-solid fa-trash-can"></i> Cambiar
+                                            </button>
+                                        </div>
                                         <div class="file-preview-info">
                                             <i class="fa-solid fa-file-image file-preview-icon" id="preview-icon"></i>
                                             <div>
@@ -613,16 +667,18 @@ El mismo corredor realiza ambos tramos.</p>
                                                 <div class="file-size" id="preview-filesize">240 KB</div>
                                             </div>
                                         </div>
-                                        <button type="button" class="remove-file-btn" id="btn-remove-file" title="Eliminar archivo">
-                                            <i class="fa-solid fa-circle-xmark"></i>
+
+                                        <!-- BOTÓN INSTANTÁNEO DE CONFIRMAR INSCRIPCIÓN DIRECTO TRAS SUBIR COMPROBANTE -->
+                                        <button type="button" id="btn-submit-instant" class="btn-submit btn-quick-confirm" style="width: 100%; margin-top: 0.9rem; padding: 0.85rem 1.2rem; font-size: 1.05rem; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 0.6rem; cursor: pointer; text-decoration: none;">
+                                            <i class="fa-solid fa-circle-check"></i> Confirmar Inscripción
                                         </button>
                                     </div>
                                 </div>
 
-                                <div class="terms-highlight-box mt-2" id="terms-container" style="text-align: center; border: 1px dashed var(--accent-orange); background: rgba(255, 107, 53, 0.08); padding: 1rem; border-radius: var(--radius-md);">
-                                    <p style="font-size: 1.05rem; font-weight: 800; color: #ff8c5a; margin: 0; display: flex; align-items: center; justify-content: center; gap: 0.5rem; text-transform: uppercase; letter-spacing: 0.03em;">
-                                        <i class="fa-solid fa-circle-check" style="color: var(--success); font-size: 1.2rem; filter: drop-shadow(0 0 5px rgba(0,230,118,0.4));"></i>
-                                        ¡Ya casi terminas! Sube tu comprobante y estarás INSCRIPTO
+                                <div class="terms-highlight-box" id="terms-container" style="text-align: center; border: 1px dashed var(--accent-orange); background: rgba(255, 107, 53, 0.08); padding: 0.75rem 1rem; border-radius: var(--radius-md); margin-top: 0.6rem;">
+                                    <p style="font-size: 0.92rem; font-weight: 800; color: #ff8c5a; margin: 0; display: flex; align-items: center; justify-content: center; gap: 0.5rem; text-transform: uppercase; letter-spacing: 0.02em;">
+                                        <i class="fa-solid fa-flag-checkered" style="color: var(--accent-cyan);"></i>
+                                        ¡Último paso para asegurar tu lugar en la largada!
                                     </p>
                                 </div>
                             </div>
@@ -785,6 +841,6 @@ El mismo corredor realiza ambos tramos.</p>
             });
         }
     </script>
-    <script src="./app.js?v=7.1"></script>
+    <script src="./app.js?v=7.4"></script>
 </body>
 </html>

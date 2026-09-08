@@ -830,11 +830,137 @@ document.addEventListener('DOMContentLoaded', () => {
         updatePaymentStepVisibility();
     }
 
-    // 3. VALIDACIÓN DE CUIL (11 dígitos, solo números)
+    // -------------------------------------------------------------
+    // MOTOR DE AUTODETECCIÓN INTELIGENTE DE GÉNERO (CUIL / NOMBRES)
+    // -------------------------------------------------------------
+    function guessGender(fullName) {
+        if (!fullName) return null;
+        
+        let firstName = fullName.trim().split(/\s+/)[0];
+        if (!firstName) return null;
+        
+        firstName = firstName.toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, ""); // Quitar acentos
+            
+        const femaleNames = new Set([
+            "maria", "ana", "belen", "lujan", "carmen", "pilar", "sol", "luz", "flor", 
+            "ruth", "ester", "abril", "ines", "lucia", "sofia", "rocio", "dolores", 
+            "mercedes", "soledad", "beatriz", "raquel", "isabel", "noemi", "miriam", 
+            "abigail", "elizabeth", "yamila", "camila", "valeria", "micaela", "romina",
+            "florencia", "carolina", "antonela", "antonella", "giuliana", "daiana", "dayana",
+            "milagros", "lourdes", "estela", "cecilia", "silvia", "monica", "patricia",
+            "sandra", "marta", "martha", "claudia", "gabriela", "daniela", "andrea",
+            "susana", "liliana", "graciela", "teresa", "alicia", "paola", "lorena",
+            "gisela", "giselle", "vanesa", "vanessa", "yanina", "marina", "natalia",
+            "melisa", "melissa", "eugenia", "victoria", "agustina", "marcela", "julieta",
+            "laura", "ximena", "jimena", "marisa", "silvana", "carla", "valeska", "ivana",
+            "tamara", "anabela", "magali", "guadalupe", "constanza", "candela", "barbara",
+            "eliana", "mariela", "brenda", "jessica", "yesica", "nadia", "sabrina",
+            "deborah", "debora", "carina", "karina", "noelia", "maite", "luciana",
+            "marianela", "solange", "ayelen", "mailen", "celeste", "azul", "jazmin",
+            "malena", "macarena", "lucrecia", "clarisa", "fatima", "berenice", "aldana"
+        ]);
+        
+        const maleNames = new Set([
+            "luca", "lucas", "bautista", "sasha", "gianluca", "tomas", "matias", 
+            "nicolas", "josue", "rene", "jose", "angel", "ariel", "juan", "carlos",
+            "pedro", "luis", "jorge", "miguel", "hector", "sergio", "diego", "walter",
+            "claudio", "marcelo", "fernando", "ruben", "raul", "gustavo", "victor",
+            "martin", "alejandro", "roberto", "daniel", "julio", "oscar", "ricardo",
+            "manuel", "cesar", "hugo", "pablo", "alberto", "eduardo", "guillermo",
+            "gabriel", "cristian", "christian", "gonzalo", "luciano", "franco", "leandro",
+            "maximiliano", "emanuel", "emmanuel", "joaquin", "ignacio", "marcos", "facundo",
+            "agustin", "rodrigo", "felipe", "santino", "valentin", "benjamin", "mateo",
+            "santiago", "thiago", "tiago", "enzo", "bruno", "gaston", "mauro", "dario",
+            "damian", "federico", "adrian", "alvaro", "alexis", "alan", "nahuel",
+            "lautaro", "nehemias", "isaias", "elias", "jeremias", "ezequiel", "braian",
+            "brian", "kevin", "axel", "jonathan", "jonatan", "ramiro", "sebastian",
+            "esteban", "german", "patricio", "fabricio", "fabrizio", "mariano"
+        ]);
+
+        if (maleNames.has(firstName)) {
+            return 'Masculino';
+        }
+        
+        if (femaleNames.has(firstName)) {
+            return 'Femenino';
+        }
+        
+        if (firstName.endsWith('a')) {
+            return 'Femenino';
+        }
+        
+        if (firstName.endsWith('o') || firstName.endsWith('os')) {
+            return 'Masculino';
+        }
+        
+        if (
+            firstName.endsWith('el') || 
+            firstName.endsWith('or') || 
+            firstName.endsWith('an') || 
+            firstName.endsWith('on') || 
+            firstName.endsWith('en') || 
+            firstName.endsWith('as') || 
+            firstName.endsWith('is') || 
+            firstName.endsWith('us') || 
+            firstName.endsWith('ur') || 
+            firstName.endsWith('id') || 
+            (firstName.endsWith('es') && !['mercedes', 'dolores', 'ines'].includes(firstName))
+        ) {
+            return 'Masculino';
+        }
+        
+        return null;
+    }
+
+    function autoDetectAndApplyGender(cuilEl, nameEl, generoEl, onUpdate) {
+        if (!generoEl) return;
+
+        let detected = null;
+
+        // 1. Detección prioritaria por prefijo de CUIL argentino (20 = Caballeros, 27 = Damas)
+        if (cuilEl) {
+            const cleanCuil = (cuilEl.value || '').replace(/\D/g, '');
+            if (cleanCuil.length >= 2) {
+                if (cleanCuil.startsWith('27')) {
+                    detected = 'Femenino';
+                } else if (cleanCuil.startsWith('20')) {
+                    detected = 'Masculino';
+                }
+            }
+        }
+
+        // 2. Si el CUIL no definió género (o prefijo 23/24), autodetectar por primer nombre
+        if (!detected && nameEl) {
+            const nameVal = (nameEl.value || '').trim();
+            if (nameVal.length >= 2) {
+                detected = guessGender(nameVal);
+            }
+        }
+
+        // Si se detectó género y difiere del actual, actualizarlo de inmediato
+        if (detected && generoEl.value !== detected) {
+            generoEl.value = detected;
+            updateFieldHighlight(generoEl);
+            if (typeof onUpdate === 'function') {
+                onUpdate();
+            }
+        }
+    }
+
+    // 3. VALIDACIÓN DE CUIL Y AUTODETECCIÓN DE GÉNERO
     inputCuil.addEventListener('input', (e) => {
         // Remover cualquier caracter no numérico
         let cleanValue = e.target.value.replace(/\D/g, '');
         e.target.value = cleanValue; // Limitar entrada a números únicamente
+        autoDetectAndApplyGender(inputCuil, inputNombre, inputGenero, recalculateCategory);
+    });
+    inputCuil.addEventListener('change', () => {
+        autoDetectAndApplyGender(inputCuil, inputNombre, inputGenero, recalculateCategory);
+    });
+    inputCuil.addEventListener('paste', () => {
+        setTimeout(() => autoDetectAndApplyGender(inputCuil, inputNombre, inputGenero, recalculateCategory), 50);
     });
 
     // 4. CÁLCULO DE EDAD Y CATEGORÍA
@@ -1384,19 +1510,50 @@ document.addEventListener('DOMContentLoaded', () => {
         const pNom2 = document.getElementById('postas_nombre_2');
         const pEquipo = document.getElementById('postas_equipo');
 
-        if (pNom1) pNom1.addEventListener('input', updatePostasTeamNamePreview);
-        if (pNom2) pNom2.addEventListener('input', updatePostasTeamNamePreview);
+        const triggerAutoGender1 = () => {
+            autoDetectAndApplyGender(pCuil1, pNom1, pGen1, recalculatePostasCategory);
+        };
+
+        const triggerAutoGender2 = () => {
+            autoDetectAndApplyGender(pCuil2, pNom2, pGen2, recalculatePostasCategory);
+        };
+
+        if (pNom1) {
+            pNom1.addEventListener('input', () => {
+                updatePostasTeamNamePreview();
+                triggerAutoGender1();
+            });
+            pNom1.addEventListener('change', triggerAutoGender1);
+            pNom1.addEventListener('paste', () => setTimeout(triggerAutoGender1, 50));
+        }
+
+        if (pNom2) {
+            pNom2.addEventListener('input', () => {
+                updatePostasTeamNamePreview();
+                triggerAutoGender2();
+            });
+            pNom2.addEventListener('change', triggerAutoGender2);
+            pNom2.addEventListener('paste', () => setTimeout(triggerAutoGender2, 50));
+        }
+
         if (pEquipo) pEquipo.addEventListener('input', updatePostasTeamNamePreview);
 
         if (pCuil1) {
             pCuil1.addEventListener('input', (e) => {
                 e.target.value = e.target.value.replace(/\D/g, '');
+                triggerAutoGender1();
             });
+            pCuil1.addEventListener('change', triggerAutoGender1);
+            pCuil1.addEventListener('paste', () => setTimeout(triggerAutoGender1, 50));
         }
+
         if (pCuil2) {
             pCuil2.addEventListener('input', (e) => {
                 e.target.value = e.target.value.replace(/\D/g, '');
+                triggerAutoGender2();
             });
+            pCuil2.addEventListener('change', triggerAutoGender2);
+            pCuil2.addEventListener('paste', () => setTimeout(triggerAutoGender2, 50));
         }
 
         const updatePostas1 = () => {
@@ -1478,10 +1635,38 @@ document.addEventListener('DOMContentLoaded', () => {
         if (pGen1) pGen1.addEventListener('change', recalculatePostasCategory);
         if (pGen2) pGen2.addEventListener('change', recalculatePostasCategory);
 
+        // Soporte interactivo para las tarjetas visuales de tipo de postas
+        const postaCards = document.querySelectorAll('.posta-type-card');
+        postaCards.forEach(card => {
+            card.addEventListener('click', () => {
+                postaCards.forEach(c => c.classList.remove('active'));
+                card.classList.add('active');
+                const radio = card.querySelector('input[type="radio"]');
+                if (radio) {
+                    radio.checked = true;
+                    radio.dispatchEvent(new Event('change'));
+                }
+            });
+        });
+
         const tipoRadios = document.querySelectorAll('input[name="postas_tipo_especial"]');
         tipoRadios.forEach(radio => {
-            radio.addEventListener('change', recalculatePostasCategory);
+            radio.addEventListener('change', () => {
+                postaCards.forEach(c => {
+                    const r = c.querySelector('input[type="radio"]');
+                    if (r && r.checked) {
+                        c.classList.add('active');
+                    } else {
+                        c.classList.remove('active');
+                    }
+                });
+                recalculatePostasCategory();
+            });
         });
+
+        // Autodetección inicial por si el navegador o localStorage autocompletó datos
+        triggerAutoGender1();
+        triggerAutoGender2();
 
         // Actualización inicial
         updatePostasTeamNamePreview();
@@ -1801,6 +1986,13 @@ document.addEventListener('DOMContentLoaded', () => {
             fileDropzone.classList.add('hidden');
             filePreviewContainer.classList.remove('hidden');
             validateSubmitButton();
+            // Desplazar suavemente a la acción de confirmación para que el usuario no deba hacer scroll
+            setTimeout(() => {
+                const instantBtn = document.getElementById('btn-submit-instant') || btnSubmit;
+                if (instantBtn) {
+                    instantBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            }, 80);
         } catch (err) {
             console.error('Error convirtiendo archivo:', err);
             showError('Ocurrió un error al procesar el archivo. Reinténtalo.');
@@ -1838,29 +2030,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function formatBytes(bytes) {
+    function formatBytes(bytes, decimals = 2) {
         if (bytes === 0) return '0 Bytes';
         const k = 1024;
-        const sizes = ['Bytes', 'KB', 'MB'];
+        const dm = decimals < 0 ? 0 : decimals;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
         const i = Math.floor(Math.log(bytes) / Math.log(k));
-        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
     }
 
     function checkIfCategoryRequiresPayment() {
-        const selectedDistId = document.getElementById('selected-distance-id').value;
-        const currentDist = (config.distances || []).find(d => d.id === selectedDistId);
-        
-        if (!currentDist) return true;
-
-        const categoryName = (inputCategoria.value || '').trim().toLowerCase();
-        
-        // Failsafe backup rules: si contiene disca, no paga.
-        if (categoryName.includes('disca')) {
-            return false;
-        }
-
-        if (categoryName && currentDist.categories && currentDist.categories.length > 0) {
-            const matchedCat = currentDist.categories.find(c => (c.name || '').trim().toLowerCase() === categoryName);
+        // En modo Postas o categorías específicas, verificar si la categoría elegida está bonificada ($0)
+        const selectedCat = inputCategoria ? inputCategoria.value : '';
+        if (selectedCat && config && config.categories) {
+            const matchedCat = config.categories.find(c => c.name === selectedCat || c.id === selectedCat);
             if (matchedCat) {
                 return matchedCat.requiresPayment !== false;
             }
@@ -1877,6 +2060,26 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             btnSubmit.disabled = false;
         }
+
+        const instantBtn = document.getElementById('btn-submit-instant');
+        if (instantBtn) {
+            instantBtn.disabled = btnSubmit.disabled;
+            instantBtn.style.opacity = btnSubmit.disabled ? '0.5' : '1';
+            instantBtn.style.cursor = btnSubmit.disabled ? 'not-allowed' : 'pointer';
+        }
+    }
+
+    // Listener para el botón instantáneo de confirmar inscripción dentro del contenedor de subida
+    const instantSubmitBtn = document.getElementById('btn-submit-instant');
+    if (instantSubmitBtn) {
+        instantSubmitBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (btnSubmit && !btnSubmit.disabled) {
+                btnSubmit.click();
+            } else if (form) {
+                form.requestSubmit();
+            }
+        });
     }
 
     function updatePaymentStepVisibility() {
@@ -2167,83 +2370,17 @@ document.addEventListener('DOMContentLoaded', () => {
         updateFieldHighlight(field);
     });
 
-    // Autodetectar género a partir del primer nombre en español/argentino
+    // Autodetectar género para modalidad individual a partir de CUIL o primer nombre
     if (inputNombre && inputGenero) {
-        inputNombre.addEventListener('input', () => {
-            const val = inputNombre.value.trim();
-            if (val.length >= 3) {
-                const guessed = guessGender(val);
-                if (guessed) {
-                    inputGenero.value = guessed;
-                    updateFieldHighlight(inputGenero);
-                    recalculateCategory();
-                }
-            }
-        });
-        inputNombre.addEventListener('change', () => {
-            recalculateCategory();
-        });
-    }
-
-    function guessGender(fullName) {
-        if (!fullName) return null;
+        const triggerIndividualAutoGender = () => {
+            autoDetectAndApplyGender(inputCuil, inputNombre, inputGenero, recalculateCategory);
+        };
+        inputNombre.addEventListener('input', triggerIndividualAutoGender);
+        inputNombre.addEventListener('change', triggerIndividualAutoGender);
+        inputNombre.addEventListener('paste', () => setTimeout(triggerIndividualAutoGender, 50));
         
-        let firstName = fullName.trim().split(/\s+/)[0];
-        if (!firstName) return null;
-        
-        firstName = firstName.toLowerCase()
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, ""); // Quitar acentos
-            
-        const femaleNames = new Set([
-            "maria", "ana", "belen", "lujan", "carmen", "pilar", "sol", "luz", "flor", 
-            "ruth", "ester", "abril", "ines", "lucia", "sofia", "rocio", "dolores", 
-            "mercedes", "soledad", "beatriz", "raquel", "isabel", "noemi", "miriam", 
-            "abigail", "elizabeth", "yamila", "camila", "valeria", "micaela", "romina",
-            "florencia", "carolina", "antonela", "antonella", "giuliana", "daiana", 
-            "milagros", "lourdes", "estela", "cecilia", "silvia", "monica", "patricia",
-            "sandra", "marta", "martha", "claudia", "gabriela", "daniela", "andrea",
-            "susana", "liliana", "graciela", "teresa", "alicia"
-        ]);
-        
-        const maleNames = new Set([
-            "luca", "lucas", "bautista", "sasha", "gianluca", "tomas", "matias", 
-            "nicolas", "josue", "rene", "jose", "angel", "ariel"
-        ]);
-
-        if (maleNames.has(firstName)) {
-            return 'Masculino';
-        }
-        
-        if (femaleNames.has(firstName)) {
-            return 'Femenino';
-        }
-        
-        if (firstName.endsWith('a')) {
-            return 'Femenino';
-        }
-        
-        if (firstName.endsWith('o') || firstName.endsWith('os')) {
-            return 'Masculino';
-        }
-        
-        if (
-            firstName.endsWith('el') || 
-            firstName.endsWith('or') || 
-            firstName.endsWith('an') || 
-            firstName.endsWith('on') || 
-            firstName.endsWith('en') || 
-            firstName.endsWith('as') || 
-            firstName.endsWith('is') || 
-            firstName.endsWith('us') || 
-            firstName.endsWith('ur') || 
-            firstName.endsWith('id') || 
-            (firstName.endsWith('es') && !['mercedes', 'dolores', 'ines'].includes(firstName))
-        ) {
-            return 'Masculino';
-        }
-        
-        return null;
+        // Ejecución inicial por si hay datos cargados previamente
+        triggerIndividualAutoGender();
     }
 
     // Escuchar selección de distancia
