@@ -62,7 +62,7 @@ window.RACE_CONFIG = {
         {
           "id": "ind_damas_hasta_29",
           "name": "INDIVIDUAL DAMAS HASTA 29 AÑOS",
-          "minAge": 14,
+          "minAge": 0,
           "maxAge": 29,
           "requiresPayment": true
         },
@@ -83,7 +83,7 @@ window.RACE_CONFIG = {
         {
           "id": "ind_caballeros_hasta_29",
           "name": "INDIVIDUAL CABALLEROS HASTA 29 AÑOS",
-          "minAge": 14,
+          "minAge": 0,
           "maxAge": 29,
           "requiresPayment": true
         },

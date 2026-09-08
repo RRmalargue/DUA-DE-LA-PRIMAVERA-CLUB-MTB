@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inscripciones | Trail Running Portal</title>
     <meta name="description" content="Inscríbete a la carrera de trail de forma rápida y sencilla. Completa tus datos, selecciona tu distancia y asegura tu lugar.">
-    <link rel="stylesheet" href="./index.css?v=6.9">
+    <link rel="stylesheet" href="./index.css?v=7.0">
     <!-- PWA Manifest & Mobile Config -->
     <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#00f2fe">
@@ -313,6 +313,17 @@ El mismo corredor realiza ambos tramos.</p>
                                     <label for="team_origen">Team o Lugar de Origen <span style="font-weight: normal; color: var(--text-muted);">(Opcional)</span></label>
                                     <input type="text" id="team_origen" name="team_origen" placeholder="Ej: Club MTB Malargüe o San Rafael" autocomplete="organization">
                                 </div>
+
+                                <!-- RESUMEN DE CATEGORÍA ASIGNADA PARA MODALIDAD INDIVIDUAL -->
+                                <div id="individual-summary-badge" style="grid-column: 1 / -1; background: linear-gradient(135deg, rgba(0, 242, 254, 0.12), rgba(0, 230, 118, 0.08)); border: 1px solid rgba(0, 242, 254, 0.35); border-radius: var(--radius-md); padding: 1.2rem; margin-top: 0.5rem;">
+                                    <div style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); font-weight: 700; margin-bottom: 0.4rem;">
+                                        <i class="fa-solid fa-ranking-star" style="color: var(--accent-cyan);"></i> Categoría Oficial Asignada:
+                                    </div>
+                                    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+                                        <strong id="individual-calc-category" style="font-size: 1.25rem; color: #ffffff;">-</strong>
+                                        <span id="individual-calc-details" style="font-size: 0.9rem; color: var(--accent-cyan); font-weight: 600;">(Completa fecha de nacimiento y género)</span>
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- 2. CONTENEDOR MODALIDAD POSTAS (DUPLAS PEDESTRISMO 10K + MTB 25K) -->
@@ -517,9 +528,9 @@ El mismo corredor realiza ambos tramos.</p>
 
                             <!-- Categoría Asignada en Paso 1 (Destacada y editable en casos múltiples) -->
                             <div class="input-group" style="grid-column: 1 / -1; margin-top: 1rem;">
-                                <label for="categoria" id="categoria-label" style="font-weight: 700; color: var(--accent-blue);">Categoría Asignada automáticamente</label>
-                                <select id="categoria" name="categoria" style="background: rgba(0, 242, 254, 0.05); border-color: rgba(0, 242, 254, 0.3); font-weight: bold; font-size: 1.1rem; color: var(--accent-blue); padding: 0.9rem; border-radius: var(--radius-sm); width: 100%; cursor: pointer;">
-                                    <option value="">Se calculará al elegir fecha, género y distancia</option>
+                                <label for="categoria" id="categoria-label" style="font-weight: 700; color: var(--accent-cyan);"><i class="fa-solid fa-ranking-star"></i> Categoría Oficial Asignada</label>
+                                <select id="categoria" name="categoria" style="background: rgba(0, 242, 254, 0.08); border: 1px solid rgba(0, 242, 254, 0.4); font-weight: bold; font-size: 1.15rem; color: #ffffff; padding: 0.9rem; border-radius: var(--radius-sm); width: 100%; cursor: pointer;">
+                                    <option value="" style="color: #000;">Se calculará al elegir fecha, género y distancia</option>
                                 </select>
                             </div>
                         </div>
@@ -774,6 +785,6 @@ El mismo corredor realiza ambos tramos.</p>
             });
         }
     </script>
-    <script src="./app.js?v=6.9"></script>
+    <script src="./app.js?v=7.0"></script>
 </body>
 </html>
