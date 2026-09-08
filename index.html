@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inscripciones | Trail Running Portal</title>
     <meta name="description" content="Inscríbete a la carrera de trail de forma rápida y sencilla. Completa tus datos, selecciona tu distancia y asegura tu lugar.">
-    <link rel="stylesheet" href="./index.css?v=7.4">
+    <link rel="stylesheet" href="./index.css?v=7.5">
     <!-- PWA Manifest & Mobile Config -->
     <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#00f2fe">
@@ -160,21 +160,9 @@ El mismo corredor realiza ambos tramos.</p>
                     </div>
 
                     <!-- Botones de descarga y enlaces del circuito activo -->
-                    <div class="downloads-grid" id="circuit-downloads-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.8rem;">
-                        <a href="#" id="circuit-gpx-btn" class="btn-secondary gpx-btn" download target="_blank" style="height: 44px; font-size: 0.92rem;">
+                    <div class="downloads-grid" id="circuit-downloads-grid" style="display: flex; gap: 0.8rem; flex-wrap: wrap;">
+                        <a href="#" id="circuit-gpx-btn" class="btn-secondary gpx-btn" download target="_blank" style="height: 46px; font-size: 0.95rem; font-weight: 700; width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem; text-decoration: none; border-radius: var(--radius-md);">
                             <i class="fa-solid fa-route"></i> Descargar GPX
-                        </a>
-                        <a href="#" id="circuit-kml-btn" class="btn-secondary kml-btn hidden" download target="_blank" style="height: 44px; font-size: 0.92rem;">
-                            <i class="fa-solid fa-earth-americas"></i> Descargar KML
-                        </a>
-                        <a href="#" id="circuit-strava-btn" class="btn-secondary hidden" target="_blank" style="background: rgba(252, 76, 2, 0.1) !important; border-color: #fc4c02 !important; color: #fc4c02 !important; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; height: 44px; border-radius: var(--radius-md); font-weight: 600; font-size: 0.92rem;">
-                            <i class="fa-brands fa-strava"></i> Strava
-                        </a>
-                        <a href="#" id="circuit-garmin-btn" class="btn-secondary hidden" target="_blank" style="background: rgba(0, 150, 214, 0.1) !important; border-color: #0096d6 !important; color: #0096d6 !important; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; height: 44px; border-radius: var(--radius-md); font-weight: 600; font-size: 0.92rem;">
-                            <i class="fa-solid fa-compass"></i> Garmin
-                        </a>
-                        <a href="#" id="circuit-earth-btn" class="btn-secondary hidden" target="_blank" style="background: rgba(66, 133, 244, 0.1) !important; border-color: #4285f4 !important; color: #4285f4 !important; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; height: 44px; border-radius: var(--radius-md); font-weight: 600; font-size: 0.92rem;">
-                            <i class="fa-solid fa-earth-americas"></i> Google Earth
                         </a>
                     </div>
                 </div>
@@ -841,6 +829,6 @@ El mismo corredor realiza ambos tramos.</p>
             });
         }
     </script>
-    <script src="./app.js?v=7.4"></script>
+    <script src="./app.js?v=7.5"></script>
 </body>
 </html>

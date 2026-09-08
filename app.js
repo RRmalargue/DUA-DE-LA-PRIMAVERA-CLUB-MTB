@@ -2611,8 +2611,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 gpxLink: "./IMAGENES/MTB DUA2026.gpx",
                 kmlLink: "",
                 stravaLink: "",
-                garminLink: "https://connect.garmin.com/modern/activity/23966685622?share_unique_id=7",
-                googleEarthLink: "https://earth.google.com/web/@-35.438479,-69.599445,1400a,30000d",
+                garminLink: "",
+                googleEarthLink: "",
                 altitudeMapImage: "./IMAGENES/ALTIMETRIA_MTB_25K.jpg",
                 detail: "Tramo 2: 25 km Mountain Bike por senderos y caminos de Malargüe."
             }
@@ -2627,10 +2627,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const detailEl = document.getElementById('circuit-active-detail');
 
         const gpxBtn = document.getElementById('circuit-gpx-btn');
-        const kmlBtn = document.getElementById('circuit-kml-btn');
-        const stravaBtn = document.getElementById('circuit-strava-btn');
-        const garminBtn = document.getElementById('circuit-garmin-btn');
-        const earthBtn = document.getElementById('circuit-earth-btn');
 
         function updateLinkButton(btn, url, isDownload = false) {
             if (!btn) return;
@@ -2673,10 +2669,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (detailEl) detailEl.textContent = data.detail || '10 km de pedestrismo competitivo con largada en el Polideportivo Malargüe.';
 
                 updateLinkButton(gpxBtn, data.gpxLink, true);
-                updateLinkButton(kmlBtn, data.kmlLink);
-                updateLinkButton(stravaBtn, data.stravaLink);
-                updateLinkButton(garminBtn, data.garminLink);
-                updateLinkButton(earthBtn, data.googleEarthLink);
+                if (gpxBtn) gpxBtn.innerHTML = '<i class="fa-solid fa-route"></i> Descargar GPX (Pedestre 10K)';
 
                 const targetAlti = (data.altitudeMapImage && data.altitudeMapImage.trim() !== '') ? data.altitudeMapImage : OFFICIAL_MTB_ALTIMETRIA_DATA;
                 if (altimetryImage) {
@@ -2704,10 +2697,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (detailEl) detailEl.textContent = data.detail || '25 km de Mountain Bike por senderos y caminos de Malargüe.';
 
                 updateLinkButton(gpxBtn, data.gpxLink, true);
-                updateLinkButton(kmlBtn, data.kmlLink);
-                updateLinkButton(stravaBtn, data.stravaLink);
-                updateLinkButton(garminBtn, data.garminLink);
-                updateLinkButton(earthBtn, data.googleEarthLink);
+                if (gpxBtn) gpxBtn.innerHTML = '<i class="fa-solid fa-route"></i> Descargar GPX (MTB 25K)';
 
                 const targetPedAlti = (data.altitudeMapImage && data.altitudeMapImage.trim() !== '') ? data.altitudeMapImage : OFFICIAL_PEDESTRE_ALTIMETRIA_DATA;
                 if (altimetryImage) {
@@ -2733,11 +2723,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 if (detailEl) detailEl.textContent = 'Visualización conjunta en el mapa: Línea Celeste para Pedestre (10K) y Línea Naranja para Mountain Bike (25K).';
 
-                updateLinkButton(gpxBtn, circuits.pedestre?.gpxLink || circuits.mtb?.gpxLink, true);
-                updateLinkButton(kmlBtn, circuits.pedestre?.kmlLink || circuits.mtb?.kmlLink);
-                updateLinkButton(stravaBtn, circuits.pedestre?.stravaLink || circuits.mtb?.stravaLink);
-                updateLinkButton(garminBtn, circuits.mtb?.garminLink || circuits.pedestre?.garminLink);
-                updateLinkButton(earthBtn, circuits.pedestre?.googleEarthLink || circuits.mtb?.googleEarthLink);
+                updateLinkButton(gpxBtn, circuits.mtb?.gpxLink || circuits.pedestre?.gpxLink, true);
+                if (gpxBtn) gpxBtn.innerHTML = '<i class="fa-solid fa-route"></i> Descargar GPX';
             }
 
             renderCircuitOnMap(tab);
