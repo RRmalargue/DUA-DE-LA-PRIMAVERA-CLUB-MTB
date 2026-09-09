@@ -644,12 +644,15 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('selected-distance-summary-title').textContent = `${selectedId} - ${selectedName}`;
         document.getElementById('selected-distance-summary-price').textContent = `$${selectedPrice.toLocaleString('es-AR')}`;
 
-        // 3. Actualizar el panel de detalles del dashboard
+        // 3. Actualizar el panel de detalles del dashboard si existe
         const currentDist = config.distances.find(d => d.id === selectedId);
         if (currentDist) {
-            document.getElementById('dashboard-dist-title').textContent = `${currentDist.id} - ${currentDist.name}`;
-            document.getElementById('dashboard-dist-price').textContent = `$${currentDist.price.toLocaleString('es-AR')}`;
-            document.getElementById('dashboard-dist-detail').textContent = currentDist.detail || 'Circuito competitivo de duatlón con pedestrismo y mountain bike.';
+            const distTitle = document.getElementById('dashboard-dist-title');
+            if (distTitle) distTitle.textContent = `${currentDist.id} - ${currentDist.name}`;
+            const distPrice = document.getElementById('dashboard-dist-price');
+            if (distPrice) distPrice.textContent = `$${currentDist.price.toLocaleString('es-AR')}`;
+            const distDetail = document.getElementById('dashboard-dist-detail');
+            if (distDetail) distDetail.textContent = currentDist.detail || '';
 
             // Limpieza proactiva: si por caché del navegador quedó la vieja barra de botones, eliminarla del DOM
             const legacyGrid = document.querySelector('#dashboard-details .downloads-grid');
