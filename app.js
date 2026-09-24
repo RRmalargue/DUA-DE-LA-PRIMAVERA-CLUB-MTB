@@ -1689,6 +1689,76 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
+        function updatePostaSelectedBanner() {
+            const postasTipo = document.querySelector('input[name="postas_tipo_especial"]:checked')?.value || 'estandar';
+            const alertBox = document.getElementById('posta-selected-alert');
+            const nameEl = document.getElementById('posta-selected-name');
+            const iconEl = document.getElementById('posta-selected-icon');
+            const tagEl = document.getElementById('posta-selected-tag');
+            
+            if (!alertBox || !nameEl) return;
+            
+            const meta = {
+                estandar: {
+                    name: 'Posta Estándar (Por Sumatoria de Edad)',
+                    tag: 'Oficial',
+                    color: 'var(--accent-orange)',
+                    border: 'rgba(255, 107, 53, 0.45)',
+                    bg: 'linear-gradient(135deg, rgba(255, 107, 53, 0.16), rgba(0, 0, 0, 0.35))',
+                    icon: 'fa-calculator'
+                },
+                libre: {
+                    name: 'Posta Libre (Sin Sumatoria de Edad)',
+                    tag: 'Popular',
+                    color: '#ffd600',
+                    border: 'rgba(255, 214, 0, 0.45)',
+                    bg: 'linear-gradient(135deg, rgba(255, 214, 0, 0.16), rgba(0, 0, 0, 0.35))',
+                    icon: 'fa-bolt'
+                },
+                tandem: {
+                    name: 'Posta Tándem (Bicicleta Doble)',
+                    tag: 'Especial',
+                    color: 'var(--accent-cyan)',
+                    border: 'rgba(0, 242, 254, 0.45)',
+                    bg: 'linear-gradient(135deg, rgba(0, 242, 254, 0.16), rgba(0, 0, 0, 0.35))',
+                    icon: 'fa-bicycle'
+                },
+                disca: {
+                    name: 'Posta Adaptada / Disca (Bonificada $0)',
+                    tag: 'Inclusiva',
+                    color: '#00e676',
+                    border: 'rgba(0, 230, 118, 0.45)',
+                    bg: 'linear-gradient(135deg, rgba(0, 230, 118, 0.16), rgba(0, 0, 0, 0.35))',
+                    icon: 'fa-wheelchair'
+                },
+                ebike: {
+                    name: 'Posta E-Bike Libre (Bicicleta Eléctrica - Sin Sumatoria)',
+                    tag: '⚡ Eléctrica',
+                    color: '#ffd600',
+                    border: 'rgba(255, 214, 0, 0.6)',
+                    bg: 'linear-gradient(135deg, rgba(255, 214, 0, 0.22), rgba(0, 242, 254, 0.12))',
+                    icon: 'fa-bolt'
+                }
+            };
+            
+            const info = meta[postasTipo] || meta.estandar;
+            nameEl.textContent = info.name;
+            nameEl.style.color = info.color;
+            alertBox.style.borderColor = info.border;
+            alertBox.style.background = info.bg;
+            alertBox.style.boxShadow = `0 0 20px ${info.border}`;
+            if (tagEl) {
+                tagEl.textContent = info.tag;
+                tagEl.style.color = info.color;
+                tagEl.style.background = `${info.color === '#ffd600' ? 'rgba(255, 214, 0, 0.2)' : info.color === '#00e676' ? 'rgba(0, 230, 118, 0.2)' : 'rgba(255, 107, 53, 0.2)'}`;
+                tagEl.style.borderColor = info.border;
+            }
+            if (iconEl) {
+                iconEl.className = `fa-solid ${info.icon}`;
+                iconEl.style.color = info.color;
+            }
+        }
+
         const tipoRadios = document.querySelectorAll('input[name="postas_tipo_especial"]');
         tipoRadios.forEach(radio => {
             radio.addEventListener('change', () => {
@@ -1700,6 +1770,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         c.classList.remove('active');
                     }
                 });
+                updatePostaSelectedBanner();
                 recalculatePostasCategory();
             });
         });
@@ -1710,6 +1781,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Actualización inicial
         updatePostasTeamNamePreview();
+        updatePostaSelectedBanner();
     }
 
     // Inicializar listeners de postas

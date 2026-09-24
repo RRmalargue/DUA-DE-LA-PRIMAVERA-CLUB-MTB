@@ -1528,4 +1528,17 @@ input[readonly] {
     color: #00e676;
 }
 
+.posta-type-card[data-type="ebike"].active,
+.posta-type-card[data-type="ebike"]:has(input:checked) {
+    border-color: #ffd600;
+    background: linear-gradient(145deg, rgba(255, 214, 0, 0.22), rgba(0, 242, 254, 0.1));
+    box-shadow: 0 0 25px rgba(255, 214, 0, 0.45);
+    transform: translateY(-2px);
+}
+
+.posta-type-card[data-type="ebike"].active .posta-custom-radio,
+.posta-type-card[data-type="ebike"]:has(input:checked) .posta-custom-radio {
+    color: #ffd600;
+}
+
 
