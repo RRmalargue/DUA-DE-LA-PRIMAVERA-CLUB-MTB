@@ -1284,6 +1284,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const gen2 = pGen2El ? pGen2El.value : '';
 
         const sumEl = document.getElementById('postas-calc-sum');
+        const sumLabel = document.getElementById('postas-calc-sum-label');
         const typeEl = document.getElementById('postas-calc-type');
         const rangeEl = document.getElementById('postas-calc-range');
 
@@ -1291,7 +1292,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 0. MODALIDAD POSTA LIBRE (SIN SUMATORIA DE EDAD)
         if (postasTipo === 'libre') {
-            if (sumEl) sumEl.textContent = (!isNaN(age1) && !isNaN(age2) && age1 > 0 && age2 > 0) ? `Sin sumatoria (${age1} + ${age2} años)` : 'Sin sumatoria de edad';
+            if (sumLabel) sumLabel.textContent = 'Sumatoria de Edades';
+            if (sumEl) {
+                sumEl.textContent = 'No suma edades (Libre)';
+                sumEl.style.fontSize = '1.25rem';
+            }
             if (rangeEl) rangeEl.textContent = 'POSTA LIBRE';
 
             if (gen1 && gen2) {
@@ -1319,10 +1324,14 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // 0.B MODALIDAD E-BIKE LIBRE (BICICLETA ELÉCTRICA)
+        // 0.B MODALIDAD E-BIKE LIBRE (BICICLETA ELÉCTRICA - NO SUMA EDADES)
         if (postasTipo === 'ebike') {
-            if (sumEl) sumEl.textContent = (!isNaN(age1) && !isNaN(age2) && age1 > 0 && age2 > 0) ? `Sin sumatoria (${age1} + ${age2} años)` : 'Bicicleta Eléctrica';
-            if (rangeEl) rangeEl.textContent = 'EBIKE LIBRE';
+            if (sumLabel) sumLabel.textContent = 'Sumatoria de Edades';
+            if (sumEl) {
+                sumEl.textContent = 'No suma edades (Libre)';
+                sumEl.style.fontSize = '1.25rem';
+            }
+            if (rangeEl) rangeEl.textContent = 'EBIKE LIBRE ⚡';
 
             if (gen1 && gen2) {
                 if (gen1 === 'Masculino' && gen2 === 'Masculino') {
@@ -1415,6 +1424,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         // 3. MODALIDAD ESTÁNDAR (POR SUMATORIA DE EDADES)
         else {
+            if (sumLabel) sumLabel.textContent = 'Sumatoria de Edades';
+            if (sumEl) sumEl.style.fontSize = '1.7rem';
             if (!isNaN(age1) && !isNaN(age2) && age1 > 0 && age2 > 0) {
                 const sumAge = age1 + age2;
                 if (sumEl) sumEl.textContent = `${sumAge} años (${age1} + ${age2})`;
@@ -1833,7 +1844,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 const catVal = inputCategoria ? inputCategoria.value : '';
-                error = error || checkField(inputCategoria, !catVal || (!catVal.startsWith('POSTAS') && catVal !== 'POSTA LIBRE'), 'Asegúrate de completar las fechas y géneros de ambos corredores para calcular la categoría.');
+                error = error || checkField(inputCategoria, !catVal || (!catVal.startsWith('POSTAS') && catVal !== 'POSTA LIBRE' && catVal !== 'EBIKE LIBRE'), 'Asegúrate de completar las fechas y géneros de ambos corredores para calcular la categoría.');
             } else {
                 // Validación para modalidad INDIVIDUAL
                 if (isFieldEnabled('nombre') && isFieldRequired('nombre')) {
@@ -2071,10 +2082,22 @@ document.addEventListener('DOMContentLoaded', () => {
     function checkIfCategoryRequiresPayment() {
         // En modo Postas o categorías específicas, verificar si la categoría elegida está bonificada ($0)
         const selectedCat = inputCategoria ? inputCategoria.value : '';
-        if (selectedCat && config && config.categories) {
-            const matchedCat = config.categories.find(c => c.name === selectedCat || c.id === selectedCat);
-            if (matchedCat) {
-                return matchedCat.requiresPayment !== false;
+        if (selectedCat && config) {
+            if (config.categories) {
+                const matchedCat = config.categories.find(c => c.name === selectedCat || c.id === selectedCat);
+                if (matchedCat) {
+                    return matchedCat.requiresPayment !== false;
+                }
+            }
+            if (config.distances) {
+                for (const dist of config.distances) {
+                    if (dist.categories) {
+                        const matchedCat = dist.categories.find(c => c.name === selectedCat || c.id === selectedCat);
+                        if (matchedCat) {
+                            return matchedCat.requiresPayment !== false;
+                        }
+                    }
+                }
             }
         }
         
