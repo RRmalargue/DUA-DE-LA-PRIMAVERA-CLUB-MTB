@@ -17,7 +17,7 @@ window.RACE_CONFIG = {
   "startLocationMapLink": "https://www.google.com/maps/search/?api=1&query=-35.468421,-69.591072",
   "deslindeLink": "./IMAGENES/DESLINDE DE RESPONSABILIDAD Y ASUNCIÓN DE RIESGOS.pdf",
   "clasificacionesLink": "",
-  "paymentDetails": "A NOMBRE DE MARIANO MOYANO/VERONICA RUIZ\n\nALIAS: CLUB.MTB.MALARGUE",
+  "paymentDetails": "A NOMBRE DE: VERONICA FABIANA RUIZ\n\nALIAS: CLUBMTB.MALARGUE\n CBU: 0000003100038458289829",
   "circuits": {
     "pedestre": {
       "name": "Circuito Pedestre (10K)",
