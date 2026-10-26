@@ -107,6 +107,13 @@ window.RACE_CONFIG = {
           "minAge": 0,
           "maxAge": 120,
           "requiresPayment": true
+        },
+        {
+          "id": "ind_gravel_libre",
+          "name": "GRAVEL LIBRE",
+          "minAge": 1,
+          "maxAge": 70,
+          "requiresPayment": true
         }
       ]
     },
