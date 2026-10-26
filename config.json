@@ -110,8 +110,8 @@
         {
           "id": "ind_gravel_libre",
           "name": "GRAVEL LIBRE",
-          "minAge": 1,
-          "maxAge": 70,
+          "minAge": 0,
+          "maxAge": 120,
           "requiresPayment": true
         }
       ]

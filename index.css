@@ -405,6 +405,59 @@ select[size]:not([size="1"]) option {
     cursor: pointer;
 }
 
+/* High-contrast Category Select & Options */
+#categoria {
+    background-color: #0b111e !important;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2300f2fe%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E") !important;
+    color: #ffffff !important;
+    border: 1.5px solid #00f2fe !important;
+    box-shadow: 0 0 12px rgba(0, 242, 254, 0.25) !important;
+    font-weight: 700 !important;
+}
+
+#categoria option,
+select option {
+    background-color: #0b111e !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    font-size: 1rem !important;
+    padding: 0.75rem 1rem !important;
+}
+
+#categoria option:hover,
+#categoria option:checked,
+select option:hover,
+select option:checked {
+    background-color: #00f2fe !important;
+    color: #000000 !important;
+    font-weight: 800 !important;
+}
+
+/* Individual Modality Cards Interactive Styling */
+.individual-type-card {
+    transition: all 0.25s ease;
+    user-select: none;
+}
+.individual-type-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+.individual-type-card.active[data-ind-type="mtb"] {
+    border-color: var(--accent-cyan) !important;
+    background: rgba(0, 242, 254, 0.14) !important;
+    box-shadow: 0 0 15px rgba(0, 242, 254, 0.25) !important;
+}
+.individual-type-card.active[data-ind-type="gravel"] {
+    border-color: #00e676 !important;
+    background: rgba(0, 230, 118, 0.14) !important;
+    box-shadow: 0 0 15px rgba(0, 230, 118, 0.3) !important;
+}
+.individual-type-card.active[data-ind-type="ebike"] {
+    border-color: #ffd600 !important;
+    background: rgba(255, 214, 0, 0.14) !important;
+    box-shadow: 0 0 15px rgba(255, 214, 0, 0.3) !important;
+}
+
 input::placeholder {
     color: var(--text-muted);
 }

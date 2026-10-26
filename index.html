@@ -587,19 +587,59 @@ Categorías por sumatoria de edades de ambos integrantes.</div>
                             <!-- Contenedor para campos personalizados dinámicos -->
                             <div id="custom-fields-container" style="grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem;"></div>
 
-                            <!-- Opción Bicicleta Eléctrica E-Bike para Individual -->
-                            <div id="ebike-individual-container" style="grid-column: 1 / -1; margin-top: 0.6rem; margin-bottom: 0.2rem; background: rgba(0, 242, 254, 0.06); border: 1px solid rgba(0, 242, 254, 0.3); border-radius: var(--radius-sm); padding: 0.85rem 1.1rem; display: flex; align-items: center; justify-content: space-between; gap: 0.8rem;">
-                                <label for="check-ebike-individual" style="display: flex; align-items: center; gap: 0.8rem; cursor: pointer; margin: 0; font-weight: 700; color: #ffffff; font-size: 0.98rem; width: 100%;">
-                                    <input type="checkbox" id="check-ebike-individual" style="width: 22px; height: 22px; accent-color: var(--accent-cyan); cursor: pointer; flex-shrink: 0;">
-                                    <span><i class="fa-solid fa-bolt" style="color: #ffd600; margin-right: 0.4rem; font-size: 1.1rem;"></i> Participo con <strong>Bicicleta Eléctrica (Categoría EBIKE LIBRE)</strong></span>
-                                </label>
+                            <!-- Selector de Modalidad / Tipo de Bicicleta para Individual -->
+                            <div id="individual-modality-selector-container" style="grid-column: 1 / -1; margin-top: 0.8rem; margin-bottom: 0.5rem; background: rgba(0, 242, 254, 0.05); border: 1px solid rgba(0, 242, 254, 0.28); border-radius: var(--radius-md); padding: 1rem 1.2rem;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
+                                    <label style="font-weight: 800; color: #ffffff; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.03em; display: flex; align-items: center; gap: 0.6rem;">
+                                        <i class="fa-solid fa-bicycle" style="color: var(--accent-cyan); font-size: 1.15rem;"></i> Modalidad / Tipo de Bicicleta Individual:
+                                    </label>
+                                    <span style="font-size: 0.8rem; background: rgba(0, 242, 254, 0.15); color: var(--accent-cyan); padding: 0.22rem 0.65rem; border-radius: 20px; font-weight: 700; border: 1px solid rgba(0, 242, 254, 0.3);">
+                                        <i class="fa-solid fa-hand-pointer"></i> Elige tu modalidad
+                                    </span>
+                                </div>
+                                <div class="individual-types-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 0.85rem;">
+                                    <!-- 1. MTB TRADICIONAL -->
+                                    <label class="individual-type-card active" data-ind-type="mtb" id="card-ind-mtb" style="border: 2px solid var(--accent-cyan); background: rgba(0, 242, 254, 0.12); border-radius: var(--radius-md); padding: 0.85rem 1rem; cursor: pointer; display: flex; align-items: center; gap: 0.75rem; transition: all 0.25s ease;">
+                                        <input type="radio" name="individual_tipo_bici" value="mtb" checked class="ind-radio-input" style="accent-color: var(--accent-cyan); width: 20px; height: 20px; cursor: pointer; flex-shrink: 0;">
+                                        <div>
+                                            <div style="color: #ffffff; font-weight: 800; font-size: 1rem; display: flex; align-items: center; gap: 0.35rem;">
+                                                <i class="fa-solid fa-mountain" style="color: var(--accent-cyan);"></i> MTB Tradicional
+                                            </div>
+                                            <div style="color: var(--accent-cyan); font-size: 0.8rem; font-weight: 600;">Por Edad y Género</div>
+                                            <div style="color: var(--text-muted); font-size: 0.75rem; line-height: 1.2; margin-top: 0.2rem;">Damas / Caballeros (-29, -40, +40)</div>
+                                        </div>
+                                    </label>
+                                    <!-- 2. GRAVEL LIBRE -->
+                                    <label class="individual-type-card" data-ind-type="gravel" id="card-ind-gravel" style="border: 1.5px solid rgba(255, 255, 255, 0.15); background: rgba(255, 255, 255, 0.03); border-radius: var(--radius-md); padding: 0.85rem 1rem; cursor: pointer; display: flex; align-items: center; gap: 0.75rem; transition: all 0.25s ease;">
+                                        <input type="radio" name="individual_tipo_bici" value="gravel" class="ind-radio-input" style="accent-color: #00e676; width: 20px; height: 20px; cursor: pointer; flex-shrink: 0;">
+                                        <div>
+                                            <div style="color: #00e676; font-weight: 800; font-size: 1rem; display: flex; align-items: center; gap: 0.35rem;">
+                                                <i class="fa-solid fa-bicycle" style="color: #00e676;"></i> Gravel Libre 🚴
+                                            </div>
+                                            <div style="color: #00e676; font-size: 0.8rem; font-weight: 600;">Bicicleta Gravel</div>
+                                            <div style="color: var(--text-muted); font-size: 0.75rem; line-height: 1.2; margin-top: 0.2rem;">Sin límite de edad / Categoría única</div>
+                                        </div>
+                                    </label>
+                                    <!-- 3. E-BIKE LIBRE -->
+                                    <label class="individual-type-card" data-ind-type="ebike" id="card-ind-ebike" style="border: 1.5px solid rgba(255, 255, 255, 0.15); background: rgba(255, 255, 255, 0.03); border-radius: var(--radius-md); padding: 0.85rem 1rem; cursor: pointer; display: flex; align-items: center; gap: 0.75rem; transition: all 0.25s ease;">
+                                        <input type="radio" name="individual_tipo_bici" value="ebike" class="ind-radio-input" style="accent-color: #ffd600; width: 20px; height: 20px; cursor: pointer; flex-shrink: 0;">
+                                        <div>
+                                            <div style="color: #ffd600; font-weight: 800; font-size: 1rem; display: flex; align-items: center; gap: 0.35rem;">
+                                                <i class="fa-solid fa-bolt" style="color: #ffd600;"></i> E-Bike Libre ⚡
+                                            </div>
+                                            <div style="color: #ffd600; font-size: 0.8rem; font-weight: 600;">Bicicleta Eléctrica</div>
+                                            <div style="color: var(--text-muted); font-size: 0.75rem; line-height: 1.2; margin-top: 0.2rem;">Sin límite de edad / Categoría única</div>
+                                        </div>
+                                    </label>
+                                </div>
+                                <input type="checkbox" id="check-ebike-individual" style="display: none;" aria-hidden="true">
                             </div>
 
                             <!-- Categoría Asignada en Paso 1 (Destacada y editable en casos múltiples) -->
-                            <div class="input-group" style="grid-column: 1 / -1; margin-top: 1rem;">
-                                <label for="categoria" id="categoria-label" style="font-weight: 700; color: var(--accent-cyan);"><i class="fa-solid fa-ranking-star"></i> Categoría Oficial Asignada</label>
-                                <select id="categoria" name="categoria" style="background: rgba(0, 242, 254, 0.08); border: 1px solid rgba(0, 242, 254, 0.4); font-weight: bold; font-size: 1.15rem; color: #ffffff; padding: 0.9rem; border-radius: var(--radius-sm); width: 100%; cursor: pointer;">
-                                    <option value="" style="color: #000;">Se calculará al elegir fecha, género y distancia</option>
+                            <div class="input-group" style="grid-column: 1 / -1; margin-top: 0.8rem;">
+                                <label for="categoria" id="categoria-label" style="font-weight: 800; color: var(--accent-cyan); font-size: 1.05rem;"><i class="fa-solid fa-ranking-star"></i> Categoría Oficial Asignada</label>
+                                <select id="categoria" name="categoria" style="background-color: #0b111e; border: 1.5px solid #00f2fe; font-weight: 800; font-size: 1.12rem; color: #ffffff; padding: 0.95rem 1.1rem; border-radius: var(--radius-sm); width: 100%; cursor: pointer; box-shadow: 0 0 12px rgba(0, 242, 254, 0.2);">
+                                    <option value="" style="background-color: #0b111e; color: #ffffff;">Se calculará al elegir fecha, género y distancia</option>
                                 </select>
                             </div>
                         </div>

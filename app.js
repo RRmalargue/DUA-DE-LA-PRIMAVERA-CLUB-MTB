@@ -755,14 +755,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const indContainer = document.getElementById('individual-fields-container');
         const postasContainer = document.getElementById('postas-fields-container');
         const ebikeIndContainer = document.getElementById('ebike-individual-container');
+        const indModalityContainer = document.getElementById('individual-modality-selector-container');
+        const indSummaryBadge = document.getElementById('individual-summary-badge');
         if (selectedId === 'POSTAS') {
             if (indContainer) indContainer.classList.add('hidden');
             if (postasContainer) postasContainer.classList.remove('hidden');
             if (ebikeIndContainer) ebikeIndContainer.style.display = 'none';
+            if (indModalityContainer) indModalityContainer.style.display = 'none';
+            if (indSummaryBadge) indSummaryBadge.style.display = 'none';
         } else {
             if (indContainer) indContainer.classList.remove('hidden');
             if (postasContainer) postasContainer.classList.add('hidden');
-            if (ebikeIndContainer) ebikeIndContainer.style.display = 'flex';
+            if (ebikeIndContainer) ebikeIndContainer.style.display = 'none';
+            if (indModalityContainer) indModalityContainer.style.display = 'block';
+            if (indSummaryBadge) indSummaryBadge.style.display = 'block';
         }
 
         // Recalcular categoría
@@ -910,6 +916,48 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => autoDetectAndApplyGender(inputCuil, inputNombre, inputGenero, recalculateCategory), 50);
     });
 
+    // -------------------------------------------------------------
+    // GESTIÓN DE MODALIDADES INDIVIDUALES (MTB, GRAVEL, EBIKE)
+    // -------------------------------------------------------------
+    function getSelectedIndividualModality() {
+        const checkedRadio = document.querySelector('input[name="individual_tipo_bici"]:checked');
+        if (checkedRadio) return checkedRadio.value;
+        const checkEbike = document.getElementById('check-ebike-individual');
+        if (checkEbike && checkEbike.checked) return 'ebike';
+        return 'mtb';
+    }
+
+    function setSelectedIndividualModality(modality) {
+        const radios = document.querySelectorAll('input[name="individual_tipo_bici"]');
+        radios.forEach(r => {
+            r.checked = (r.value === modality);
+        });
+        const cards = document.querySelectorAll('.individual-type-card');
+        cards.forEach(c => {
+            if (c.getAttribute('data-ind-type') === modality) {
+                c.classList.add('active');
+                if (modality === 'mtb') {
+                    c.style.border = '2px solid var(--accent-cyan)';
+                    c.style.background = 'rgba(0, 242, 254, 0.12)';
+                } else if (modality === 'gravel') {
+                    c.style.border = '2px solid #00e676';
+                    c.style.background = 'rgba(0, 230, 118, 0.14)';
+                } else if (modality === 'ebike') {
+                    c.style.border = '2px solid #ffd600';
+                    c.style.background = 'rgba(255, 214, 0, 0.14)';
+                }
+            } else {
+                c.classList.remove('active');
+                c.style.border = '1.5px solid rgba(255, 255, 255, 0.15)';
+                c.style.background = 'rgba(255, 255, 255, 0.03)';
+            }
+        });
+        const checkEbike = document.getElementById('check-ebike-individual');
+        if (checkEbike) {
+            checkEbike.checked = (modality === 'ebike');
+        }
+    }
+
     // 4. CÁLCULO DE EDAD Y CATEGORÍA
     function populateCategoryOptions(age, gender, distanceId) {
         if (!inputCategoria) return;
@@ -923,6 +971,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const opt = document.createElement('option');
             opt.value = '';
             opt.textContent = 'Se calculará al elegir fecha, género y distancia';
+            opt.style.backgroundColor = '#0b111e';
+            opt.style.color = '#ffffff';
             inputCategoria.appendChild(opt);
             inputCategoria.value = '';
             return;
@@ -935,6 +985,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const opt = document.createElement('option');
             opt.value = distanceId || 'General';
             opt.textContent = distanceId || 'General';
+            opt.style.backgroundColor = '#0b111e';
+            opt.style.color = '#ffffff';
             inputCategoria.appendChild(opt);
             inputCategoria.value = distanceId || 'General';
             return;
@@ -949,6 +1001,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     const opt = document.createElement('option');
                     opt.value = cat.name;
                     opt.textContent = cat.name;
+                    opt.style.backgroundColor = '#0b111e';
+                    opt.style.color = '#ffffff';
+                    opt.style.fontWeight = '700';
+                    opt.style.padding = '8px';
                     inputCategoria.appendChild(opt);
                 });
                 if (previousSelection && currentDist.categories.some(c => c.name === previousSelection)) {
@@ -964,6 +1020,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const opt = document.createElement('option');
                 opt.value = '';
                 opt.textContent = 'Se calculará al elegir fecha y género';
+                opt.style.backgroundColor = '#0b111e';
+                opt.style.color = '#ffffff';
                 inputCategoria.appendChild(opt);
                 inputCategoria.value = '';
                 return;
@@ -972,13 +1030,14 @@ document.addEventListener('DOMContentLoaded', () => {
             // 1. Filtrar por rango de edad
             let candidates = currentDist.categories.filter(cat => age >= cat.minAge && age <= cat.maxAge);
 
-            // 2. Filtrar por género (preservando siempre la categoría EBIKE LIBRE)
+            // 2. Filtrar por género (preservando siempre las categorías especiales EBIKE LIBRE y GRAVEL LIBRE)
             const genderClean = (gender || '').toLowerCase();
             if (genderClean.includes('fem') || genderClean.includes('dam')) {
                 candidates = candidates.filter(cat => {
                     const name = cat.name.toLowerCase();
                     const id = cat.id.toLowerCase();
                     if (id.includes('ebike') || name.includes('ebike')) return true;
+                    if (id.includes('gravel') || name.includes('gravel')) return true;
                     return !(name.includes('caballeros') || name.includes('masculino') || id.includes('caballeros') || id.includes('masculino') || id.startsWith('m_'));
                 });
             } else if (genderClean.includes('masc') || genderClean.includes('cab')) {
@@ -986,6 +1045,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const name = cat.name.toLowerCase();
                     const id = cat.id.toLowerCase();
                     if (id.includes('ebike') || name.includes('ebike')) return true;
+                    if (id.includes('gravel') || name.includes('gravel')) return true;
                     return !(name.includes('damas') || name.includes('femenino') || id.includes('damas') || id.includes('femenino') || id.startsWith('f_'));
                 });
             }
@@ -995,11 +1055,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     const opt = document.createElement('option');
                     opt.value = cat.name;
                     opt.textContent = cat.name;
+                    opt.style.backgroundColor = '#0b111e';
+                    opt.style.color = '#ffffff';
+                    opt.style.fontWeight = '700';
+                    opt.style.padding = '8px';
                     inputCategoria.appendChild(opt);
                 });
 
-                const checkEbike = document.getElementById('check-ebike-individual');
-                if (checkEbike && checkEbike.checked) {
+                const indModality = getSelectedIndividualModality();
+                if (indModality === 'gravel') {
+                    const gravelCat = candidates.find(c => c.name.includes('GRAVEL'));
+                    if (gravelCat) {
+                        inputCategoria.value = gravelCat.name;
+                        return;
+                    }
+                } else if (indModality === 'ebike') {
                     const ebikeCat = candidates.find(c => c.name.includes('EBIKE'));
                     if (ebikeCat) {
                         inputCategoria.value = ebikeCat.name;
@@ -1010,7 +1080,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (previousSelection && candidates.some(c => c.name === previousSelection)) {
                     inputCategoria.value = previousSelection;
                 } else {
-                    const standardCat = candidates.find(c => !c.name.includes('EBIKE')) || candidates[0];
+                    const standardCat = candidates.find(c => !c.name.includes('EBIKE') && !c.name.includes('GRAVEL')) || candidates[0];
                     inputCategoria.value = standardCat.name;
                 }
                 return;
@@ -1021,6 +1091,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const opt = document.createElement('option');
         opt.value = distanceId || 'General';
         opt.textContent = distanceId || 'General';
+        opt.style.backgroundColor = '#0b111e';
+        opt.style.color = '#ffffff';
         inputCategoria.appendChild(opt);
         inputCategoria.value = distanceId || 'General';
     }
@@ -1031,13 +1103,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!distanceVal) {
             inputEdad.value = '';
             populateCategoryOptions(null, null, null);
-            if (labelCategoria) labelCategoria.textContent = 'Categoría Asignada automáticamente';
+            if (labelCategoria) labelCategoria.innerHTML = '<i class="fa-solid fa-ranking-star"></i> Categoría Asignada automáticamente';
             if (inputCategoria) inputCategoria.size = 1;
             return;
         }
 
         if (distanceVal === 'POSTAS') {
-            if (labelCategoria) labelCategoria.textContent = 'Categoría Asignada automáticamente (Sumatoria Dupla)';
+            if (labelCategoria) labelCategoria.innerHTML = '<i class="fa-solid fa-ranking-star"></i> Categoría Asignada automáticamente (Sumatoria Dupla)';
             if (inputCategoria) inputCategoria.size = 1;
             recalculatePostasCategory();
             return;
@@ -1051,7 +1123,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Si es manual, no depende de la edad o el género para cargar las opciones
         if (isManual) {
-            // Calcular edad si está ingresada
             if (birthDateVal && birthDateVal.indexOf('/') !== -1 && birthDateVal.split('/').length === 3) {
                 const age = calculateAge(birthDateVal);
                 if (age > 0 && !isNaN(age)) {
@@ -1072,36 +1143,77 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Si es automática, requiere fecha y género obligatorios para calcular
-        if (labelCategoria) labelCategoria.textContent = 'Categoría Asignada automáticamente';
         if (inputCategoria) inputCategoria.size = 1;
 
         const indBadgeCat = document.getElementById('individual-calc-category');
         const indBadgeDetails = document.getElementById('individual-calc-details');
-        const checkEbike = document.getElementById('check-ebike-individual');
+        const indModality = getSelectedIndividualModality();
 
-        // Si el corredor tildó la opción de Bicicleta Eléctrica E-Bike
-        if (checkEbike && checkEbike.checked && distanceVal === 'INDIVIDUAL') {
+        // 1. Si el corredor eligió modalidad GRAVEL LIBRE
+        if (indModality === 'gravel' && distanceVal === 'INDIVIDUAL') {
             if (birthDateVal && birthDateVal.indexOf('/') !== -1 && birthDateVal.split('/').length === 3) {
                 const age = calculateAge(birthDateVal);
                 if (age > 0 && !isNaN(age)) {
                     inputEdad.value = `${age} años`;
                 }
             }
-            populateCategoryOptions(30, genderVal || 'Masculino', distanceVal);
-            inputCategoria.value = 'EBIKE LIBRE';
-            if (indBadgeCat) indBadgeCat.textContent = 'EBIKE LIBRE ⚡';
-            if (indBadgeDetails) indBadgeDetails.textContent = '(Bicicleta Eléctrica - Sin límite de edad)';
-            if (labelCategoria) labelCategoria.textContent = 'Categoría Oficial: EBIKE LIBRE ⚡';
+            populateCategoryOptions(30, genderVal || 'both', distanceVal);
+            inputCategoria.value = 'GRAVEL LIBRE';
+            if (indBadgeCat) {
+                indBadgeCat.textContent = 'GRAVEL LIBRE 🚴';
+                indBadgeCat.style.color = '#00e676';
+            }
+            if (indBadgeDetails) {
+                indBadgeDetails.textContent = '(Bicicleta Gravel - Sin límite de edad)';
+                indBadgeDetails.style.color = '#00e676';
+            }
+            if (labelCategoria) {
+                labelCategoria.innerHTML = '<i class="fa-solid fa-bicycle" style="color: #00e676;"></i> Categoría Oficial: GRAVEL LIBRE 🚴';
+            }
             updatePaymentStepVisibility();
             return;
         }
 
+        // 2. Si el corredor eligió modalidad E-BIKE LIBRE
+        if (indModality === 'ebike' && distanceVal === 'INDIVIDUAL') {
+            if (birthDateVal && birthDateVal.indexOf('/') !== -1 && birthDateVal.split('/').length === 3) {
+                const age = calculateAge(birthDateVal);
+                if (age > 0 && !isNaN(age)) {
+                    inputEdad.value = `${age} años`;
+                }
+            }
+            populateCategoryOptions(30, genderVal || 'both', distanceVal);
+            inputCategoria.value = 'EBIKE LIBRE';
+            if (indBadgeCat) {
+                indBadgeCat.textContent = 'EBIKE LIBRE ⚡';
+                indBadgeCat.style.color = '#ffd600';
+            }
+            if (indBadgeDetails) {
+                indBadgeDetails.textContent = '(Bicicleta Eléctrica - Sin límite de edad)';
+                indBadgeDetails.style.color = '#ffd600';
+            }
+            if (labelCategoria) {
+                labelCategoria.innerHTML = '<i class="fa-solid fa-bolt" style="color: #ffd600;"></i> Categoría Oficial: EBIKE LIBRE ⚡';
+            }
+            updatePaymentStepVisibility();
+            return;
+        }
+
+        // 3. Modalidad MTB Tradicional (Cálculo automático por edad y género)
         if (!birthDateVal || birthDateVal.indexOf('/') === -1 || birthDateVal.split('/').length !== 3 || !genderVal) {
             inputEdad.value = '';
             populateCategoryOptions(null, null, null);
-            if (indBadgeCat) indBadgeCat.textContent = '-';
-            if (indBadgeDetails) indBadgeDetails.textContent = (!birthDateVal ? '(Ingresa tu fecha de nacimiento)' : '(Selecciona tu género)');
+            if (indBadgeCat) {
+                indBadgeCat.textContent = '-';
+                indBadgeCat.style.color = '#ffffff';
+            }
+            if (indBadgeDetails) {
+                indBadgeDetails.textContent = (!birthDateVal ? '(Ingresa tu fecha de nacimiento)' : '(Selecciona tu género)');
+                indBadgeDetails.style.color = 'var(--accent-cyan)';
+            }
+            if (labelCategoria) {
+                labelCategoria.innerHTML = '<i class="fa-solid fa-ranking-star"></i> Categoría Asignada automáticamente';
+            }
             return;
         }
 
@@ -1109,8 +1221,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (age <= 0 || isNaN(age)) {
             inputEdad.value = '';
             populateCategoryOptions(null, null, null);
-            if (indBadgeCat) indBadgeCat.textContent = '-';
-            if (indBadgeDetails) indBadgeDetails.textContent = '(Verifica la fecha ingresada)';
+            if (indBadgeCat) {
+                indBadgeCat.textContent = '-';
+                indBadgeCat.style.color = '#ffffff';
+            }
+            if (indBadgeDetails) {
+                indBadgeDetails.textContent = '(Verifica la fecha ingresada)';
+                indBadgeDetails.style.color = 'var(--accent-cyan)';
+            }
             return;
         }
         inputEdad.value = `${age} años`;
@@ -1118,8 +1236,17 @@ document.addEventListener('DOMContentLoaded', () => {
         populateCategoryOptions(age, genderVal, distanceVal);
         
         const assignedCat = inputCategoria ? inputCategoria.value : '';
-        if (indBadgeCat) indBadgeCat.textContent = assignedCat || 'Sin categoría coincidente';
-        if (indBadgeDetails) indBadgeDetails.textContent = assignedCat ? `(${age} años • ${genderVal})` : '(Verifica tu edad o género)';
+        if (indBadgeCat) {
+            indBadgeCat.textContent = assignedCat || 'Sin categoría coincidente';
+            indBadgeCat.style.color = '#ffffff';
+        }
+        if (indBadgeDetails) {
+            indBadgeDetails.textContent = assignedCat ? `(${age} años • ${genderVal})` : '(Verifica tu edad o género)';
+            indBadgeDetails.style.color = 'var(--accent-cyan)';
+        }
+        if (labelCategoria) {
+            labelCategoria.innerHTML = `<i class="fa-solid fa-ranking-star" style="color: var(--accent-cyan);"></i> Categoría Oficial: ${assignedCat || '-'}`;
+        }
         
         // Actualizar visualización del paso de pago de acuerdo con la categoría activa seleccionada
         updatePaymentStepVisibility();
@@ -1128,28 +1255,88 @@ document.addEventListener('DOMContentLoaded', () => {
     if (inputCategoria) {
         ['change', 'click', 'input'].forEach(evt => {
             inputCategoria.addEventListener(evt, () => {
-                const checkEbike = document.getElementById('check-ebike-individual');
-                if (checkEbike) {
-                    if (inputCategoria.value === 'EBIKE LIBRE') {
-                        checkEbike.checked = true;
-                    } else {
-                        checkEbike.checked = false;
-                    }
-                }
+                const val = (inputCategoria.value || '').toUpperCase();
                 const indBadgeCat = document.getElementById('individual-calc-category');
                 const indBadgeDetails = document.getElementById('individual-calc-details');
-                if (inputCategoria.value === 'EBIKE LIBRE') {
-                    if (indBadgeCat) indBadgeCat.textContent = 'EBIKE LIBRE ⚡';
-                    if (indBadgeDetails) indBadgeDetails.textContent = '(Bicicleta Eléctrica - Sin límite de edad)';
+                
+                if (val.includes('GRAVEL')) {
+                    setSelectedIndividualModality('gravel');
+                    if (indBadgeCat) {
+                        indBadgeCat.textContent = 'GRAVEL LIBRE 🚴';
+                        indBadgeCat.style.color = '#00e676';
+                    }
+                    if (indBadgeDetails) {
+                        indBadgeDetails.textContent = '(Bicicleta Gravel - Sin límite de edad)';
+                        indBadgeDetails.style.color = '#00e676';
+                    }
+                    if (labelCategoria) {
+                        labelCategoria.innerHTML = '<i class="fa-solid fa-bicycle" style="color: #00e676;"></i> Categoría Oficial: GRAVEL LIBRE 🚴';
+                    }
+                } else if (val.includes('EBIKE')) {
+                    setSelectedIndividualModality('ebike');
+                    if (indBadgeCat) {
+                        indBadgeCat.textContent = 'EBIKE LIBRE ⚡';
+                        indBadgeCat.style.color = '#ffd600';
+                    }
+                    if (indBadgeDetails) {
+                        indBadgeDetails.textContent = '(Bicicleta Eléctrica - Sin límite de edad)';
+                        indBadgeDetails.style.color = '#ffd600';
+                    }
+                    if (labelCategoria) {
+                        labelCategoria.innerHTML = '<i class="fa-solid fa-bolt" style="color: #ffd600;"></i> Categoría Oficial: EBIKE LIBRE ⚡';
+                    }
+                } else if (val) {
+                    setSelectedIndividualModality('mtb');
+                    if (indBadgeCat) {
+                        indBadgeCat.textContent = inputCategoria.value;
+                        indBadgeCat.style.color = '#ffffff';
+                    }
+                    const birthDateVal = inputFechaNacimiento?.value || '';
+                    const genderVal = inputGenero?.value || '';
+                    if (birthDateVal && genderVal) {
+                        const age = calculateAge(birthDateVal);
+                        if (indBadgeDetails) {
+                            indBadgeDetails.textContent = `(${age} años • ${genderVal})`;
+                            indBadgeDetails.style.color = 'var(--accent-cyan)';
+                        }
+                    }
+                    if (labelCategoria) {
+                        labelCategoria.innerHTML = `<i class="fa-solid fa-ranking-star" style="color: var(--accent-cyan);"></i> Categoría Oficial: ${inputCategoria.value}`;
+                    }
                 }
                 updatePaymentStepVisibility();
             });
         });
     }
 
+    // Eventos para el selector de modalidad individual (MTB, Gravel, E-Bike)
+    const indRadios = document.querySelectorAll('input[name="individual_tipo_bici"]');
+    indRadios.forEach(radio => {
+        radio.addEventListener('change', () => {
+            setSelectedIndividualModality(radio.value);
+            recalculateCategory();
+        });
+    });
+
+    const indCards = document.querySelectorAll('.individual-type-card');
+    indCards.forEach(card => {
+        card.addEventListener('click', () => {
+            const type = card.getAttribute('data-ind-type');
+            if (type) {
+                setSelectedIndividualModality(type);
+                recalculateCategory();
+            }
+        });
+    });
+
     const checkEbikeInd = document.getElementById('check-ebike-individual');
     if (checkEbikeInd) {
         checkEbikeInd.addEventListener('change', () => {
+            if (checkEbikeInd.checked) {
+                setSelectedIndividualModality('ebike');
+            } else {
+                setSelectedIndividualModality('mtb');
+            }
             recalculateCategory();
         });
     }
