@@ -247,6 +247,13 @@ window.RACE_CONFIG = {
           "minAge": 0,
           "maxAge": 200,
           "requiresPayment": true
+        },
+        {
+          "id": "posta_ebike_mixxto_libre",
+          "name": "POSTA EBIKE MIXTOS LIBRE",
+          "minAge": 1,
+          "maxAge": 200,
+          "requiresPayment": true
         }
       ]
     }

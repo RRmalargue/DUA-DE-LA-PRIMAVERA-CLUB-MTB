@@ -110,8 +110,8 @@
         {
           "id": "ind_gravel_libre",
           "name": "GRAVEL LIBRE",
-          "minAge": 0,
-          "maxAge": 120,
+          "minAge": 1,
+          "maxAge": 70,
           "requiresPayment": true
         }
       ]
@@ -244,6 +244,13 @@
           "id": "postas_ebike_libre",
           "name": "EBIKE LIBRE",
           "minAge": 0,
+          "maxAge": 200,
+          "requiresPayment": true
+        },
+        {
+          "id": "posta_ebike_mixxto_libre",
+          "name": "POSTA EBIKE MIXTOS LIBRE",
+          "minAge": 1,
           "maxAge": 200,
           "requiresPayment": true
         }
